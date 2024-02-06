@@ -1,0 +1,395 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.MachineLearningModel\\Modum.MachineLearningModel.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.DataAccess\\Modum.DataAccess.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.DataAccess\\Modum.DataAccess.csproj",
+        "projectName": "Modum.DataAccess",
+        "projectPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.DataAccess\\Modum.DataAccess.csproj",
+        "packagesPath": "C:\\Users\\gosug\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.DataAccess\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\gosug\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Models\\Modum.Models.csproj": {
+                "projectPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Models\\Modum.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "CloudinaryDotNet": {
+              "target": "Package",
+              "version": "[1.22.0, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.2.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.Facebook": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.AspNetCore.Authentication.Google": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[43.0.0, )"
+            },
+            "X.PagedList": {
+              "target": "Package",
+              "version": "[8.4.7, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.MachineLearningModel\\Modum.MachineLearningModel.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.MachineLearningModel\\Modum.MachineLearningModel.csproj",
+        "projectName": "Modum.MachineLearningModel",
+        "projectPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.MachineLearningModel\\Modum.MachineLearningModel.csproj",
+        "packagesPath": "C:\\Users\\gosug\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.MachineLearningModel\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\gosug\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Services\\Modum.Services.csproj": {
+                "projectPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Services\\Modum.Services.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "CloudinaryDotNet": {
+              "target": "Package",
+              "version": "[1.22.0, )"
+            },
+            "Microsoft.ML": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Models\\Modum.Models.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Models\\Modum.Models.csproj",
+        "projectName": "Modum.Models",
+        "projectPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Models\\Modum.Models.csproj",
+        "packagesPath": "C:\\Users\\gosug\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Models\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\gosug\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "CloudinaryDotNet": {
+              "target": "Package",
+              "version": "[1.22.0, )"
+            },
+            "Cqrs": {
+              "target": "Package",
+              "version": "[4.4.1.24, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.2.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.Facebook": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.AspNetCore.Authentication.Google": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.ML": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.ML.OnnxTransformer": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[43.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Services\\Modum.Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Services\\Modum.Services.csproj",
+        "projectName": "Modum.Services",
+        "projectPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Services\\Modum.Services.csproj",
+        "packagesPath": "C:\\Users\\gosug\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Services\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\gosug\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.DataAccess\\Modum.DataAccess.csproj": {
+                "projectPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.DataAccess\\Modum.DataAccess.csproj"
+              },
+              "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Models\\Modum.Models.csproj": {
+                "projectPath": "C:\\Users\\gosug\\source\\repos\\Modum\\Modum.Models\\Modum.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "CloudinaryDotNet": {
+              "target": "Package",
+              "version": "[1.22.0, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.2.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.Facebook": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.AspNetCore.Authentication.Google": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[43.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
