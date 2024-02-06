@@ -24,22 +24,22 @@ Our commitment to innovation and customer satisfaction drives us to continually 
 
 <h2><a href="https://modum.azurewebsites.net/" target="_blank">Visit the website!</a></h2>
 <br>
-Stack:
-<div class="row"> <a href="#">
-    <img src="https://github.com/MikeCodesDotNET/ColoredBadges/blob/master/svg/dev/languages/csharp_dotnet.svg" alt="example badge" style="vertical-align:top margin:6px 4px">
-  </a> 
-<a href="#">
-    <img src="https://raw.githubusercontent.com/MikeCodesDotNET/ColoredBadges/master/svg/dev/languages/html.svg" style="vertical-align:top margin:6px 4px">
-  </a>  
-  <a href="#">
-    <img src="https://github.com/MikeCodesDotNET/ColoredBadges/blob/master/svg/dev/languages/css3.svg" alt="example badge" style="vertical-align:top margin:6px 4px">
-  </a>  
-  <a href="#">
-    <img src="https://github.com/MikeCodesDotNET/ColoredBadges/blob/master/svg/dev/languages/js.svg" alt="example badge" style="vertical-align:top margin:6px 4px">
-  </a>  
-    <a href="#">
-    <img src="https://github.com/MikeCodesDotNET/ColoredBadges/blob/master/svg/dev/tools/visualstudio.svg" alt="example badge" style="vertical-align:top margin:6px 4px">
-  </a> </div>
+<h3>Used Technologies</h3>
+<ul>
+    <li>Framework -> ASP.NET(C#/.NET 7)</li>
+    <li>Front-end -> Javascript/jQuery/Gulp</li>
+    <li>Views -> HTML5/CSS3/Bootstrap</li>
+    <li>Databases -> SQL Server/Firebase</li>
+    <li>Testing -> xUnit/Apache</li>
+    <li>External API -> RapidApi(for outfit picker)</li>
+    <li>Providing API -> RestApi</li>
+    <li>User ChatBot -> Botsonic</li>
+    <li>Recurring actions -> Hangfire</li>
+    <li>Workflow -> Azure Services/Github workflow</li>
+    <li>Payment -> Stripe</li>
+    <li>OAUTH -> Google/Facebook</li>
+</ul>
 
-<h2>The main application structure(for now):</h2>
-<img src="https://github.com/vasioo/ClothesShop_ReadMe/assets/78680789/ee49526d-f259-4fc9-a493-6431c780f395">
+<h2>The main application structure:</h2>
+<img src="https://github.com/vasioo/Project-Modum/assets/78680789/adfe4e19-0dc9-4050-802d-917a69e24c3a">
+
