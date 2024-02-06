@@ -1,0 +1,198 @@
+﻿@using Modum.Models.BaseModels.Models;
+@using Modum.Models.BaseModels.Models.BaseStructure;
+@using Modum.Models.BaseModels.Models.Payment;
+@using Modum.Models.BaseModels.Models.ProductStructure;
+@using Modum.Models.ViewModels;
+@model FavouritesViewModel
+@{
+    IEnumerable<Product> tenFavItems = Model.TenFavItems;
+    IEnumerable<Product> lastViewedProducts = Model.LastViewedProducts;
+}
+@section Styles {
+    <link href="@Url.Content("~/css/custom/_CardScrollerPartial.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/custom/ShopView.css")" rel="stylesheet" type="text/css" />
+}
+<div class="favourites-page">
+    <br />
+    <br />
+    <div class="centered-container">
+        <!-- Your provided code here -->
+        <div class="favourites-container">
+            <div id="personalized-items" class="pb-5">
+                <div id="personalized-header" class="d-flex align-items-center">
+                    <h2 class="display-4 p-sm-5 p-3" style="font-weight:500">Favourites</h2>
+                </div>
+                <div id="personalized-items-section">
+                    @if (Model.FavoriteProducts == null || Model.FavoriteProducts.Count() == 0)
+                    {
+                        <div class="col">
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <h2 class="text-center">No items added to favourites!</h2>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            @foreach (var product in Model.FavoriteProducts)
+                            {
+                                string link = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-1-for-{product.ImageContainerId}.png";
+                                <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                    <div class="card">
+                                        <div>
+                                            <a id="@product.Id" class="btn add-to-cart-button" style="top:15px; left:15px;position:absolute;z-index:2"><i class="fas fa-shopping-cart fa-xl p-1"></i></a>
+                                            <a id="@product.Id" class="btn remove-from-favourites-button" style="top:15px; right:15px;position:absolute;z-index:2"><i class="fa fa-trash fa-xl p-1"></i></a>
+
+                                        </div>
+                                        <a asp-area="" asp-controller="Home" asp-action="Shop" asp-route-productId="@product.Id">
+                                            <img class="card-img-top" src="@link" alt="Product Image" />
+                                        </a>
+                                        <div class="card-body">
+                                            <h1 class="card-title">@product.Brand @product.Title</h1>
+                                            @if (product.DiscountFromPrice > 0)
+                                            {
+                                                var newValue = product.Price - product.DiscountFromPrice;
+                                                <div class="row pl-3">
+                                                    <h6>Initial Price: </h6>
+                                                    <h6 class="pl-3" style="text-decoration:line-through; color:gray"> $@product.Price </h6>
+                                                    <h6 class="pl-2 pr-2"> - </h6>
+                                                    <h6 class="discount-container" style="color:green"> $@product.DiscountFromPrice</h6>
+                                                </div>
+                                                <div class="row pl-3">
+                                                    <h4>Discounted Price: </h4>
+                                                    <h4 class="price-container pl-3" style="color:red"> $@newValue </h4>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="row">
+                                                    <h4>Price: </h4>
+                                                    <h4 class="price-container pl-3" style="color:red">$@product.Price</h4>
+                                                </div>
+                                            }
+
+                                            @{
+                                                string joinedSizes = string.Join(", ", product.ProductSizes.Select(x => x.ProductSize));
+                                            }
+                                            <div class="row pl-3">
+                                                <h6>Sizes: </h6>
+                                                <h6 class="pl-3">@joinedSizes</h6>
+                                            </div>
+                                            <div class="row pl-3">
+                                                <h6>
+                                                    Colors:
+                                                </h6>
+                                                <h6 class="pl-3">
+                                                    <a class="btn" style="background-color:@product.Colour"></a>
+                                                </h6>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+        <br />
+
+    </div>
+
+    @if (tenFavItems != null)
+    {
+        <div class="recommendations-div container">
+            <h2 class="most-added-to-fav-text-container pl-3">Most added to favourites:</h2>
+            @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml",tenFavItems)
+        </div>
+    }
+
+    @if (lastViewedProducts != null)
+    {
+        <div id="last-viewed-section" class="container">
+            <h2 class="most-added-to-fav-text-container pl-3">Last viewed products:</h2>
+            @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml",lastViewedProducts)
+        </div>
+    }
+    @{
+        Cart cartContainer = (Cart)Model.Cart;
+    }
+    @if (Model.FavoriteProducts != null)
+    {
+        if (Model.FavoriteProducts.Count() != 0)
+        {
+            @foreach (var product in Model.FavoriteProducts)
+            {
+                @if (cartContainer != null)
+                {
+                    <div id="sizeSelectionPopup_@product.Id" class="popup">
+                        <div class="popup-content">
+                            <span class="close closePopup">&times;</span>
+                            <h2>Select Size:</h2>
+                            <ul class="list-group" id="sizeSelectionPopup">
+
+                                @foreach (var size in product.ProductSizes)
+                                {
+
+                                    @if (cartContainer.CartItems.Any(item => item.ProductId == product.Id && item.Size == size.ProductSize.ToString()))
+                                    {
+                                        <li class="list-group-item mb-3 border clickable-size checked-sizes">
+                                            @if (size.AvailableItems > 0)
+                                            {
+                                                <div class="form-check">
+                                                    <label class="form-check-label" for="flexCheckDefault" data-original-text="@size.ProductSize">
+                                                        @size.ProductSize
+                                                    </label>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="form-check" disabled>
+                                                    <label class="form-check-label size-unavailable" for="flexCheckDefault" data-original-text="@size.ProductSize">
+                                                        @size.ProductSize (Unavailable)
+                                                    </label>
+                                                </div>
+                                            }
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="list-group-item mb-3 border clickable-size unchecked-sizes">
+                                            @if (size.AvailableItems > 0)
+                                            {
+                                                <div class="form-check">
+                                                    <label class="form-check-label" for="flexCheckDefault" data-original-text="@size.ProductSize">
+                                                        @size.ProductSize
+                                                    </label>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="form-check" disabled>
+                                                    <label class="form-check-label size-unavailable" for="flexCheckDefault" data-original-text="@size.ProductSize">
+                                                        @size.ProductSize (Unavailable)
+                                                    </label>
+                                                </div>
+                                            }
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                            <a class="btn btn-dark text-white confirm-size-selection">Confirm</a>
+                        </div>
+                    </div>
+                }
+
+            }
+        }
+    }
+</div>

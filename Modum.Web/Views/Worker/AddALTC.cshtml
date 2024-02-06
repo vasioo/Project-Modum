@@ -1,0 +1,68 @@
+﻿@using Modum.Models.BaseModels.Models.LTCs;
+@using Modum.Models.ViewModels;
+@{
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
+
+@section Styles {
+    <link href="@Url.Content("~/css/custom/AddProduct.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="add-ltc">
+    <div class="row justify-content-around pt-5">
+        <div class="col-md-3">
+            <h2 class="mb-3 col text-center">Upload Images</h2>
+            <div class="image-container">
+                <label class="form-label col text-center" for="ltc-image-1">Image:</label>
+                <div class="upload-input">
+                    <input type="file" id="ltc-image-1" name="ltc-image-1" class="image-upload" accept=".png, .jpg, .jpeg" multiple="multiple" max="1">
+                    <img class="uploaded-image" />
+                    <label for="ltc-image-1" class="text-center content">
+                        <span class="text">
+                            <span class="mb-2 plus-icon"><i class="fa fa-plus"></i></span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="mb-3 col text-center">Product Details</h2>
+            <div class="row">
+                <div class="col-12">
+                    <label for="title-input-field">Title:</label>
+                    <input id="title-input-field" type="text" placeholder="Enter title" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="startdate-input-field">Start Date:</label>
+                    <input type="datetime" id="startdate-input-field" class="form-control" />
+                </div>
+                <div class="col-sm-6">
+                    <label for="enddate-input-field">End Date:</label>
+                    <input type="datetime" id="enddate-input-field" class="form-control" />
+                </div>
+            </div>
+            <hr class="my-4" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="description-input-field">Description:</label>
+                    <textarea id="description-input-field" type="text" placeholder="Enter description" class="form-control" rows="6"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label for="content-input-field">Content:</label>
+                    <textarea id="content-input-field" type="text" placeholder="Enter content" class="form-control" rows="6"></textarea>
+                </div>
+            </div>
+            <hr class="my-4" />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-success btn-block btn-save">Save Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

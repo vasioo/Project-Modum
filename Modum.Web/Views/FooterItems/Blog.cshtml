@@ -1,0 +1,61 @@
+﻿@using Modum.Models.ViewModels;
+@model BlogViewModel
+
+
+<div class="blog-page">
+    <div class="loading-container-blogs">
+        <div class="typewriter-text" id="typewriter">
+        </div>
+    </div>
+
+    <div class="container-fluid custom-container-for-blogs" style="display: none;">
+        <div class="justify-content-center container pt-4">
+            <div class="row justify-content-center text-center">
+                <div class="col-12">
+                    <div class="h1">Modum Blogs</div>
+                    <hr class="w-40">
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Worker") || User.IsInRole("SuperAdmin"))
+                {
+                    <a asp-area="" asp-controller="Docs" asp-action="CreateDocument" class="mb-4 ml-3 mt-4 col-5 btn btn-success">Add a Blog</a>
+                }
+                @foreach (var blog in Model.BlogPosts.OrderByDescending(x => x.DateOfCreation))
+                {
+                    @await Html.PartialAsync("~/Views/FooterItems/_BlogPartial.cshtml",blog)
+                }
+            </div>
+        </div>
+    </div>
+    
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var text = "Modum Blogs";
+        var speed = 150;
+
+        function typeWriter(i, txt, speed) {
+            if (i < txt.length) {
+                document.getElementById("typewriter").innerHTML += txt.charAt(i);
+                i++;
+                setTimeout(function () {
+                    typeWriter(i, txt, speed)
+                }, speed);
+            } else {
+                setTimeout(function () {
+                    document.querySelector('.loading-container-blogs').style.animation = 'fadeOut 1s forwards';
+                }, 1000);
+
+                setTimeout(function () {
+                    document.querySelector('.loading-container-blogs').style.display = 'none';
+                    document.querySelector('.custom-container-for-blogs').style.display = 'block';
+                }, 1000);
+            }
+        }
+
+        setTimeout(function () {
+            typeWriter(0, text, speed);
+        }, 500); 
+    });
+</script>

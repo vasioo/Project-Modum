@@ -1,0 +1,141 @@
+﻿@{
+    string mafText = "<script>" +
+                    "\n const containerId = 'Add Your Container Id';" +
+                    "\n   fetch('https://modum.azurewebsites.net/api/ads/mostAddedToFav')" +
+                    "\n        .then(response => response.text())" +
+                    "\n        .then(htmlString => {" +
+                    "\n            const containerIdAttr = document.getElementById(containerId);" +
+                    "\n            if (containerIdAttr) {" +
+                    "\n                containerIdAttr.innerHTML = htmlString;" +
+                    "\n            }" +
+                    "\n        })" +
+                    "\n        .catch(error => console.error('Error fetching product HTML:', error));" +
+                    "\n      //Make sure the application uses bootstrap here is the link if it does not https://getbootstrap.com/docs/4.4/getting-started/introduction/  " +
+                    "\n </script>";
+    string mbText = "<script>" +
+                  "\n const containerId = 'Add Your Container Id';" +
+                  "\n   fetch('https://modum.azurewebsites.net/api/ads/mostBought')" +
+                  "\n        .then(response => response.text())" +
+                  "\n        .then(htmlString => {" +
+                  "\n            const containerIdAttr = document.getElementById(containerId);" +
+                  "\n            if (containerIdAttr) {" +
+                  "\n                containerIdAttr.innerHTML = htmlString;" +
+                  "\n            }" +
+                  "\n        })" +
+                  "\n        .catch(error => console.error('Error fetching product HTML:', error));" +
+                  "\n      //Make sure the application uses bootstrap here is the link if it does not https://getbootstrap.com/docs/4.4/getting-started/introduction/  " +
+                  "\n </script>";
+}
+
+<div class="ads-page">
+    <div class="container">
+        <div class="row">
+            <div class="container mt-4">
+
+                <div class="jumbotron">
+                    <h1 class="display-4">Modum Ads API Documentation</h1>
+                    <p class="lead">Integrate Modum Ads seamlessly into your website.</p>
+                </div>
+
+                <section id="embedding" class="mb-4">
+                    <h2>Embedding Ads</h2>
+                    <p>
+                        To embed Modum Ads on your website, use the following HTML code and replace 'YOUR_API_ENDPOINT'
+                        with the actual API endpoint provided by Modum.
+                    </p>
+                    <pre>
+                    <code class="html">
+                &lt;div id="modumAdsContainer"&gt;&lt;/div&gt;
+
+                &lt;script&gt;
+                    fetch('YOUR_API_ENDPOINT')
+                        .then(response =&gt; response.text())
+                        .then(htmlString =&gt; {
+                            const container = document.getElementById('modumAdsContainer');
+                            if (container) {
+                                container.innerHTML = htmlString;
+                            }
+                        })
+                        .catch(error =&gt; console.error('Error fetching ad HTML:', error));
+                &lt;/script&gt;
+                </code>
+            </pre>
+                </section>
+
+                <section id="endpoints" class="mb-4">
+                    <h2>API Endpoints</h2>
+                    <p>
+                        The Modum Ads API provides the following endpoints:
+                    </p>
+                    <ul>
+                        <li>
+                            <code>/api/ads/mostAddedToFav</code> - Get information about the most added to favorites products.
+                        </li>
+                        <li>
+                            <code>/api/ads/mostBought</code> - Get information about the most bought products.
+                        </li>
+                    </ul>
+                </section>
+
+                <section id="examples" class="mb-4">
+                    <h2>Examples</h2>
+                    <p>
+                        Here are examples of how to use the Modum Ads API buttons:
+                    </p>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Example 1: Embed most added to favorites ads
+                        </div>
+                        <div class="card-body">
+                            <pre>
+                            <code class="html">
+                                // Copy and paste this code into your HTML
+                                &lt;div id="modumAdsContainer1"&gt;&lt;/div&gt;
+
+                                &lt;script&gt;
+                                    fetch('https://modum.azurewebsites.net/api/ads/mostAddedToFav')
+                                        .then(response =&gt; response.text())
+                                        .then(htmlString =&gt; {
+                                            const container = document.getElementById('modumAdsContainer1');
+                                            if (container) {
+                                                container.innerHTML = htmlString;
+                                            }
+                                        })
+                                        .catch(error =&gt; console.error('Error fetching ad HTML:', error));
+                                &lt;/script&gt;
+                                </code>
+                    </pre>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            Example 2: Embed most bought ads
+                        </div>
+                        <div class="card-body">
+                            <pre>
+                            <code class="html">
+                                // Copy and paste this code into your HTML
+                                &lt;div id="modumAdsContainer2"&gt;&lt;/div&gt;
+
+                                &lt;script&gt;
+                                    fetch('https://modum.azurewebsites.net/api/ads/mostBought')
+                                        .then(response =&gt; response.text())
+                                        .then(htmlString =&gt; {
+                                            const container = document.getElementById('modumAdsContainer2');
+                                            if (container) {
+                                                container.innerHTML = htmlString;
+                                            }
+                                        })
+                                        .catch(error =&gt; console.error('Error fetching ad HTML:', error));
+                                &lt;/script&gt;
+                                </code>
+                                </pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,208 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section Styles {
+    <link href="@Url.Content("~/css/custom/_CardScrollerPartial.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="main-page">
+    <section>
+        @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml")
+
+        <div id="discount-section">
+            <h2>Take 30% discount</h2>
+            <h3>Use code something to enjoy the best offers</h3>
+            <p>* only for this week</p>
+            <div>
+                <!-- Implement information icon showing additional information for discount -->
+                <!-- For simplicity, you can add an icon or image here -->
+                <img src="information-icon.png" alt="Information Icon">
+            </div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+
+        <div style="background-color: silver;" id="delivery-section" class="container">
+            <div class="row">
+                <div id="delivery-subsection-1" class="col-md-4">
+                    <img alt="delivery-image" />
+                    <p>
+                        lorem ipsum aubvobopias nblb
+                        lknasl oasn vhjas ljch  an,icj l asopijv k aopijo ikasdjfoa
+                    </p>
+                </div>
+                <div id="delivery-subsection-2" class="col-md-4">
+                    <img alt="delivery-image" />
+                    <p>
+                        lorem ipsum aubvobopias nblb
+                        lknasl oasn vhjas ljch  an,icj l asopijv k aopijo ikasdjfoa
+                    </p>
+                </div>
+                <div id="delivery-subsection-3" class="col-md-4">
+                    <img alt="delivery-image" />
+                    <p>
+                        lorem ipsum aubvobopias nblb
+                        lknasl oasn vhjas ljch  an,icj l asopijv k aopijo ikasdjfoa
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+
+        <div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+    </section>
+    <!-------------------
+      Header Section End
+    -------------------->
+    <div class="subsection-separator">
+        <br />
+        <br />
+        <br />
+    </div>
+    <!-------------------
+      Premium Section Start
+    -------------------->
+    <section>
+        <div id="premium-section" class="container">
+            @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml")
+        </div>
+
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+        <div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+        <div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+        <div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+    </section>
+    <!-------------------
+      Premium Section End
+    -------------------->
+    <div class="subsection-separator">
+        <br />
+        <br />
+        <br />
+    </div>
+    <!-------------------
+      Sport Section Start
+    -------------------->
+    <section>
+        <div id="sport-section" class="container">
+            @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml")
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+        <div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+        <div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+        <div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+
+    </section>
+
+    <!-------------------
+      Sport Section End
+    -------------------->
+    <div class="subsection-separator">
+        <br />
+        <br />
+        <br />
+    </div>
+    <!-------------------
+      Recommended Section Start
+    -------------------->
+    <section>
+        <div id="recommended-section" class="container">
+            @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml")
+        </div>
+
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+        <div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+        <div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+        <div>
+        </div>
+        <div class="subsection-separator">
+            <br />
+            <br />
+            <br />
+        </div>
+    </section>
+    <!-------------------
+      Recommended Section End
+    -------------------->
+    <div class="subsection-separator">
+        <br />
+        <br />
+        <br />
+    </div>
+</div>

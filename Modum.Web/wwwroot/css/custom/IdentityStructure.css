@@ -1,0 +1,167 @@
+﻿.facebook-button {
+    background-color: dodgerblue;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+    .facebook-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+.google-button {
+    background-color: indianred;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+    .google-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+.custom-input-group {
+    position: relative;
+    margin-top: 1.4rem;
+}
+
+.custom-input {
+    font-size: 18px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #757575;
+    outline: none;
+}
+
+.custom-label {
+    color: #999;
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 10px;
+    transition: 0.2s ease all;
+}
+
+.custom-input:focus ~ .custom-label,
+.custom-input:valid ~ .custom-label {
+    top: -20px;
+    font-size: 14px;
+    color: #5264AE;
+}
+
+.custom-bar {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+    .custom-bar:before,
+    .custom-bar:after {
+        content: '';
+        height: 2px;
+        width: 0;
+        bottom: 1px;
+        position: absolute;
+        background: #5264AE;
+        transition: 0.2s ease all;
+    }
+
+    .custom-bar:before {
+        left: 50%;
+    }
+
+    .custom-bar:after {
+        right: 50%;
+    }
+
+.custom-input:focus ~ .custom-bar:before,
+.custom-input:focus ~ .custom-bar:after {
+    width: 50%;
+}
+
+.custom-highlight {
+    position: absolute;
+    height: 60%;
+    width: 100px;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.custom-input:focus ~ .custom-highlight {
+    animation: customInputHighlighter 0.3s ease;
+}
+
+@keyframes customInputHighlighter {
+    from {
+        background: #5264AE;
+    }
+
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+
+
+.btn-for-entering {
+    background: sandybrown;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+    .btn-for-entering:hover {
+        background: #ffa54f;
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+.container {
+    font-family: cursive;
+}
+
+#togglePassword {
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+#toggleConfirmPassword {
+    right: 5px;
+    top: 60%;
+    transform: translateY(-50%);
+}
+.custom-input.birthdate {
+    font-size: 18px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #757575;
+    outline: none;
+}
+
+    .custom-input.birthdate:not(:placeholder-shown) ~ .custom-label {
+        top: -20px;
+        font-size: 14px;
+        color: #5264AE;
+    }
+
+    .custom-input.birthdate:focus ~ .custom-bar:before,
+    .custom-input.birthdate:focus ~ .custom-bar:after {
+        width: 50%;
+    }
+
+    .custom-input.birthdate:focus ~ .custom-highlight {
+        animation: customInputHighlighter 0.3s ease;
+    }
+.ui-menu {
+    max-width: 200px;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

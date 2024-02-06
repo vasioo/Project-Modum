@@ -1,0 +1,104 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using Modum.DataAccess.MainModel;
+@using Modum.Web.Models.Models.Pagination;
+@inject UserManager<ApplicationUser> UserManager
+@model PaginatedList<ApplicationUser>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="manage-users">
+    <div id="userTableContainer" class="pt-3">
+        <div class="d-flex justify-content-center">
+            <div class="h2">
+                Manage Users Menu
+            </div>
+        </div>
+        <div id="user-filtering" class="d-flex pt-4 pb-4 justify-content-center">
+            <form asp-action="ManageUsers" method="get">
+                <div class="form-actions no-color row">
+                    <div class="h5 row p-0 m-0 pr-2 align-items-center pl-2 pb-1" style="font-weight:400">
+                        Find by User name:
+                    </div>
+                    <div class="">
+                        <input type="text" name="SearchString" class="form-control" value="@ViewData["CurrentFilter"]" />
+                    </div>
+                    <div class="pl-3">
+                        <input type="submit" value="Search" class="btn btn-dark" /> |
+                        <a class="btn btn-danger" asp-action="ManageUsers">Clear</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <table class="table table-striped" border="1">
+            <thead>
+                <tr class="header-row">
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Account Origin Date</th>
+                    <th>WORKER</th>
+                    @if (User.IsInRole("SuperAdmin"))
+                    {
+                        <th>ADMIN</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    var username = $"{user.FirstName} {user.LastName}";
+                    <tr>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.Email</td>
+                        <td>@user.AccountOriginDate</td>
+                        <td class="justify-content-center">
+                            @if (await UserManager.IsInRoleAsync(user, "Worker"))
+                            {
+                                <button class="btn btn-warning col-12 mr-2 remove-worker-btn" id="@user.Id" data-username="@username">Remove Worker</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-success col-12 mr-2 make-worker-btn" id="@user.Id" data-username="@username">Make Worker</button>
+                            }
+                        </td>
+
+                        @if (User.IsInRole("SuperAdmin"))
+                        {
+                            <td class="justify-content-center">
+                                @if (await UserManager.IsInRoleAsync(user, "Admin"))
+                                {
+                                    <button class="btn btn-warning col-12 mr-2 remove-admin-btn" id="@user.Id" data-username="@username">Remove Admin</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-success col-12 mr-2 make-admin-btn" id="@user.Id" data-username="@username">Make Admin</button>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="ManageUsers"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    <a asp-action="ManageUsers"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
+</div>
+
+

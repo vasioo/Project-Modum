@@ -1,0 +1,161 @@
+﻿.container {
+    position: relative;
+}
+.favourites-container {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index:1000;
+}
+
+.popup-content {
+    background-color: white;
+    border: 1px solid #ccc;
+    width: 80%;
+    max-width: 400px;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.clickable-size {
+    cursor: pointer;
+    padding: 10px;
+}
+.checked-sizes {
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+}
+
+.form-check-label {
+    user-select: none;
+}
+
+.close {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    padding: 10px;
+    cursor: pointer;
+    font-size:xx-large;
+}
+
+    .close:hover {
+        color: red;
+    }
+
+.mySlides {
+    display: none;
+}
+
+    .mySlides img {
+        width: 430px;
+        height: 680px;
+    }
+
+.cursor {
+    cursor: pointer;
+}
+
+.title-row-container h1{
+    font-size:2em;
+}
+
+.demo {
+    width: 100px;
+    height: 120px;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+    .demo:hover {
+        opacity: 1;
+    }
+
+.prev,
+.next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+    .prev:hover,
+    .next:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+        color:white !important;
+    }
+
+.numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+}
+
+.caption-container {
+    text-align: center;
+    background-color: #222;
+    padding: 2px 16px;
+    color: white;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.column {
+    float: left;
+    width: 16.66%;
+    padding: 5px;
+}
+
+.demo {
+    opacity: 0.6;
+}
+
+.image-control-slider {
+    bottom: 24px;
+    right: 24px;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.card-header:not(.collapsed) .rotate-icon {
+    transform: rotate(180deg);
+}
+
+.card-header .accicon {
+    float: right;
+    font-size: 20px;
+    width: 1.2em;
+}
+
+.card-header {
+    cursor: pointer;
+    border-bottom: none;
+}

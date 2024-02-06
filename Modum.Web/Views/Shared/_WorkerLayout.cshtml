@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modum</title>
+    <link rel="stylesheet" type="text/css" href="~/css/custom/CustomAdminLayout.css">
+    <link rel="stylesheet" type="text/css" href="~/css/custom/AllViews.css">
+    <!-- FONTS -->
+    <link rel="stylesheet" href="~/clothes-shop/fonts/flaticon/flaticon.css">
+    <link rel="shortcut icon" type="x-icon" href="~/clothes-shop/images/logos/modum-transparent2-removebg-preview.png" />
+    <script type="text/javascript" src="https://kit.fontawesome.com/47edf10d0e.js"></script>
+    <!-- VENDOR -->
+    <link rel="stylesheet" href="~/clothes-shop/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <!--ALERTS-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!--TinyMCE-->
+    <script src="https://cdn.tiny.cloud/1/zax6pbh3xd7v8fm39f9ehvlzd88h6i2upqoyom0yb0rzheob/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#tiny',
+            plugins: [
+                'a11ychecker', 'advlist', 'advcode', 'advtable', 'autolink', 'checklist', 'export',
+                'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks',
+                'powerpaste', 'fullscreen', 'formatpainter', 'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | a11ycheck casechange blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify |' +
+                'bullist numlist checklist outdent indent | removeformat | code table help'
+        })
+    </script>
+    @RenderSection("Styles", false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" id="header-bar">
+            <div class="container-fluid">
+                <a class="navbar-brand " asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">
+                    <img src="~/clothes-shop/images/logos/modum-transparent2-removebg-preview.png" />
+
+                </a>
+                <a class="btn d-lg-none" id="hamburger-menu">
+                    <span class="navbar-toggler-icon"></span>
+                </a>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link nav-item nav-link-custom" asp-area="" asp-controller="Worker" asp-action="ManageProducts">
+                                Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-item nav-link-custom" asp-area="" asp-controller="Worker" asp-action="ManageSubSelection">
+                                Sub-Selection
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-item nav-link-custom" asp-area="" asp-controller="Worker" asp-action="ManageLTCs">
+                                LTCs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-item nav-link-custom" asp-area="" asp-controller="Docs" asp-action="DocsShower">
+                                Blog Posts
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/clothes-shop/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="~/clothes-shop/js/vendor/popper.min.js"></script>
+    <script src="~/clothes-shop/js/vendor/bootstrap.min.js"></script>
+    <script src="~/clothes-shop/js/vendor/slick.min.js"></script>
+    <script src="~/clothes-shop/js/workerLayout.js"></script>
+
+    <!-- COMMON -->
+    <script src="~/clothes-shop/js/common.js"></script>
+    <!-- CUSTOM -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+    <script src="~/clothes-shop/js/custom/layoutsPanel.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            addLtc.init($('.add-ltc'));
+            addProductPage.init($('.add-product'));
+            editLtc.init($('.edit-ltc'));
+            editProductPage.init($('.edit-product'));
+            manageLtcs.init($('.manage-ltcs'));
+            manageProductsPage.init($('.manage-products'));
+            manageSubSelectionsPage.init($('.manage-sub-selections'));
+        });
+    </script>
+    <!--ALERT-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

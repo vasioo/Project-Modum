@@ -1,0 +1,114 @@
+﻿@using Modum.Models.BaseModels.Models.FooterItems;
+@model BlogPost
+
+@{
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-10 col-md-12">
+            <form asp-action="EditDocument" asp-controller="Docs">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" id="docId" value="@Model.Id" />
+
+                <div class="row justify-content-center h2">
+                    Edit Blog 
+                    <br />@Model.Id
+                </div>
+                <div class="form-group pt-3">
+                    <label for="title">Title</label>
+                    <input asp-for="Title" id="title" class="form-control" value="@Model.Title" required />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-group pt-3">
+                    <label for="tiny">Content</label>
+                    <textarea id="tiny" class="form-control" style="width: 100%" rows="10" asp-for="Content" required> @Model.Content</textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+
+                @{
+                    var link = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/main-image-for-blog-{Model.Id}.png";
+                }
+
+                <div class="form-group mt-3">
+                    <div class="col-10 col-lg-5 col-xl-2 p-0 m-0">
+                        <label class="form-label col text-center" for="blog-image-1">Main image for showing</label>
+                        <div class="upload-input">
+                            <input type="file" id="blog-image-1" name="blogImage" class="image-upload" accept=".png, .jpg, .jpeg" multiple="multiple" max="1">
+                            <img class="uploaded-image" src="@link" required>
+                            <label for="blog-image-1" class="text-center content">
+                                <span class="text">
+                                    <span class="mb-15 plus-icon"><i class="fa fa-plus"></i></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-primary col">Save</button>
+                </div>
+                <div class="form-group">
+                    <button id="@Model.Id" class="btn btn-danger col deleteBlogPostButton">Delete</button>
+                </div>
+            </form>
+            <div class="form-group mt-3">
+                <a class="btn btn-info col" asp-action="DocsShower" asp-controller="Docs">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var elements = document.getElementsByClassName('deleteBlogPostButton'); // Replace 'yourClassName' with the actual class name
+
+        Array.from(elements).forEach(function (element) {
+            element.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this blog!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Delete!'
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        var id = element.getAttribute('id');
+
+                        var antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                        fetch('/Docs/DeleteDocumentPost', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'RequestVerificationToken': antiForgeryToken
+                            },
+                            body: 'id=' + id
+                        })
+                            .then(function (response) {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(function (data) {
+                                var currentDomain = window.location.host
+                                var updatedUrl = "https://" + currentDomain + "/Footer/Blog";
+
+                                window.location.href = updatedUrl;
+
+                            })
+                            .catch(function (error) {
+                                console.error('Fetch error:', error);
+                            });
+                    }
+                });
+            });
+        });
+    });
+
+</script>

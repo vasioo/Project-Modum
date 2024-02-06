@@ -1,0 +1,12 @@
+﻿.main-category-label
+{
+    font-size:35px;
+    color:black;
+}
+
+th{
+    background-color:slategrey;
+}
+tr, td, th {
+    border: solid 1px black;
+}

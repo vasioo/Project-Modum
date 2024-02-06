@@ -1,0 +1,418 @@
+﻿@using Modum.Models.BaseModels.Models.BaseStructure;
+@using Modum.Models.BaseModels.Models.ProductStructure;
+@using Modum.Models.ViewModels;
+@using Modum.Web.Models.Models.Pagination;
+@model _UserProductsPartialViewModel
+@{
+
+    IEnumerable<Product> tenFavItems = Model.TenFavItems;
+    IEnumerable<Product> lastViewedProducts = Model.LastViewedProducts;
+}
+@section Styles {
+    <link href="@Url.Content("~/css/custom/_UserProductsPartial.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/custom/_CardScrollerPartial.css")" rel="stylesheet" type="text/css" />
+}
+<div class="user-items-selection-list">
+    <div class="container">
+        <br />
+        <br />
+        <div class="row" id="main-container">
+            <div class="col-12 col-lg-3 ">
+                <div id="desktop-version-of-filters">
+                    <h1 class="d-flex align-items-center justify-content-center maincategory-id" id=@Model.MainCategoryId name="filter.MainCategoryId">Filter</h1>
+                </div>
+                <div id="filter-collapse-selector" class="d-lg-none row">
+                    <a class="text-dark filter-collapse row pl-3" id="toggle-filter" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
+                        <div class="row justify-content-around">
+                            <i class="fa-solid fa-chevron-down rotate mr-2 ml-4 down"></i>
+                            <h3>Filter</h3>
+                        </div>
+                    </a>
+                </div>
+                <br>
+                <div id="collapseFilter" class="collapse d-lg-block">
+
+                    @if (Model.Subcategories == null || Model.Categories == null)
+                    {
+                        <div class="pb-2" id="filter-by-category" hidden></div>
+                    }
+
+                    else
+                    {
+                        <div class="pb-2" id="filter-by-category">
+                            <div class="card">
+                                <a class="filter-by" data-toggle="collapse" data-target="#collapse-category" aria-expanded="true" aria-controls="collapse-category" style="cursor:pointer">
+                                    <div class="heading-panel row" id="collapse-category-header">
+                                        <i class="fa-solid fa-chevron-down rotate mr-2 ml-4" id="collapse-category-icon"></i>
+                                        <div class="pl-0 collapse-menu-text h4 pt-2">Category</div>
+                                    </div>
+                                </a>
+                                <div id="collapse-category" class="collapse show" aria-labelledby="collapse-category-header">
+                                    <div class="card-body">
+                                        @{
+                                            IEnumerable<Category> categories = (IEnumerable<Category>)Model.Categories;
+                                            IEnumerable<Subcategory> subcategories = (IEnumerable<Subcategory>)Model.Subcategories;
+                                            IEnumerable<int> selectedSubcategories = (IEnumerable<int>)Model.SelectedSubcategoriesItems;
+                                            @foreach (var category in categories)
+                                            {
+                                                <h5 style="font-weight:700" class="row h5 pt-2 pb-2 pl-3 ml-2">@category.Name</h5>
+                                                foreach (var subcategory in subcategories.Where(s => s.CategoryId == category.Id))
+                                                {
+                                                    if (selectedSubcategories != null)
+                                                    {
+                                                        if (selectedSubcategories.Contains(subcategory.Id))
+                                                        {
+                                                            <a class="row subcategory-item h5 subcategory-selected pl-4 ml-3" id=@subcategory.Id>@subcategory.Name</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a class="row subcategory-item h5 pl-4 ml-3" id=@subcategory.Id>@subcategory.Name</a>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="row subcategory-item h5 pl-4 ml-3" id=@subcategory.Id>@subcategory.Name</a>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="pb-2" id="filter-by-size">
+                        <div class="card">
+                            <a class="filter-by" data-toggle="collapse" data-target="#collapse-size" aria-expanded="true" aria-controls="collapse-size" style="cursor:pointer">
+                                <div class="heading-panel row" id="collapse-size-header">
+                                    <i class='fa-solid fa-chevron-down rotate mr-2 ml-4' id="collapse-color-icon"></i>
+                                    <div class="pl-0 collapse-menu-text h4 pt-2">Size</div>
+                                </div>
+                            </a>
+
+                            <div id="collapse-size" class="collapse show" aria-labelledby="collapse-size-header">
+                                <div class="card-body row pl-3 ml-4">
+
+                                    @if (Model.Sizes == null)
+                                    {
+                                        <div class="row">No Sizes</div>
+                                    }
+
+                                    else
+                                    {
+                                        string neededInformation = Model.FilterSizes?.ToString() ?? "";
+                                        var filterSizes = neededInformation.Split('_').ToList();
+
+                                        @foreach (var size in Model.Sizes)
+                                        {
+                                            if (filterSizes != null)
+                                            {
+                                                if (filterSizes.Contains(size.ToString()))
+                                                {
+                                                    <button class="col size-col selected-size">@size</button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="col size-col">@size</button>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <button class="col size-col">@size</button>
+                                            }
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pb-2" id="filter-by-price">
+                        <div class="card">
+                            <a class="filter-by" data-toggle="collapse" data-target="#collapse-price" aria-expanded="true" aria-controls="collapse-price" style="cursor:pointer">
+                                <div class="heading-panel row" id="collapse-sipriceze-header">
+                                    <i class='fa-solid fa-chevron-down rotate mr-2 ml-4' id="collapse-color-icon"></i>
+                                    <div class="pl-0 collapse-menu-text h4 pt-2">Price</div>
+                                </div>
+                            </a>
+
+                            <div id="collapse-price" class="collapse show" aria-labelledby="collapse-price-header">
+                                <div class="card-body ">
+                                    <div class="range_container pl-1 ml-2">
+                                        <div class="pb-2">
+                                            <input class="h6 form_control_container__time__input float-left text-left" type="number" id="fromInput" value=@Model.MinPrice min="0" max="1000" readonly />
+                                            <input class="h6 form_control_container__time__input float-right text-right" type="number" id="toInput" value=@Model.MaxPrice min="0" max="1000" readonly />
+                                        </div>
+                                        <div class="sliders_control">
+                                            <input id="fromSlider" type="range" value=@Model.MinPrice min="0" max="1000" />
+                                            <input id="toSlider" type="range" value=@Model.MaxPrice min="0" max="1000" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.FilterLTCs == null || Enumerable.Count(Model.FilterLTCs) == 0)
+                    {
+                        <div class="pb-2" id="filter-by-ltc" hidden>
+                        </div>
+                    }
+
+                    else
+                    {
+                        <div class="pb-2" id="filter-by-ltc">
+                            <div class="card">
+                                <a class="filter-by" data-toggle="collapse" data-target="#collapse-ltc" aria-expanded="true" aria-controls="collapse-ltc" style="cursor:pointer">
+                                    <div class="heading-panel row" id="collapse-ltc-header">
+                                        <i class='fa-solid fa-chevron-down rotate mr-2 ml-4' id="collapse-color-icon"></i>
+                                        <div class="pl-0 collapse-menu-text h4 pt-2">Limited Time</div>
+                                    </div>
+                                </a>
+
+                                <div id="collapse-ltc" class="collapse show" aria-labelledby="collapse-ltc-header">
+                                    <div class="card-body">
+                                        @if (Model.FilterLTCs.Any())
+                                        {
+                                            <div class="form-check h5">
+                                                @{
+                                                    var neededLTCInformation = Model.FilterLTCs ?? new string[0];
+                                                    var filterLTCs = neededLTCInformation.ToList();
+                                                    var index = 0; 
+
+                                                    foreach (var ltc in neededLTCInformation)
+                                                    {
+                                                        var ltcId = $"ltcFlexCheckDefault_{index}";
+
+                                                        <div class="form-check">
+                                                            <input class="form-check-input ltc-checkbox" type="checkbox" value="" id="@ltcId" @(filterLTCs != null && filterLTCs.Contains(ltc) ? "checked" : "")>
+                                                            <label class="form-check-label" for="@ltcId">
+                                                                @ltc
+                                                            </label>
+                                                        </div>
+
+                                                        index++;
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="row">No Limited Time Campaigns</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.DistinctColours == null || Enumerable.Count(Model.DistinctColours) == 0)
+                    {
+                        <div class="pb-2" id="filter-by-color" hidden>
+                        </div>
+                    }
+
+                    else
+                    {
+                        <div class="pb-2" id="filter-by-color">
+                            <div class="card">
+                                <a class="filter-by" data-toggle="collapse" data-target="#collapse-color" aria-expanded="true" aria-controls="collapse-color" style="cursor:pointer">
+                                    <div class="heading-panel row" id="collapse-color-header">
+                                        <i class='fa-solid fa-chevron-down rotate mr-2 ml-4' id="collapse-color-icon"></i>
+                                        <div class="pl-0 collapse-menu-text h4 pt-2">Color</div>
+                                    </div>
+                                </a>
+
+                                <div id="collapse-color" class="collapse show" aria-labelledby="collapse-color-header">
+                                    <div class="card-body pl-3 ml-4 d-flex flex-wrap">
+                                        @{
+                                            var neededColorInformation = Model.FilterColors ?? new string[0];
+                                            var filterColors = neededColorInformation.ToList();
+
+                                            var distinctColoursCount = Model.DistinctColours.Count();
+                                            var lastIndex = distinctColoursCount - 1;
+
+                                            foreach (var (index, color) in Model.DistinctColours.Select((value, index) => (index, value)))
+                                            {
+                                                if (filterColors != null)
+                                                {
+                                                    if (filterColors.Contains(color))
+                                                    {
+                                                        <button class="color-col pr-2 selected-color align-items-center justify-content-center @(index < lastIndex ? "mr-2" : "")" style="background-color:@color;width:20px;height:20px;" name="filter.ProductColours" id="@color">
+                                                            <i class="fas fa-check" style="color: white;"></i>
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="color-col pr-2 @(index < lastIndex ? "mr-2" : "")" style="background-color:@color;width:20px;height:20px;" name="filter.ProductColours" id="@color"></button>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <button class="color-col pr-2 @(index < lastIndex ? "mr-2" : "")" style="background-color:@color;width:20px;height:20px;" id="@color"></button>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.DistinctBrands == null || Enumerable.Count(Model.DistinctBrands) == 0)
+                    {
+                        <div class="pb-2" id="filter-by-brand" hidden>
+                        </div>
+                    }
+
+                    else
+                    {
+                        <div class="pb-2" id="filter-by-brand">
+                            <div class="card">
+                                <a class="filter-by" data-toggle="collapse" data-target="#collapse-brand" aria-expanded="true" aria-controls="collapse-brand" style="cursor:pointer">
+                                    <div class="heading-panel row" id="collapse-brand-header">
+                                        <i class='fa-solid fa-chevron-down rotate mr-2 ml-4' id="collapse-color-icon"></i>
+                                        <div class="pl-0 collapse-menu-text h4 pt-2">Brand</div>
+                                    </div>
+                                </a>
+
+                                <div id="collapse-brand" class="collapse show" aria-labelledby="collapse-brand-header">
+                                    <div class="card-body">
+                                        @if (Model.DistinctBrands.Any())
+                                        {
+                                            <div class="form-check h5">
+                                                @{
+                                                    var neededBrandInformation = Model.FilterBrands ?? new string[0];
+                                                    var filterBrands = neededBrandInformation.ToList();
+                                                    var index = 0; // Use an index to ensure unique IDs
+
+                                                    foreach (var brand in Model.DistinctBrands)
+                                                    {
+                                                        var checkboxId = $"flexCheckDefault_{index}";
+
+                                                        <div class="form-check">
+                                                            <input class="form-check-input brand-checkbox" type="checkbox" value="" id="@checkboxId" @(filterBrands != null && filterBrands.Contains(brand) ? "checked" : "")>
+                                                            <label class="form-check-label" for="@checkboxId">
+                                                                @brand
+                                                            </label>
+                                                        </div>
+
+                                                        index++;
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="row">No Brands</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+                <hr />
+            </div>
+            <div class="col-12 col-lg-9">
+                <h1 class="d-flex align-items-center text-center justify-content-center" style="font-weight:700;font-family: Courier New, monospace;">Products section</h1>
+                <hr />
+                <br>
+                <div class="row pl-3">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <label for="sortBy" style="margin-bottom: 0; color: grey">Sort By:</label>
+                    </div>
+                    <div class="  pl-3 d-flex justify-content-center align-items-center ">
+                        <select id="sortBy" class="form-control">
+                            @if (Model.SortBy != "" && Model.SortBy != null)
+                            {
+                                @if (Model.SortBy == "Most Popular")
+                                {
+                                    <option class="sort-by-option" value="most-popular" selected>Most Popular</option>
+                                }
+                                else
+                                {
+                                    <option class="sort-by-option" value="most-popular">Most Popular</option>
+
+                                }
+                                @if (Model.SortBy == "Lowest Price")
+                                {
+                                    <option class="sort-by-option" value="lowest-price" selected>Lowest Price</option>
+                                }
+                                else
+                                {
+                                    <option class="sort-by-option" value="lowest-price">Lowest Price</option>
+
+                                }
+                                @if (Model.SortBy == "Highest Price")
+                                {
+                                    <option class="sort-by-option" value="highest-price" selected>Highest Price</option>
+                                }
+                                else
+                                {
+                                    <option class="sort-by-option" value="highest-price">Highest Price</option>
+
+                                }
+                                @if (Model.SortBy == "Newest")
+                                {
+                                    <option class="sort-by-option" value="newest" selected>Newest</option>
+                                }
+                                else
+                                {
+                                    <option class="sort-by-option" value="newest">Newest</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <br />
+                <div class="row product-items">
+                    @{
+                        int counter = 0;
+                    }
+                    <button style="display:none" onclick="document.getElementById('helper-button-for-updating').click();" id="helper-button-for-updating" hidden>Trigger JavaScript Event</button>
+                    @if (Model.PaginatedProducts!=null)
+                    {
+                        @foreach (var product in Model.PaginatedProducts)
+                        {
+                            <div class="col-md-4 col-6 pl-1 pr-1">
+                                @await Html.PartialAsync("~/Views/UserViews/_CardPartial.cshtml", product)
+                            </div>
+                            counter++;
+                        }
+                        @if (Model.PaginatedProducts.Count() == 0)
+                        {
+                            <div class="pl-5 d-flex justify-content-center align-items-center h1">No products were found with these filters</div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="pl-5 d-flex justify-content-center align-items-center h1">No products were found with these filters</div>
+                    }
+                   
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        @if (tenFavItems != null&&tenFavItems.Count()>0)
+        {
+            <div id="most-added-to-favourites-section" class="container">
+                <h2 class="most-added-to-fav-text-container">Most added to favourites:</h2>
+                @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml",tenFavItems)
+            </div>
+        }
+        @if (lastViewedProducts != null &&lastViewedProducts.Count() > 0)
+        {
+            <div id="last-viewed-section" class="container">
+                <h2 class="most-added-to-fav-text-container">Last viewed products:</h2>
+                @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml",lastViewedProducts)
+            </div>
+        }
+    </div>
+</div>

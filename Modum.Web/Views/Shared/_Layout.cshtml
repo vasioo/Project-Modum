@@ -1,0 +1,489 @@
+﻿@using Modum.Models.BaseModels.Models.BaseStructure;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="shortcut icon" type="x-icon" href="~/clothes-shop/images/logos/modum-transparent2-removebg-preview.png" />
+    <title>@ViewData["Title"] - Modum</title>
+    <!--=====================================
+              CSS LINK PART START
+      =======================================-->
+    <link rel="stylesheet" type="text/css" href="~/css/custom/AllViews.css">
+    <!-- FAVICON -->
+    <!-- FONTS -->
+    <link rel="stylesheet" href="~/clothes-shop/fonts/flaticon/flaticon.css">
+    <script type="text/javascript" src="https://kit.fontawesome.com/47edf10d0e.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- VENDOR -->
+    <link rel="stylesheet" href="~/clothes-shop/css/vendor/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+    <!--ALERTS-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!--CUSTOM-->
+    <link rel="stylesheet" type="text/css" href="~/css/custom/GenderCallTemplate.css">
+    <link rel="stylesheet" type="text/css" href="~/css/custom/CustomLayout.css">
+    @RenderSection("Styles", false)
+    <!--=====================================
+                CSS LINK PART END
+    =======================================-->
+    @*name: Modum*@
+    @*slogan: induite vos bene*@
+
+
+</head>
+<body>
+    @using System.Reflection
+    <header>
+        <div id="head-section pb-5">
+            <div class="desktop-menu">
+                <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light box-shadow " id="header-bar">
+                    <div class="container-fluid d-flex justify-content-center align-items-center">
+                        <div class="d-sm-inline-flex justify-content-between">
+                            <ul class=" navbar-nav flex-grow-1 justify-content-center align-items-center">
+                                <li class="nav-item d-none d-sm-block ">
+                                    <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">Women</a>
+                                </li>
+                                <li class="nav-item d-none d-sm-block ">
+                                    <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Men">Men</a>
+                                </li>
+                                <li class="nav-item d-none d-sm-block ">
+                                    <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Girls">Girls</a>
+                                </li>
+                                <li class="nav-item d-none d-sm-block ">
+                                    <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Boys">Boys</a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav flex-grow-1 justify-content-center align-items-center">
+                                <li class="nav-item nav-item-image">
+                                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">
+                                        <img src="~/clothes-shop/images/logos/modum-transparent2-removebg-preview.png" />
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <div class="input-group">
+                                        <input class="form-control me-2 border-0 border-bottom border-dark" type="search" id="search-input" placeholder="Search" aria-label="Search" value=@ViewBag.SearchStringContainer />
+                                        <a class="btn btn-outline-dark border-0 text-dark" id="search-link">
+                                            <i class="fas fa-search"></i>
+                                        </a>
+                                    </div>
+
+                                </li>
+                                <!-- Favourites -->
+                                <li class="nav-item">
+                                    <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Home" asp-action="Favourites">
+                                        <i class="far fa-heart fa-2xl"></i> <!-- Font Awesome heart icon -->
+                                    </a>
+                                </li>
+                                <!-- Cart -->
+                                <li class="nav-item">
+                                    <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Home" asp-action="Cart">
+                                        <i class="fas fa-shopping-cart fa-2xl"></i> <!-- Font Awesome shopping cart icon -->
+                                    </a>
+                                </li>
+                                <!-- User -->
+                                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link nav-item fontawesome-icons" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                            <i class="fas fa-user fa-2xl"></i>
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link nav-item fontawesome-icons" asp-area="Identity" asp-page="/Account/Register">
+                                            <i class="far fa-user fa-2xl"></i>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Admin" asp-action="ManageUsers">
+                                            <i class="fa-solid fa-lock fa-2xl"></i>
+                                        </a>
+                                    </li>
+                                }
+                                @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Worker") || User.IsInRole("SuperAdmin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Worker" asp-action="ManageProducts">
+                                            <i class="fa-solid fa-screwdriver-wrench fa-2xl"></i>
+                                        </a>
+                                    </li>
+                                }
+                                <!-- End User -->
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <div id="undersection" class="d-flex justify-content-center align-items-center">
+                    @if (Model != null)
+                    {
+                        @if (Model.GetType().GetProperty("UnderNavCategories") != null)
+                        {
+                            IEnumerable<Category> categoryList = Model.UnderNavCategories;
+                            IEnumerable<Brands> basicBrandList = Model.BasicBrands;
+                            IEnumerable<Brands> premiumBrandList = Model.PremiumBrands;
+                            @foreach (var category in categoryList)
+                            {
+                                <div class="item">
+                                    @category.Name
+                                    <div class="hover-container">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="col-1">
+                                                <h4 class="row pb-1 subheaders">Categories</h4>
+                                                @foreach (var subcategory in category.Subcategories)
+                                                {
+                                                    string hrefAttr = $"/Home/_UserProductsPartial?filter.MainCategoryId={category.MainCategoryId}&filter.CategoryId={category.Id}&filter.SelectedSubcategories={subcategory.Id}";
+                                                    <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@subcategory.Name</a></i></div>
+                                                }
+                                            </div>
+                                            @if (basicBrandList != null)
+                                            {
+                                                <div class="col-1">
+                                                    <h4 class="row pb-1 subheaders">Brands</h4>
+                                                    @foreach (var brand in basicBrandList)
+                                                    {
+                                                        string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={brand.BrandName}";
+                                                        <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@brand.BrandName</a></i></div>
+                                                    }
+                                                </div>
+                                            }
+                                            @if (premiumBrandList != null)
+                                            {
+                                                <div class="col-1">
+                                                    <h4 class="row pb-1 subheaders">Brands</h4>
+                                                    @foreach (var brand in premiumBrandList)
+                                                    {
+                                                        string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={brand.BrandName}";
+                                                        <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@brand.BrandName</a></i></div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+            <div class="mobile-menu">
+                <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light border-bottom box-shadow " id="header-bar">
+                    <div class="container-fluid">
+                        <div class="row pl-3">
+
+                            <a class="btn" id="hamburger-menu">
+                                <span class="navbar-toggler-icon"></span>
+                            </a>
+                            <div class="pl-3">
+                                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">
+                                    <img src="~/clothes-shop/images/logos/modum-transparent2.png" style="width:4em" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row pr-4">
+                            <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Home" asp-action="Favourites">
+                                <i class="far fa-heart fa-2xl"></i> <!-- Font Awesome heart icon -->
+                            </a>
+                            <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Home" asp-action="Cart">
+                                <i class="fas fa-shopping-cart fa-2xl"></i> <!-- Font Awesome shopping cart icon -->
+                            </a>
+
+                            @if (User.Identity != null && User.Identity.IsAuthenticated)
+                            {
+                                <a class="nav-link nav-item fontawesome-icons" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                    <i class="fas fa-user fa-2xl"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="nav-link nav-item fontawesome-icons" asp-area="Identity" asp-page="/Account/Register">
+                                    <i class="far fa-user fa-2xl"></i>
+                                </a>
+                            }
+                        </div>
+                        <div class="hamburger-menu" id="hamburger-menu-popup">
+                            <span class="close d-flex row pr-4" id="closePopupHamburgerMenu">&times;</span>
+
+                            <div class="hamburger-content">
+                                <ul class="align-items-center justify-content-center d-flex row">
+                                    <li class="nav-item m-0">
+                                        <a class="nav-link nav-link-custom-mobile gender-section h4" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">Women</a>
+                                    </li>
+                                    <li class="nav-item m-0">
+                                        <a class="nav-link nav-link-custom-mobile gender-section h4" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Men">Men</a>
+                                    </li>
+                                    <li class="nav-item m-0">
+                                        <a class="nav-link nav-link-custom-mobile gender-section h4" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Girls">Girls</a>
+                                    </li>
+                                    <li class="nav-item m-0">
+                                        <a class="nav-link nav-link-custom-mobile gender-section h4" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Boys">Boys</a>
+                                    </li>
+                                </ul>
+                                <hr />
+                                <div id="accordion" class="">
+                                    @if (Model != null)
+                                    {
+                                        @if (Model.GetType().GetProperty("UnderNavCategories") != null)
+                                        {
+                                            IEnumerable<Category> categoryList = Model.UnderNavCategories;
+                                            IEnumerable<Brands> basicBrandList = Model.BasicBrands;
+                                            IEnumerable<Brands> premiumBrandList = Model.PremiumBrands;
+                                            @foreach (var category in categoryList)
+                                            {
+                                                string headingId = $"heading-{category.Name}";
+                                                string collapseId = $"collapse-{category.Name}";
+
+                                                <div class="card">
+                                                    @if (category.Subcategories.Count() > 0)
+                                                    {
+                                                        <a class="btn btn-link text-dark collapsed subcategories-list" data-toggle="collapse" data-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                                                            <div class="row card-header" id="@headingId">
+                                                                <i class='fa-solid fa-chevron-down rotate mr-2 ml-4 down' id="collapse-color-icon"></i>
+                                                                <h5 class="mb-0 pl-3">
+                                                                    @category.Name
+                                                                </h5>
+                                                            </div>
+                                                        </a>
+
+                                                        <div id="@collapseId" class="subcategories-collapse collapse" aria-labelledby="@headingId" data-parent="#accordion">
+                                                            @foreach (var subcategory in category.Subcategories)
+                                                            {
+                                                                string hrefAttr = $"/Home/_UserProductsPartial?filter.MainCategoryId={category.MainCategoryId}&filter.CategoryId={category.Id}&filter.SelectedSubcategories={subcategory.Id}";
+                                                                <div class="row">
+                                                                    <a class="btn text-dark btn-link" href="@hrefAttr">
+                                                                        <div class="pl-5 row text-dark">
+                                                                            <div>@subcategory.Name</div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        string hrefAttr = $"/Home/_UserProductsPartial?filter.MainCategoryId={category.MainCategoryId}&filter.CategoryId={category.Id}";
+                                                        <a class="btn text-dark btn-link" href="@hrefAttr">
+                                                            <div class="row card-header">
+                                                                <h5 class="mb-0">
+                                                                    @category.Name
+                                                                </h5>
+                                                            </div>
+                                                        </a>
+                                                    }
+
+
+                                                </div>
+                                            }
+
+
+                                            @if (basicBrandList != null)
+                                            {
+                                                @foreach (var basicBrand in basicBrandList)
+                                                {
+                                                    string headingId = $"heading-{basicBrand.BrandName}";
+                                                    string collapseId = $"collapse-{basicBrand.BrandName}";
+
+                                                    <div class="card">
+                                                        @{
+                                                            string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={basicBrand.BrandName}";
+                                                        }
+                                                        <a class="btn text-dark btn-link" href="@hrefAttr">
+                                                            <div class="row card-header">
+                                                                <h5 class="mb-0">
+                                                                    @basicBrand.BrandName
+                                                                </h5>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                }
+                                            }
+
+                                            @if (premiumBrandList != null)
+                                            {
+                                                @foreach (var premiumBrand in premiumBrandList)
+                                                {
+                                                    string headingId = $"heading-{premiumBrand.BrandName}";
+                                                    string collapseId = $"collapse-{premiumBrand.BrandName}";
+
+                                                    <div class="card">
+                                                        @{
+                                                            string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={premiumBrand.BrandName}";
+                                                        }
+                                                        <a class="btn text-dark" href="@hrefAttr">
+                                                            <div class="row card-header">
+                                                                <h5 class="mb-0">
+                                                                    @premiumBrand.BrandName
+                                                                </h5>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div id="cookie-consent-message">
+        <partial name="_CookieConsentPartial" />
+    </div>
+
+    <div class=".mt-3 main-selector pb-5">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <div class="row">
+        <script>
+            (function (w, d, s, o, f, js, fjs) {
+                w["botsonic_widget"] = o;
+                w[o] =
+                    w[o] ||
+                    function () {
+                        (w[o].q = w[o].q || []).push(arguments);
+                    };
+                (js = d.createElement(s)), (fjs = d.getElementsByTagName(s)[0]);
+                js.id = o;
+                js.src = f;
+                js.async = 1;
+                fjs.parentNode.insertBefore(js, fjs);
+            })(window, document, "script", "Botsonic", "https://widget.writesonic.com/CDN/botsonic.min.js");
+            Botsonic("init", {
+                serviceBaseUrl: "https://api.botsonic.ai",
+                token: "dd262e19-62ba-44ef-af8e-2367bbc2d485",
+            });
+        </script>
+    </div>
+    <footer class="border-top footer text-muted pt-5">
+        <div id="footer-main" class="row pb-5">
+            <div class="col-12 col-lg-6 col-md-6 col-sm-6 col-xl-3 border-right-custom-footer">
+                <div class="footer-main-subsections">
+                    <h2 class="footer-main-subheadings">About us</h2>
+                    <a asp-controller="Footer" asp-area="" asp-action="AboutUs" class="footer-main-links row">About Us</a>
+                    <a asp-controller="Footer" asp-area="" asp-action="Blog" class="footer-main-links row">Blog</a>
+                    <a asp-controller="Footer" asp-area="" asp-action="Campaigns" class="footer-main-links row">Campaigns</a>
+                    <a asp-controller="Footer" asp-area="" asp-action="OutfitPicker" class="footer-main-links row">Outfit Picker</a>
+                    <a asp-controller="Footer" asp-area="" asp-action="Partnership" class="footer-main-links row">Partnership</a>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 col-md-6 col-sm-6 col-xl-3 border-right-custom-footer">
+                <div class="footer-main-subsections">
+                    <h2 class="footer-main-subheadings">Information</h2>
+                    <a asp-controller="Footer" asp-area="" asp-action="TermsAndConditions" class="footer-main-links row">T&C</a>
+                    <a asp-controller="Footer" asp-area="" asp-action="Privacy" class="footer-main-links row">Privacy Policy</a>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 col-md-6 col-sm-6 col-xl-3 border-right-custom-footer">
+                <div class="footer-main-subsections">
+                    <h2 class="footer-main-subheadings">Questions</h2>
+                    <a asp-controller="Footer" asp-area="" asp-action="ContactUs" class="footer-main-links row">Contact Us</a>
+                    <a asp-controller="Footer" asp-area="" asp-action="Returning" class="footer-main-links row">Returning</a>
+                    <a asp-controller="Footer" asp-area="" asp-action="Ads" class="footer-main-links row">Ads</a>
+                    <a asp-controller="Footer" asp-area="" asp-action="OnlinePayment" class="footer-main-links row">Online Payment</a>
+                    <a asp-controller="Footer" asp-area="" asp-action="PaymentOnDelivery" class="footer-main-links row">Payment on Delivery</a>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 col-md-6 col-sm-6 col-xl-3">
+                <div class="footer-main-subsections">
+                    <h2 class="footer-main-subheadings">Used Services</h2>
+                    <div class="row">
+                        <a href="https://www.econt.com/" target="_blank">
+                            <div class="col-12 mt-2 pl-4 ml-2">
+                                <img style=" height:5.6rem;" src="data:image/jpeg;base64,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" alt="Econt Logo" class="img-fluid">
+                            </div>
+                        </a>
+                        <a href="https://stripe.com/en-bg" target="_blank">
+                            <div class="col-12 mt-2">
+                                <img style=" height:5.6rem;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXMSAXoY_3gaKCn4f8Ppm3lXtW782AWyY0HF2Ydu1mIk_y0CF6rKDobJOBKxzksFnAlQ&usqp=CAU" alt="Stripe Logo " class="img-fluid">
+                            </div>
+                        </a>
+                        <a href="https://www.speedy.bg/public/bg" target="_blank">
+                            <div class="col-12 mt-2">
+                                <img style=" height:5.6rem;" src="https://www.speedy.bg/uploads/file_manager_uploads/Pics/speedy-logo-460x204.png" alt="Speedy Logo" class="img-fluid">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div id="footer-trademark" class="row align-items-center justify-content-center">
+                <div class="col-12 text-center py-3">
+                    The content of this website is prohibited for external use protected by CL & MIT.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!--=====================================
+                   JS LINK PART START
+       =======================================-->
+    <!-- VENDOR -->
+    <script src="~/clothes-shop/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="~/clothes-shop/js/vendor/popper.min.js"></script>
+    <script src="~/clothes-shop/js/vendor/bootstrap.min.js"></script>
+    <script src="~/clothes-shop/js/vendor/slick.min.js"></script>
+    <!-- CUSTOM -->
+    <script src="~/clothes-shop/js/custom/allViews.js"></script>
+    <!-- PAGES -->
+    <script src="~/clothes-shop/js/mainLayout.js"></script>
+
+    <!-- COMMON -->
+    <script src="~/clothes-shop/js/common.js"></script>
+
+    <!-- CUSTOM -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            cartPage.init($('.cart-page'));
+            contactUs.init($('.contactUs-page'));
+            favouritesPage.init($('.favourites-page'));
+            genderTemplate.init($('.genderCall-page'));
+            loginPage.init($('.login-page'));
+            outfitPicker.init($('.outfit-picker-page'));
+            partnershipPage.init($('.partnership-page'));
+            registerUser.init($('.register-page'));
+            shopPage.init($('.shop-page'));
+            userItemsSelectionList.init($('.user-items-selection-list'));
+        });
+    </script>
+
+    <!--ALERT-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <!--=====================================
+                JS LINK PART END
+    =======================================-->
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+﻿@using Modum.Models.BaseModels.Models.FooterItems;
+@model BlogPost
+
+
+<div class="col-lg-10 mb-4">
+    <div style="position: relative;" class="blog-card-container">
+        <a class="text-decoration-none" asp-area="" asp-controller="Footer" asp-action="BlogPost" asp-route-postId="@Model.Id">
+            <div class="card blog-card">
+                @{
+                    string link1 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/main-image-for-blog-{Model.Id}.png";
+                }
+                <img src="@link1" class="card-img-top" alt="Blog Post Image">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Title</h5>
+                    <p class="card-text">@Html.Raw(Model.Content.Substring(0, Math.Min(Model.Content.Length, 100)))...</p>
+                </div>
+            </div>
+        </a>
+        @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Worker") || User.IsInRole("SuperAdmin"))
+        {
+            <a href="/Docs/EditDocument?id=@Model.Id" class="btn btn-danger" style="position: absolute; top: 5px; right: 5px;">Edit</a>
+        }
+    </div>
+</div>

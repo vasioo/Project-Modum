@@ -1,0 +1,37 @@
+﻿@using Modum.Models.BaseModels.Models.FooterItems;
+@model IEnumerable<BlogPost>
+
+@{
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
+<div class="container mt-5">
+    <h1 class="text-center pb-5">Shower</h1>
+    <div class="col">
+        <div class="d-flex justify-content-center align-items-center" style="width:150px; height:200px;background-color:lightgray; font-size:100px;">
+            <a style="text-decoration:none; color: black;" asp-action="Create">+</a>
+        </div>
+        <span class="font-weight-bold d-block mt-3">Blank Doc</span>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3 col-6 mb-4">
+                <div class="d-flex justify-content-center align-items-center display-2 p-3" style="height: 200px; background-color: lightblue;">
+                    <a class="text-decoration-none text-dark" asp-action="EditDocument" asp-controller="Docs" asp-route-id="@item.Id">
+                        @{
+                            var srcLink = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/main-image-for-blog-{item.Id}";
+                        }
+                        <img src="@srcLink" alt="📃" class="img-fluid rounded">
+                    </a>
+                </div>
+
+                <span class="font-weight-bold p-0 m-0 d-flex row justify-content-center mt-3">
+                    @item.Title
+                </span>
+            </div>
+        }
+    </div>
+</div>

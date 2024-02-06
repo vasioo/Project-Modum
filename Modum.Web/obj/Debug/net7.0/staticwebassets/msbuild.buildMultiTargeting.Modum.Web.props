@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Modum.Web.props" />
+</Project>

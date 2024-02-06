@@ -1,0 +1,89 @@
+﻿@using Modum.Models.BaseModels.Models.BaseStructure;
+@using Modum.Models.ViewModels;
+@using Stripe;
+@model OrderLogViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col">
+            <h1 class="row justify-content-center">Order Information</h1>
+            <hr>
+            <div class="row pt-2 border">
+                <div class="col-md-6">
+                    <section>
+                        <h2>Product</h2>
+                        <hr>
+                        <p><strong>Charge ID:</strong> @Model.Charge.Id</p>
+                        <p><strong>Amount:</strong> $@Model.Charge.Amount</p>
+                        <p><strong>Captured Amount:</strong> $@Model.Charge.AmountCaptured</p>
+                        <p><strong>Refunded Amount:</strong> $@Model.Charge.AmountRefunded</p>
+                    </section>
+                </div>
+                <div class="col-md-6">
+                    <section>
+                        <h2>Billing Details</h2>
+                        <hr>
+                        <div class="row pt-2">
+                            <div class="col-md-6">
+                                <p><strong>Email:</strong> @Model.Charge.BillingDetails.Email</p>
+                                <p><strong>Name:</strong> @Model.Charge.BillingDetails.Name</p>
+                                <p><strong>Address:</strong> @Model.Charge.BillingDetails.Address.Line1</p>
+                                <p><strong>City:</strong> @Model.Charge.BillingDetails.Address.City</p>
+                                <p><strong>Country:</strong> @Model.Charge.BillingDetails.Address.Country</p>
+                                <p><strong>Postal Code:</strong> @Model.Charge.BillingDetails.Address.PostalCode</p>
+                                <p><strong>State:</strong> @Model.Charge.BillingDetails.Address.State</p>
+                                <p><strong>Phone:</strong> @Model.Charge.BillingDetails.Phone</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="row pt-2 border">
+                <div class="col-md-6">
+                    <section>
+                        <h2>Outcome</h2>
+                        <hr>
+                        <p><strong>Network Status:</strong> @Model.Charge.Outcome.NetworkStatus</p>
+                        <p><strong>Risk Level:</strong> @Model.Charge.Outcome.RiskLevel</p>
+                        <p><strong>Risk Score:</strong> @Model.Charge.Outcome.RiskScore</p>
+                        <p><strong>Seller Message:</strong> @Model.Charge.Outcome.SellerMessage</p>
+                        <p><strong>Outcome Type:</strong> @Model.Charge.Outcome.Type</p>
+                    </section>
+                </div>
+                <div class="col-md-6">
+                    <section>
+                        <h2>Payment Method Details</h2>
+                        <hr />
+                        <p><strong>Payment Method:</strong> @Model.Charge.PaymentMethod</p>
+                        <p><strong>Brand:</strong> @Model.Charge.PaymentMethodDetails.Card.Brand</p>
+                        <p><strong>Last 4 Digits:</strong> @Model.Charge.PaymentMethodDetails.Card.Last4</p>
+                        <p><strong>Fingerprint:</strong> @Model.Charge.PaymentMethodDetails.Card.Fingerprint</p>
+                        <p><strong>Funding:</strong> @Model.Charge.PaymentMethodDetails.Card.Funding</p>
+                        <p><strong>Country:</strong> @Model.Charge.PaymentMethodDetails.Card.Country</p>
+                        <p><strong>Expiry Date:</strong> @Model.Charge.PaymentMethodDetails.Card.ExpMonth/@Model.Charge.PaymentMethodDetails.Card.ExpYear</p>
+                        <p><strong>Network:</strong> @Model.Charge.PaymentMethodDetails.Card.Network</p>
+                        <p><strong>Three-D Secure:</strong> @Model.Charge.PaymentMethodDetails.Card.ThreeDSecure</p>
+                    </section>
+                </div>
+            </div>
+            <div class="row pt-2 justify-content-center border">
+                <div class="col-md-6">
+                    <section>
+                        <h2>Receipt Details</h2>
+                        <hr>
+                        <p><strong>Receipt Email:</strong> @Model.Charge.ReceiptEmail</p>
+                        <p><strong>Receipt Number:</strong> @Model.Charge.ReceiptNumber</p>
+                        <p><strong><a href="@Model.Charge.ReceiptUrl">Receipt URL (click)</a></strong> </p>
+                        <p><strong>Receipt Refunded:</strong> @Model.Charge.Refunded</p>
+                        <p><strong>Receipt Review:</strong> @Model.Charge.Review</p>
+                        <p><strong>Receipt Status:</strong> @Model.Charge.Status</p>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

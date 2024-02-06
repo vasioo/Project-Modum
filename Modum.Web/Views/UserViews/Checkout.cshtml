@@ -1,0 +1,53 @@
+﻿@using Microsoft.Extensions.Options;
+@using Modum.Models.BaseModels.Models.PaymentStructure;
+@using Modum.Models.BaseModels.Models.ProductStructure;
+@inject IOptions<StripeSettings> Stripe
+@model IEnumerable<Product>
+<div class="">
+    <div class="col">
+        <div class="">
+            @if (Model.Count() > 0)
+            {
+                @foreach (var product in Model)
+                {
+                    <div>@product.Title</div>
+                }
+            }
+        </div>
+    </div>
+    <div class="col">
+        <div class="container">
+            <form id="payment-form" asp-action="Processing" method="post" asp-controller="Home">
+                <div id="shipping-information">
+                    <input type="text" id="name" placeholder="Name" value="@ViewBag.UserName" />
+                    <input type="text" id="country" placeholder="Country" value="@ViewBag.UserCountry" />
+                    <input type="text" id="address" placeholder="Address" />
+                </div>
+
+                <div id="card-information">
+                    <label>Card Information</label>
+                    <div class="row">
+                        <div id="card-element"></div>
+                    </div>
+                    <div class="row">
+                        <div id="card-errors" role="alert"></div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="stripeToken" id="stripeToken" />
+                <input type="hidden" name="priceOfTransaction" id="priceOfTransaction" value="@ViewBag.Total" />
+
+                <button id="proceed-btn-stripe-api" class="btn btn-dark row">Proceed</button>
+            </form>
+    
+        </div>
+    </div>
+</div>
+<script>
+    stripe.createToken(card).then(function (result) {
+        if (result.token) {
+            document.getElementById('stripeToken').value = result.token.id;
+        } else if (result.error) {
+        }
+    });
+</script>

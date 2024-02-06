@@ -1,0 +1,145 @@
+﻿@page
+@using Modum.DataAccess.MainModel;
+@inject SignInManager<ApplicationUser> SignInManager
+@model LoginModel
+@{
+    ViewData["Title"] = "Log in";
+}
+
+@section Styles {
+    <link href="@Url.Content("~/css/custom/IdentityStructure.css")" rel="stylesheet" type="text/css" />
+}
+
+<style>
+    main {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1001%26quot%3b)' fill='none'%3e%3cpath d='M865.45 152.96a29.49 29.49 0 1 0-58.67-6z' stroke='%23e73635'%3e%3c/path%3e%3cpath d='M74.14 90.6a2.92 2.92 0 1 0 3.4-4.75z' fill='%23037b0b'%3e%3c/path%3e%3cpath d='M18.23 528.27L43.1 528.27L43.1 573.9L18.23 573.9z' fill='%23e73635'%3e%3c/path%3e%3cpath d='M105.83 212.12L108.48 212.12L108.48 264.97L105.83 264.97z' stroke='%23037b0b'%3e%3c/path%3e%3cpath d='M1261.3 40.93a5 5 0 1 0-1.64-9.87z' stroke='%23d3b714'%3e%3c/path%3e%3cpath d='M772.84 100.38 a9.56 9.56 0 1 0 19.12 0 a9.56 9.56 0 1 0 -19.12 0z' fill='%23037b0b'%3e%3c/path%3e%3cpath d='M678.15 508.31L706.99 508.31L706.99 537.15L678.15 537.15z' fill='%23e73635'%3e%3c/path%3e%3cpath d='M598.12 396.94L602.81 396.94L602.81 426.31L598.12 426.31z' stroke='%23037b0b'%3e%3c/path%3e%3cpath d='M45.15 533.45a0.12 0.12 0 1 0-0.19-0.14z' fill='%23d3b714'%3e%3c/path%3e%3cpath d='M1232.92 402.68a7.18 7.18 0 1 0 13.36-5.28z' stroke='%23037b0b'%3e%3c/path%3e%3cpath d='M1359.14 437.33L1360.88 437.33L1360.88 439.07L1359.14 439.07z' stroke='%23037b0b'%3e%3c/path%3e%3cpath d='M929.8 153.29a53.66 53.66 0 1 0 9 106.94z' stroke='%23037b0b'%3e%3c/path%3e%3cpath d='M415.53 427.49 a17.62 17.62 0 1 0 35.24 0 a17.62 17.62 0 1 0 -35.24 0z' stroke='%23037b0b'%3e%3c/path%3e%3cpath d='M321.1 369.37 a26.08 26.08 0 1 0 52.16 0 a26.08 26.08 0 1 0 -52.16 0z' stroke='%23e73635'%3e%3c/path%3e%3cpath d='M1183.33 226.55L1198.23 226.55L1198.23 241.45L1183.33 241.45z' fill='%23037b0b'%3e%3c/path%3e%3cpath d='M174.33 218.16L213.55 218.16L213.55 232.1L174.33 232.1z' fill='%23037b0b'%3e%3c/path%3e%3cpath d='M976.66 8.39L1001.22 8.39L1001.22 36.49L976.66 36.49z' fill='%23d3b714'%3e%3c/path%3e%3cpath d='M487.92 234.18L490.39 234.18L490.39 236.65L487.92 236.65z' fill='%23e73635'%3e%3c/path%3e%3cpath d='M1235.62 204.79a54.06 54.06 0 1 0 107.02-15.38z' stroke='%23d3b714'%3e%3c/path%3e%3cpath d='M1157.65 230.84a38.9 38.9 0 1 0 36.31-68.81z' fill='%23d3b714'%3e%3c/path%3e%3cpath d='M377.14 457.99a49.33 49.33 0 1 0-88.24-44.14z' stroke='%23d3b714'%3e%3c/path%3e%3cpath d='M1203.02 283L1256.42 283L1256.42 336.4L1203.02 336.4z' stroke='%23e73635'%3e%3c/path%3e%3cpath d='M609.33 69.28 a4.92 4.92 0 1 0 9.84 0 a4.92 4.92 0 1 0 -9.84 0z' stroke='%23037b0b'%3e%3c/path%3e%3cpath d='M357.11 70.2a37.96 37.96 0 1 0-59.28 47.42z' fill='%23e73635'%3e%3c/path%3e%3cpath d='M1296.82 254.58 a47.52 47.52 0 1 0 95.04 0 a47.52 47.52 0 1 0 -95.04 0z' stroke='%23d3b714'%3e%3c/path%3e%3cpath d='M1087.19 557.41a55.83 55.83 0 1 0-110.8-13.82z' stroke='%23d3b714'%3e%3c/path%3e%3cpath d='M571.69 443.75L623.26 443.75L623.26 495.32L571.69 495.32z' fill='%23037b0b'%3e%3c/path%3e%3cpath d='M626.19 306.71a4.63 4.63 0 1 0 8.98-2.26z' fill='%23037b0b'%3e%3c/path%3e%3cpath d='M1400.49 490.22a23.64 23.64 0 1 0 47.28-0.68z' stroke='%23037b0b'%3e%3c/path%3e%3cpath d='M1078.41 454.23L1099.8 454.23L1099.8 475.62L1078.41 475.62z' fill='%23037b0b'%3e%3c/path%3e%3cpath d='M384.98 301.68L434.4 301.68L434.4 340.01L384.98 340.01z' stroke='%23e73635'%3e%3c/path%3e%3cpath d='M141.17 466.38 a9.74 9.74 0 1 0 19.48 0 a9.74 9.74 0 1 0 -19.48 0z' fill='%23037b0b'%3e%3c/path%3e%3cpath d='M567.79 256.24L609.02 256.24L609.02 256.81L567.79 256.81z' fill='%23037b0b'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1001'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
+    }
+</style>
+
+<div class="login-page">
+    <div class="container py-4">
+        <div class="row justify-content-around align-items-center" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); background:white;">
+            <div class="col-md-5">
+                <img src="~/clothes-shop/images/others/login-page-model-image.jpg" class="w-100" />
+            </div>
+            <div class="col-md-5">
+                <section>
+                    <form id="account" method="post" class="p-2">
+                        <h2 class="d-flex align-items-center justify-content-center pt-4">Login</h2>
+                        <hr />
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                        <div class="custom-input-group">
+                            <input asp-for="Input.Email" class="custom-input" autocomplete="username" aria-required="true" required>
+                            <span class="custom-highlight"></span>
+                            <span class="custom-bar"></span>
+                            <label class="custom-label">Email</label>
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+                        <div class="custom-input-group">
+                            <i id="togglePassword" class="far fa-eye position-absolute end-0 top-50 translate-middle-y p-4 user-select-none" style="cursor:pointer"></i>
+                            <input asp-for="Input.Password" class="custom-input" id="custom-password-eye-orienter" autocomplete="current-password" aria-required="true" required>
+
+                            <span class="custom-highlight"></span>
+                            <span class="custom-bar"></span>
+                            <label class="custom-label">Password</label>
+                        </div>
+
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+
+
+                        <div class="checkbox mb-3 pt-5">
+                            <div class="row">
+                                <div class="col">
+                                    <label asp-for="Input.RememberMe" class="text-left">
+                                        <input asp-for="Input.RememberMe" />
+                                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                    </label>
+                                </div>
+                                <div class="col">
+                                    <p class="text-right">
+                                        <a id="forgot-password" asp-page="./ForgotPassword">Forgotten password?</a>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-for-entering">Log in</button>
+                            </div>
+                            <div class="col-md-6 offset-md-3">
+                                <br />
+                                <h5 class="text-center">Not a member:</h5>
+                                <p class="text-center">
+                                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Join Us</a>
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                </section>
+                <section class="pb-4">
+                    <h3 class="d-flex align-items-center justify-content-center">Log in with:</h3>
+                    <hr />
+
+                    @{
+                        var providers = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+                        var googleProvider = providers.Find(prov => prov.Name == "Google");
+                        var facebookProvider = providers.Find(prov => prov.Name == "Facebook");
+
+                        var google = googleProvider?.Name ?? "";
+                        var facebook = facebookProvider?.Name ?? "";
+                    }
+                    <form asp-area="Identity" asp-page="/Account/ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                        <div class="row-fluid d-flex justify-content-around">
+
+                            <div class="facebook-button col-5">
+                                <input type="submit" value="@facebook" name="provider" hidden id="facebookInput" />
+                                <a class="btn btn-facebook w-100" id="facebookLink">
+                                    <span>
+                                        <svg width="32" height="32" viewBox="0 0 18 18" class="svg-wrapper--8ky9e">
+                                            <path d="M2.425 0A2.425 2.425 0 0 0 0 2.425v13.15A2.425 2.425 0 0 0 2.425 18H8.91l.012-6.432H7.25a.394.394 0 0 1-.394-.393l-.008-2.074c0-.218.176-.395.394-.395h1.669V6.702c0-2.325 1.42-3.59 3.493-3.59h1.702c.218 0 .395.176.395.394v1.748a.394.394 0 0 1-.394.394h-1.045c-1.128 0-1.346.537-1.346 1.323v1.735h2.478c.236 0 .42.206.392.44l-.246 2.074a.394.394 0 0 1-.392.348h-2.221L11.716 18h3.858A2.426 2.426 0 0 0 18 15.575V2.425A2.425 2.425 0 0 0 15.574 0H2.425z" fill="#FFF" fill-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="google-button col-5">
+                                <input type="submit" value="@google" name="provider" hidden id="googleInput" />
+                                <a class="btn btn-google w-100" id="googleLink">
+                                    <span>
+                                        <svg viewBox="0 0 48 48" width="32" height="32" class="svg-wrapper--8ky9e">
+                                            <defs>
+                                                <path id="google-icon_svg__a" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"></path>
+                                            </defs>
+                                            <clipPath id="google-icon_svg__b">
+                                                <use xlink:href="#google-icon_svg__a" overflow="visible"></use>
+                                            </clipPath>
+                                            <path clip-path="url(#google-icon_svg__b)" fill="#FBBC05" d="M0 37V11l17 13z"></path>
+                                            <path clip-path="url(#google-icon_svg__b)" fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
+                                            <path clip-path="url(#google-icon_svg__b)" fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
+                                            <path clip-path="url(#google-icon_svg__b)" fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
+                                        </svg>
+                                    </span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+<script>
+    document.getElementById("facebookLink").addEventListener("click", function () {
+        document.getElementById("facebookInput").click();
+    });
+    document.getElementById("googleLink").addEventListener("click", function () {
+        document.getElementById("googleInput").click();
+    });
+</script>

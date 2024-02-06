@@ -1,0 +1,177 @@
+﻿#header-go-behind,
+#header-go-ahead {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.helper-additional-discount-section {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.discount-section {
+    position: relative;
+    background-color: #ffdb4d;
+    padding: 20px;
+    border-radius: 50px;
+    max-width: 400px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    float: left;
+    box-sizing: border-box;
+    padding: 15px;
+    text-align: center;
+}
+
+
+
+    .discount-section::before {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: -40px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 20px 40px 20px 0;
+        border-color: transparent #ffdb4d transparent transparent;
+    }
+
+#overflowing-element-for-season {
+    opacity: 0.75;
+    position: absolute;
+    left: 65%;
+    top: 0;
+    background-color: black;
+}
+
+#image-for-season {
+    max-width: 100vw;
+    height: auto;
+}
+
+#head-of-page {
+    position: relative;
+}
+
+#custom-season-overflow-text {
+    font-size: 50px;
+}
+
+#button-for-custom-season-overflow {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    width: 85%;
+}
+
+    #button-for-custom-season-overflow:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+
+@media(max-width:768px) {
+    .discount-section {
+        width: 100%
+    }
+}
+
+@media (max-width: 989px) {
+    #overflowing-element-for-season {
+        left: 45%;
+    }
+
+    #custom-season-overflow-text {
+        font-size: 40px;
+    }
+
+    .discount-container {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    #overflowing-element-for-season {
+        left: 45%;
+    }
+
+    #custom-season-overflow-text {
+        font-size: 30px;
+    }
+
+    .discount-container {
+        padding: 10px;
+    }
+
+    .discount-section {
+        width: 100%;
+    }
+}
+
+#subscribe-email-input-field {
+    border: none;
+    border-bottom: 2px solid black;
+}
+
+.label-data-shower {
+    font-size: 1em;
+}
+
+.data-shower {
+    font-size: 1.4em;
+}
+
+#section-for-delivery {
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 5%, rgba(211,211,211,1) 49%, rgba(255,255,255,1) 95%);
+}
+
+#button-for-limited-time-campaign {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+    #button-for-limited-time-campaign:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+.grid-container {
+    columns: 5 200px;
+    column-gap: 1.5rem;
+    width: 90%;
+    margin: 0 auto;
+}
+
+    .grid-container div {
+        width: 150px;
+        margin: 0 1.5rem 1.5rem 0;
+        display: inline-block;
+        width: 100%;
+        border: solid 2px black;
+        padding: 5px;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        transition: all 0.25s ease-in-out;
+    }
+
+        .grid-container div:hover img {
+            filter: grayscale(0);
+        }
+
+        .grid-container div:hover {
+            border-color: coral;
+        }
+
+        .grid-container div img {
+            width: 100%;
+            filter: grayscale(100%);
+            border-radius: 5px;
+            transition: all 0.25s ease-in-out;
+        }
+
+        .grid-container div p {
+            margin: 5px 0;
+            padding: 0;
+            text-align: center;
+            font-style: italic;
+        }
+

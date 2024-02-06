@@ -1,0 +1,71 @@
+﻿<script type="text/javascript">
+    showLoader();
+    function showAlertAndRedirect(isValidAccess) {
+        if (!isValidAccess) {
+            commonFuncs.hideLoader();
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Thank you for your order!",
+                showConfirmButton: false,
+                timer: 2000,
+                didClose: () => {
+                    window.location.href = '/Home/GenderCallTemplate?category=Women';
+                }
+            });
+        } else {
+            hideLoader();
+            Swal.fire({
+                position: "center",
+                icon: "Error",
+                title: "You cannot redirect pages!",
+                showConfirmButton: false,
+                timer: 2000,
+                didClose: () => {
+                    window.location.href = '/Home/GenderCallTemplate?category=Women';
+                }
+            });
+        }
+        hideLoader();
+    }
+
+    function isRequestFromStripe() {
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const sourceParam = urlSearchParams.get('source');
+
+        return sourceParam === 'stripe';
+    }
+
+    window.onload = function () {
+        if (isRequestFromStripe()) {
+            showAlertAndRedirect(true);
+        } else {
+            showAlertAndRedirect(false);
+        }
+    };
+    function showLoader() {
+        const overlay = document.createElement('div');
+        overlay.id = 'loader-overlay';
+        document.body.appendChild(overlay);
+
+        const spinner = document.createElement('div');
+        spinner.id = 'loader-spinner';
+        document.body.appendChild(spinner);
+    }
+
+    function hideLoader() {
+        const overlay = document.getElementById('loader-overlay');
+        const spinner = document.getElementById('loader-spinner');
+
+        if (overlay && spinner) {
+            overlay.style.display = 'none';
+            spinner.style.display = 'none';
+
+            setTimeout(function () {
+                overlay.remove();
+                spinner.remove();
+            }, 500);
+        }
+    }
+
+</script>

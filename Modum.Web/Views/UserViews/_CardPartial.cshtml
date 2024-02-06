@@ -1,0 +1,27 @@
+﻿@using Modum.Models.BaseModels.Models.ProductStructure;
+@model Product
+@{
+    string link = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-1-for-{@Model.ImageContainerId}.png";
+}
+<li class="card custom-section-card">
+    <a asp-area="" asp-controller="Home" asp-action="Shop" asp-route-productId="@Model.Id">
+        <img max-width="300px" class="card-img-top" src="@link" alt="Product Image" style="height:300px" />
+    </a>
+    <div class="card-body">
+        <h2 class="card-title d-flex align-items-center justify-content-center">@Model.Brand</h2>
+        <h5 class="d-flex align-items-center justify-content-center" style="color:grey">@Model.Title</h5>
+        @if (Model.DiscountFromPrice > 0)
+        {
+            var newValue = Model.Price - Model.DiscountFromPrice;
+            <div class="row d-flex align-items-center justify-content-center">
+                <h6 class="" style="text-decoration:line-through; color:gray">$@Model.Price </h6>
+                <h6 class="discount-container" style="color:green">- $@Model.DiscountFromPrice</h6>
+            </div>
+            <h4 class="price-container d-flex align-items-center justify-content-center discounted-price" >$ @newValue </h4>
+        }
+        else
+        {
+            <h4 class="price-container d-flex align-items-center justify-content-center discounted-price">$ @Model.Price</h4>
+        }
+    </div>
+</li>

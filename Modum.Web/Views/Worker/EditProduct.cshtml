@@ -1,0 +1,244 @@
+﻿@using Modum.Models.BaseModels.Models.ProductStructure;
+@using Modum.Models.ViewModels;
+@model EditProductViewModel
+@{
+    SelectList categoryList = Model.CategoryList;
+    SelectList subcategoryList = Model.SubcategoryList;
+    var selectedCategoryValue = categoryList.Select(cat => cat.Value == Model.Product.CategoryId.ToString());
+    var selectedSubcategoryValue = subcategoryList.Select(sub => sub.Value == Model.Product.SubcategoryId.ToString());
+    var imgCntrId = Model.CloudinaryImageContainerId;
+    var hrefLink1 = "https://res.cloudinary.com/dzaicqbce/image/upload/v1694344569/image-1-for-" + imgCntrId + ".png";
+    var hrefLink2 = "https://res.cloudinary.com/dzaicqbce/image/upload/v1694344569/image-2-for-" + imgCntrId + ".png";
+    var hrefLink3 = "https://res.cloudinary.com/dzaicqbce/image/upload/v1694344569/image-3-for-" + imgCntrId + ".png";
+    var hrefLink4 = "https://res.cloudinary.com/dzaicqbce/image/upload/v1694344569/image-4-for-" + imgCntrId + ".png";
+    var hrefLink5 = "https://res.cloudinary.com/dzaicqbce/image/upload/v1694344569/image-5-for-" + imgCntrId + ".png";
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
+@section Styles {
+    <link href="@Url.Content("~/css/custom/AddProduct.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="edit-product">
+    <div class="image-container row justify-content-around" id=@imgCntrId>
+        <div class="col">
+            <label class="form-label" for="product-image-1">Image 1</label>
+            <div class="upload-input">
+                <input type="file" id="product-image-1" name="product-image-1" class="image-upload" accept=".png, .jpg, .jpeg" multiple="multiple" max="1">
+                <img class="uploaded-image" src=@hrefLink1 alt="Your Image Description">
+                <label for="product-image-1" class="text-center content">
+                    <span class="text">
+                        <span class="mb-15 plus-icon"><i class="fa fa-plus"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="col">
+            <label class="form-label" for="product-image-2">Image 2</label>
+            <div class="upload-input">
+                <input type="file" id="product-image-2" name="product-image-2" class="image-upload" accept=".png, .jpg, .jpeg" multiple="multiple" max="1">
+                <img class="uploaded-image" src=@hrefLink2 alt="Your Image Description">
+                <label for="product-image-2" class="text-center content">
+                    <span class="text">
+                        <span class="mb-15 plus-icon"><i class="fa fa-plus"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="col">
+            <label class="form-label" for="product-image-3">Image 3</label>
+            <div class="upload-input">
+                <input type="file" id="product-image-3" name="product-image-3" class="image-upload" accept=".png, .jpg, .jpeg" multiple="multiple" max="1">
+                <img class="uploaded-image" src=@hrefLink3 alt="Your Image Description">
+                <label for="product-image-3" class="text-center content">
+                    <span class="text">
+                        <span class="mb-15 plus-icon"><i class="fa fa-plus"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="col">
+            <label class="form-label" for="product-image-4">Image 4</label>
+            <div class="upload-input">
+                <input type="file" id="product-image-4" name="product-image-4" class="image-upload" accept=".png, .jpg, .jpeg" multiple="multiple" max="1">
+                <img class="uploaded-image" src=@hrefLink4 alt="Your Image Description">
+                <label for="product-image-4" class="text-center content">
+                    <span class="text">
+                        <span class="mb-15 plus-icon"><i class="fa fa-plus"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="col">
+            <label class="form-label" for="product-image-5">Image 5</label>
+            <div class="upload-input">
+                <input type="file" id="product-image-5" name="product-image-5" class="image-upload" accept=".png, .jpg, .jpeg" multiple="multiple" max="1">
+                <img class="uploaded-image" src=@hrefLink5 alt="Your Image Description">
+                <label for="product-image-5" class="text-center content">
+                    <span class="text">
+                        <span class="mb-15 plus-icon"><i class="fa fa-plus"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <br />
+    <div class="main-properties">
+        <div class="row justify-content-between">
+            <div class="col-md-6">
+                <label class="form-label" for="title-input-field">Title</label>
+                <input id="title-input-field" type="text" placeholder="Title" class="form-control" value="@Model.Product.Title" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="brand-input-field">Brand</label>
+                <input id="brand-input-field" type="text" placeholder="Brand" class="form-control" value="@Model.Product.Brand" />
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        @foreach (var size in Model.Sizes)
+                        {
+                            <th scope="col">@size</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach (var size in Model.Sizes)
+                        {
+                            <td>
+                                @if (Model.Product.ProductSizes.Any(ps => ps.ProductSize.ToString().ToLower() == size.ToString().ToLower()))
+                                {
+                                    <input class="sizes-input-fields" id=@size type="checkbox" checked />
+                                }
+                                else
+                                {
+                                    <input class="sizes-input-fields" id=@size type="checkbox" />
+                                }
+                            </td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+
+        <div class="row justify-content-between">
+            <div class="col-md-6">
+                <label class="form-label" for="price-input-field">Price</label>
+                <input id="price-input-field" type="number" placeholder="Price" class="form-control" value="@Model.Product.Price" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="discount-from-price-input-field">Discount From Price</label>
+                <input id="discount-from-price-input-field" type="number" placeholder="Discount From Price" class="form-control" value="@Model.Product.DiscountFromPrice" />
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="col">
+            <label class="form-label" for="item-colour">Item Color</label>
+            <input type="color" value="#000000" id="item-colour" />
+        </div>
+
+        <hr />
+
+        <div class="row justify-content-between">
+            <div class="col-md-5">
+                <label class="form-label" for="description-input-field">Description</label>
+                <textarea id="description-input-field" type="text" placeholder="Description" class="form-control" rows="10">@Model.Product.Description</textarea>
+            </div>
+            <div class="col-md-5 pt-2">
+                <label class="form-label" for="return-policy-input-field">Return Policy</label>
+                <textarea id="return-policy-input-field" placeholder="Return Policy" class="form-control" rows="10">@Model.Product.ReturnPolicy</textarea>
+            </div>
+        </div>
+
+        <hr />
+        <br />
+
+        <div class="sub-selection">
+            <div id="main-categories-container" class="main-categories-checkboxes">
+                <label><b>Which Main Category should the product be added to:</b></label>
+                <br />
+                <div class="">
+                    @foreach (var item in Model.MainCategoryList)
+                    {
+                        <label for=@item.Id>@item.Name: </label>
+                        <input class="main-category-input-fields-edit" id="@item.Id" type="radio" name="mainCategory" value="@item.Id" @(item.Id.ToString() == Model.Product.MainCategoryId.ToString() ? "checked='checked'" : "") />
+                        <br />
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    @Html.DropDownListFor(
+                    model => model.Product.CategoryId,
+                    new SelectList(categoryList, "Value", "Text", selectedCategoryValue),
+                    "--Select existing category--",
+                    new { @class = "form-control", id = "selectCategoryDropdownId" }
+                    )
+                </div>
+                <div class="col">
+                    @Html.DropDownListFor(
+                    model => model.Product.SubcategoryId,
+                    new SelectList(subcategoryList, "Value", "Text", selectedSubcategoryValue),
+                    "--Select existing subcategory--",
+                    new { @class = "form-control", id = "selectSubcategoryDropdownId" }
+                    )
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <br />
+
+        @foreach (var size in Model.Product.ProductSizes)
+        {
+            <div class="" id="available-items-container-@size.AllTimeAvailableItems">
+                <label>
+                    Number of available items for @size.ProductSize
+                    <input type="number" id="size_@size.ProductSize" placeholder="Available Items For @size.ProductSize" class="form-control @size.Id" value=@size.AvailableItems />
+                </label>
+            </div>
+        }
+
+        <br />
+        <br />
+        <hr />
+        <br />
+        <br />
+
+        <div class="row pb-4">
+            <div class="col-12 mb-3">
+                <h4>Limited Time Campaigns</h4>
+            </div>
+            @foreach (var item in Model.LTCs)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="form-check ltc-item">
+                        @if (Model.Product.LTCs.Contains(item))
+                        {
+                            <input class="form-check-input ltc-input-box" type="checkbox" checked id="@item.Id" @(item.EndDate < DateTime.Now ? "disabled" : "")>
+                            <label class="form-check-label" for="@item.Id"><strong>@item.Title</strong></label>
+                        }
+                        else
+                        {
+                            <input class="form-check-input ltc-input-box" type="checkbox" id="@item.Id" @(item.EndDate < DateTime.Now ? "disabled" : "")>
+                            <label class="form-check-label" for="@item.Id"><strong>@item.Title</strong></label>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <div>
+            <button id=@Model.Product.Id class="edit-btn-save btn-success">Save Product</button>
+        </div>
+    </div>
+</div>

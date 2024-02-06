@@ -1,0 +1,21 @@
+﻿@using Modum.Models.BaseModels.Models.ProductStructure;
+@model IEnumerable<Product>
+
+@section Styles {
+    <link href="@Url.Content("~/css/custom/_CardScrollerPartial.css")" rel="stylesheet" type="text/css" />
+}
+<div class="product-cards-container">
+    <div class="container prod-container-scroller-activator">
+        <button class="arr arr-prev prevBtn">&#8249;</button>
+        <ul class="cards" id="card-slider">
+            @if (Model != null)
+            {
+                @foreach (var product in Model)
+                {
+                    @await Html.PartialAsync("~/Views/UserViews/_CardPartial.cshtml", product)
+                }
+            }
+        </ul>
+        <button class="arr arr-next nextBtn" >&#8250;</button>
+    </div>
+</div>

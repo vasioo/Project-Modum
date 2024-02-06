@@ -1,0 +1,40 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+<div class="container mt-4">
+    <h3 class="mt-4">@ViewData["Title"]</h3>
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    <div class="row">
+        <div class="col-md-6" id="manage-nav-main-body-content">
+            <form id="profile-form" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                <div class="form-floating mb-3">
+                    <label asp-for="Username" class="form-label">Username:</label>
+                    <input asp-for="Username" class="form-control" placeholder="Please choose your username." value="@Model.Username" />
+                </div>
+
+                <div class="form-floating mb-3">
+                    <label asp-for="Input.FirstName" class="form-label">First Name:</label>
+                    <input asp-for="Input.FirstName" class="form-control" placeholder="Enter your first name" value="@Model.FirstName" />
+                </div>
+
+                <div class="form-floating mb-3">
+                    <label asp-for="Input.LastName" class="form-label">Last Name:</label>
+                    <input asp-for="Input.LastName" class="form-control" placeholder="Enter your last name" value="@Model.LastName" />
+                </div>
+
+                <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-dark">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

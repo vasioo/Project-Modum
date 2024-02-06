@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using Modum.DataAccess.MainModel;
+@using Modum.Models.BaseModels.Models.FooterItems;
+@using Modum.Models.Docs;
+@inject UserManager<ApplicationUser> userManager;
+@model BlogPost
+@{
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-10 col-md-12">
+            <form asp-action="CreatePost" asp-controller="Docs" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row justify-content-center h2">
+                    Add A Blog Page
+                </div>
+                <div class="form-group pt-3">
+                    <label for="title">Title</label>
+                    <input asp-for="Title" id="title" class="form-control" value="" required />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                    <div class="invalid-feedback">The Title Field cannot be empty.</div>
+                </div>
+
+                <div class="form-group pt-3">
+                    <label for="tiny">Content</label>
+                    <textarea id="tiny" class="form-control" style="width: 100%" rows="10" asp-for="Content" required></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                    <div class="invalid-feedback">The Content Field cannot be empty.</div>
+                </div>
+                <div class="form-group mt-3">
+                    <div class="col-10 col-lg-5 col-xl-2 p-0 m-0">
+                        <label class="form-label col text-center" for="blog-image-1">Main image for showing</label>
+                        <div class="upload-input">
+                            <input type="file" id="blog-image-1" name="blogImage" class="image-upload" accept=".png, .jpg, .jpeg" multiple="multiple" max="1" required>
+                            <img class="uploaded-image">
+                            <label for="blog-image-1" class="text-center content">
+                                <span class="text">
+                                    <span class="mb-15 plus-icon"><i class="fa fa-plus"></i></span>
+                                </span>
+                            </label>
+                            <div class="invalid-feedback">Please upload an image.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-primary col btn-lg">Create</button>
+                </div>
+            </form>
+            <div class="form-group mt-3">
+                <a class="btn btn-info col" asp-action="DocsShower" asp-controller="Docs">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

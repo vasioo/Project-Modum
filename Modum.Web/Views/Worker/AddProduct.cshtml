@@ -1,0 +1,183 @@
+﻿@using Modum.Models.ViewModels;
+
+@model AddProductViewModel
+@{
+    SelectList categoryList = Model.CategoryList;
+    SelectList subcategoryList = Model.SubcategoryList;
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+
+}
+
+@section Styles {
+    <link href="@Url.Content("~/css/custom/AddProduct.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="add-product">
+    <div class="image-container row justify-content-around">
+        @for (int i = 1; i <= 5; i++)
+        {
+            <div class="col-10 col-lg-5 col-xl-2 p-0 m-0">
+                <label class="form-label col text-center" for="product-image-@i">Image @i</label>
+                <div class="upload-input">
+                    <input type="file" id="product-image-@i" name="product-image-@i" class="image-upload" accept=".png, .jpg, .jpeg" multiple="multiple" max="1">
+                    <img class="uploaded-image">
+                    <label for="product-image-@i" class="text-center content">
+                        <span class="text">
+                            <span class="mb-15 plus-icon"><i class="fa fa-plus"></i></span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        }
+    </div><br />
+    <hr />
+    <br />
+    <div class="main-properties">
+        <div class="row justify-content-between">
+            <div class="col-md-6">
+                <label class="form-label" for="title-input-field">Title</label>
+                <input id="title-input-field" type="text" placeholder="Title" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="brand-input-field">Brand</label>
+                <input id="brand-input-field" type="text" placeholder="Brand" class="form-control" />
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        @foreach (var size in Model.Sizes)
+                        {
+                            <th scope="col">@size</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach (var size in Model.Sizes)
+                        {
+                            <td>
+                                <input class="sizes-input-fields" id=@size type="checkbox" />
+                            </td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+
+        <div class="row justify-content-between">
+            <div class="col-md-6">
+                <label class="form-label" for="price-input-field">Price</label>
+                <input id="price-input-field" type="number" min="1" step="any" placeholder="Price" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="discount-from-price-input-field">Discount From Price</label>
+                <input id="discount-from-price-input-field" type="number" min="1" step="any" placeholder="Discount From Price" class="form-control" />
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="col">
+            <label class="form-label" for="item-colour">Item Color</label>
+            <input type="color" value="#000000" id="item-colour" />
+        </div>
+
+        <hr />
+
+        <div class="row justify-content-between">
+            <div class="col-md-6">
+                <label class="form-label" for="description-input-field">Description</label>
+                <textarea id="description-input-field" type="text" placeholder="Description" class="form-control" rows="10"></textarea>
+            </div>
+            <div class="col-md-6 pt-2">
+                <label class="form-label" for="return-policy-input-field">Return Policy</label>
+                <textarea id="return-policy-input-field" placeholder="Return Policy" class="form-control" rows="10"></textarea>
+            </div>
+        </div>
+
+        <hr />
+        <br />
+
+        <div class="sub-selection">
+            <div id="main-categories-container" class="main-categories-checkboxes">
+                <label><b>Which Main Category should the product be added to:</b></label>
+                <br />
+                <div class="">
+                    @foreach (var item in Model.MainCategoryList)
+                    {
+                        <label for=@item.Id>@item.Name: </label>
+                        <input class="main-category-input-fields" id=@item.Id type="radio" name="mainCategory"
+                               value=@item.Id @if (item.Id == 1)
+                        {
+                            <text>checked</text>
+                        }/>
+                        <br />
+                    }
+                </div>
+            </div>
+            @*if there are more than one selected load data which both of the main categories have*@
+            <div class="row">
+                <div class="col">
+                    @Html.DropDownList("SelectedCategory",categoryList , "--Select existing category--",
+                    new { @class = "form-control", id = "selectCategoryDropdownId" })
+                </div>
+                <div class="col">
+                    @Html.DropDownList("SelectedSubcategory",subcategoryList , "--Select existing subcategory--",
+                    new { @class = "form-control", id = "selectSubcategoryDropdownId" })
+                </div>
+            </div>
+
+        </div>
+
+        <br />
+        <br />
+
+        <div class="" id="available-items-container">
+
+        </div>
+        <br />
+        <br />
+        <hr />
+
+        <div class="row justify-content-center">
+            <a class="col-10 col-md-2 pt-2 choosing-season-button btn border" id="allSeasonsBtn">All Seasons</a>
+            <a class="col-10 col-md-2 pt-2 choosing-season-button btn border" id="winterBtn">Winter</a>
+            <a class="col-10 col-md-2 pt-2 choosing-season-button btn border" id="autumnBtn">Autumn</a>
+            <a class="col-10 col-md-2 pt-2 choosing-season-button btn border" id="springBtn">Spring</a>
+            <a class="col-10 col-md-2 pt-2 choosing-season-button btn border" id="summerBtn">Summer</a>
+        </div>
+        
+        <br />
+        <br />
+        <hr />
+        <br />
+        <br />
+
+        <div class="row pb-4">
+            <div class="col-12 mb-3">
+                <h4>Limited Time Campaigns</h4>
+            </div>
+            @foreach (var item in Model.LTCs)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="form-check ltc-item">
+                        <input class="form-check-input ltc-input-box" type="checkbox" id="@item.Id" @(item.EndDate < DateTime.Now ? "disabled" : "")>
+                        <label class="form-check-label" for="@item.Id">
+                            <strong>@item.Title</strong>
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+        <div>
+            <button class="btn-save btn-success row">Save Product</button>
+        </div>
+    </div>
+</div>

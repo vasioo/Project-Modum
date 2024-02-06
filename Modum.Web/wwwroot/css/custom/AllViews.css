@@ -1,0 +1,136 @@
+﻿#loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 9999;
+    animation: fadeInOverlay 0.5s ease-in-out;
+}
+
+@keyframes fadeInOverlay {
+    from {
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    to {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+}
+
+#loader-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    animation: fadeInLoader 0.5s ease-in-out;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes fadeInLoader {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+header{
+    top:0;
+    z-index:2;
+    position:sticky;
+}
+/*body::-webkit-scrollbar {
+  width: 0.9rem;
+}
+ 
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+ 
+body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}*/
+body {
+    scroll-behavior: smooth;
+}
+
+.upload-input {
+    position: relative;
+    height: 150px;
+}
+
+    .upload-input input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 2px dashed rgba(124,134,154,.25);
+        text-indent: -9999px;
+    }
+
+    .upload-input .content {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        padding: 30px;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .upload-input .plus-icon {
+        height: 50px;
+        width: 50px;
+        color: #fff;
+        background: #88888859;
+        display: inline-block;
+        line-height: 50px;
+        font-size: 18px;
+        border-radius: 5px;
+        -webkit-transition: all 0.4s ease;
+        transition: all 0.4s ease;
+    }
+
+    .upload-input:hover .plus-icon {
+        background-color: #5830E0;
+    }
+
+
+.uploaded-image {
+    height: 150px;
+    width: 100%;
+}
+.header-row {
+    background-color: darkgrey;
+    color: white;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: white;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: lightgrey;
+}

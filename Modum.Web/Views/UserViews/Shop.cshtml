@@ -1,0 +1,322 @@
+﻿@using Modum.DataAccess.MainModel;
+@using Modum.Models.BaseModels.Models.BaseStructure;
+@using Modum.Models.BaseModels.Models.Payment;
+@using Modum.Models.BaseModels.Models.ProductStructure;
+@using Microsoft.AspNetCore.Identity;
+@using Modum.Models.ViewModels;
+@inject SignInManager<ApplicationUser> SignInManager
+@model ShopViewModel
+
+@section Styles {
+    <link href="@Url.Content("~/css/custom/_CardScrollerPartial.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/custom/ShopView.css")" rel="stylesheet" type="text/css" />
+}
+@{
+    IEnumerable<Product> items = Model.TenFavItems;
+    IEnumerable<Product> lastViewedProducts = Model.LastViewedProducts;
+    string link1 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-1-for-{Model.Product.ImageContainerId}.png";
+    string link2 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-2-for-{Model.Product.ImageContainerId}.png";
+    string link3 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-3-for-{Model.Product.ImageContainerId}.png";
+    string link4 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-4-for-{Model.Product.ImageContainerId}.png";
+    string link5 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-5-for-{Model.Product.ImageContainerId}.png";
+}
+
+
+<div class="shop-page">
+    <div class="container">
+        <br>
+        <br>
+        <div id="selected-product-section" class="pb-5 mb-4">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="slideshow-container row">
+                        <div class="col-md-3 d-none d-md-block">
+                            <div class="p-2">
+                                <img class="demo cursor" src="@link1" onclick="currentSlide(1)">
+                            </div>
+                            <div class="p-2">
+                                <img class="demo cursor" src="@link2" onclick="currentSlide(2)">
+                            </div>
+                            <div class="p-2">
+                                <img class="demo cursor" src="@link3" onclick="currentSlide(3)">
+                            </div>
+                            <div class="p-2">
+                                <img class="demo cursor" src="@link4" onclick="currentSlide(4)">
+                            </div>
+                            <div class="p-2">
+                                <img class="demo cursor " src="@link5" onclick="currentSlide(5)">
+                            </div>
+                        </div>
+                        <div class="col-md-8 pl-0 pr-0">
+                            <div class="mySlides fade-custom">
+                                <img src="@link1" class="w-100 images-for-product">
+                            </div>
+                            <div class="mySlides fade-custom">
+                                <img src="@link2" class="w-100 images-for-product">
+                            </div>
+                            <div class="mySlides fade-custom">
+                                <img src="@link3" class="w-100 images-for-product">
+                            </div>
+                            <div class="mySlides fade-custom">
+                                <img src="@link4" class="w-100 images-for-product">
+                            </div>
+                            <div class="mySlides fade-custom">
+                                <img src="@link5" class="w-100 images-for-product">
+                            </div>
+                            <div class="image-control-slider">
+                                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="product-information">
+                        <div class="container">
+                            <div class="row p-3 justify-content-between title-row-container">
+                                <div class="p-0 col-6"><h1>@Model.Product.Title</h1></div>
+                                <div class="p-0 col-6 text-right"> <h1 class="text-right">@Model.Product.Brand</h1></div>
+                            </div>
+                            <br />
+                            @if (Model.Product.DiscountFromPrice > 0)
+                            {
+                                <h5 style="color: darkgrey;">Current Price:</h5>
+                                <h3 class="given-price" style="color: red;" id="given-price-with-discount">
+                                    @(Model.Product.Price - Model.Product.DiscountFromPrice) $
+                                </h3>
+                                <h6 style="color: grey;">Normal Price: @Model.Product.Price $</h6>
+                            }
+                            else
+                            {
+                                <h3 class="given-price">@Model.Product.Price $</h3>
+                            }
+                            <br>
+                            <br>
+                            <br>
+                            @if (!SignInManager.IsSignedIn(User))
+                            {
+                                <div class="row justify-content-center">
+                                    <a class="col-9 btn btn-dark p-3" asp-area="Identity" asp-page="/Account/Register">
+                                        Add to cart <i class="fas fa-shopping-cart fa-lg"></i>
+                                    </a>
+                                    <a class="col-3 btn btn-light p-3" asp-area="Identity" asp-page="/Account/Register">
+                                        <i class="fa-solid fa-heart fa-lg heart-icon"></i>
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row justify-content-center">
+                                    <div class="col-9 btn btn-dark p-3 add-to-cart-shop" id=@Model.Product.Id>
+                                        Add to cart <i class="fas fa-shopping-cart fa-lg"></i>
+                                    </div>
+                                    @{
+                                        Favourites favourites = (Favourites)Model.Favourites;
+                                    }
+                                    @if (favourites != null)
+                                    {
+                                        @if (favourites.Products.Contains(Model.Product))
+                                        {
+                                            <div class="col-3 btn btn-light p-3 add-to-favourites-shop" id=@Model.Product.Id>
+                                                <i class="fa-solid fa-heart fa-lg heart-icon"></i>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-3 btn btn-light p-3 add-to-favourites-shop" id=@Model.Product.Id>
+                                                <i class="far fa-heart fa-lg heart-icon"></i>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="col-3 btn btn-light p-3 add-to-favourites-shop" id=@Model.Product.Id>
+                                            <i class="far fa-heart fa-lg heart-icon"></i>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            <br>
+                            <br>
+                            <div class="row justify-content-center">
+                                <div class="accordion col-12 p-0" id="accordionExample">
+                                    <div class="card" style="width: 100%">
+                                        <div class="card-header collapsed" data-toggle="collapse" data-target="#collapseOne"
+                                             aria-expanded="false" aria-controls="collapseOne">
+                                            <span class="title">Product Description</span>
+                                            <span class="accicon"><i class="fas fa-angle-down rotate-icon"></i></span>
+                                        </div>
+                                        <div id="collapseOne" class="collapse" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                @Model.Product.Description
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="width: 100%">
+                                        <div class="card-header collapsed" data-toggle="collapse" data-target="#collapseTwo"
+                                             aria-expanded="false" aria-controls="collapseTwo">
+                                            <span class="title">Return Policy</span>
+                                            <span class="accicon"><i class="fas fa-angle-down rotate-icon"></i></span>
+                                        </div>
+                                        <div id="collapseTwo" class="collapse" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                @Model.Product.ReturnPolicy
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Worker") || User.IsInRole("SuperAdmin"))
+                            {
+                                <div class="row pt-4 justify-content-center">
+                                    <a class="btn btn-warning text-white col redirect-to-edit-page" id="@Model.Product.Id">Edit</a>
+                                </div>
+                                <div class="row pt-2 justify-content-center">
+                                    <a class="btn btn-danger text-white col delete">Delete</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+        @if (items != null)
+        {
+            <div id="favourites-scroller" class="container">
+                <h2 class="most-added-to-fav-text-container pl-3">Most added to favourites:</h2>
+                @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml",lastViewedProducts)
+            </div>
+        }
+        @if (lastViewedProducts != null)
+        {
+            <div id="last-viewed-section" class="container">
+                <h2 class="last-viewed-text-container pl-3">Last viewed products:</h2>
+                @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml",lastViewedProducts)
+            </div>
+        }
+        <div id="reccomendations"></div>
+        @{
+            Cart cartContainer = (Cart)Model.Cart;
+        }
+        <div id="sizeSelectionPopup" class="popup">
+            <div class="popup-content">
+                <span class="close" id="closePopup">&times;</span>
+                <h2>Select Size:</h2>
+                <ul class="list-group pt-4" id="sizeSelectionPopupList">
+                    @foreach (var size in Model.Product.ProductSizes)
+                    {
+                        @if (cartContainer != null)
+                        {
+                            @if (cartContainer.CartItems.Any(item => item.ProductId == Model.Product.Id && item.Size == size.ProductSize.ToString()))
+                            {
+                                <li class="list-group-item border mb-4 clickable-size checked-sizes">
+                                    @if (size.AvailableItems > 0)
+                                    {
+                                        <div class="form-check">
+                                            <label class="form-check-label" for="flexCheckDefault"
+                                                   data-original-text="@size.ProductSize">
+                                                @size.ProductSize
+                                            </label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="form-check" disabled>
+                                            <label class="form-check-label size-unavailable" for="flexCheckDefault"
+                                                   data-original-text="@size.ProductSize">
+                                                @size.ProductSize (Unavailable)
+                                            </label>
+                                        </div>
+                                    }
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item border mb-4 clickable-size">
+                                    @if (size.AvailableItems > 0)
+                                    {
+                                        <div class="form-check">
+                                            <label class="form-check-label" for="flexCheckDefault"
+                                                   data-original-text="@size.ProductSize">
+                                                @size.ProductSize
+                                            </label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="form-check" disabled>
+                                            <label class="form-check-label size-unavailable" for="flexCheckDefault"
+                                                   data-original-text="@size.ProductSize">
+                                                @size.ProductSize (Unavailable)
+                                            </label>
+                                        </div>
+                                    }
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="list-group-item border mb-4 clickable-size">
+                                @if (size.AvailableItems > 0)
+                                {
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="flexCheckDefault"
+                                               data-original-text="@size.ProductSize">
+                                            @size.ProductSize
+                                        </label>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-check" disabled>
+                                        <label class="form-check-label size-unavailable" for="flexCheckDefault"
+                                               data-original-text="@size.ProductSize">
+                                            @size.ProductSize (Unavailable)
+                                        </label>
+                                    </div>
+                                }
+                            </li>
+                        }
+                    }
+                </ul>
+                <a class="btn btn-dark col text-white confirm-size-selection" style="font-size:1.3rem;">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    // Next/previous controls
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        let dots = document.getElementsByClassName("demo");
+        let captionText = document.getElementById("caption");
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " active";
+    }
+</script>

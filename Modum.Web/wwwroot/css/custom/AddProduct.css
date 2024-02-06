@@ -1,0 +1,13 @@
+﻿.table thead {
+    background-color: #f8f9fa;  
+}
+
+.table th,
+.table td {
+    border: 1px solid #dee2e6;
+}
+
+.choosing-season-button.selected {
+    background-color: #007bff;
+    color: #ffffff;
+}

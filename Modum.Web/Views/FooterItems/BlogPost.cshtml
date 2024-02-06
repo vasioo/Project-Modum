@@ -1,0 +1,61 @@
+﻿@using Modum.Models.ViewModels;
+@model BlogPostViewModel
+
+<div class="loading-container-blogs">
+    <div class="typewriter-text" id="typewriter">
+    </div>
+</div>
+<div class="container-fluid custom-container-for-blogs" style="display: none;">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2 mt-4">
+            <h1 class="text-center">@Model.Post.Title</h1>
+            <div class="mt-4">
+                @Html.Raw(Model.Post.Content)
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var referrer = document.referrer;
+
+        var specificPagePath = "/Blog";
+
+        var currentUrl = window.location.href;
+
+        if (!referrer.endsWith(specificPagePath)) {
+            var text = "Modum Blogs";
+            var speed = 150; 
+
+            function typeWriter(i, txt, speed) {
+                if (i < txt.length) {
+                    document.getElementById("typewriter").innerHTML += txt.charAt(i);
+                    i++;
+                    setTimeout(function () {
+                        typeWriter(i, txt, speed)
+                    }, speed);
+                } else {
+                    // After typing, wait for 1 second, then fade out the loading screen
+                    setTimeout(function () {
+                        document.querySelector('.loading-container-blogs').style.animation = 'fadeOut 1s forwards';
+                    }, 1000);
+
+                    // Reveal the content after the fading animation completes
+                    setTimeout(function () {
+                        document.querySelector('.loading-container-blogs').style.display = 'none';
+                        document.querySelector('.custom-container-for-blogs').style.display = 'block';
+                    }, 1000);
+                }
+            }
+
+            setTimeout(function () {
+                typeWriter(0, text, speed);
+            }, 500);
+        } else {
+            document.querySelector('.loading-container-blogs').style.display = 'none';
+            document.querySelector('.custom-container-for-blogs').style.display = 'block';
+        }
+    });
+</script>

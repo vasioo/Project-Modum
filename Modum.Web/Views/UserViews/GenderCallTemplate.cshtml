@@ -1,0 +1,191 @@
+﻿@using Modum.Models.BaseModels.Models;
+@using Modum.Models.BaseModels.Models.ProductStructure;
+@using Modum.Models.ViewModels;
+@model GenderCallTemplateViewModel;
+@{
+    var category = Model.Category;
+    IEnumerable<Product> tenFavItems = Model.TenFavItems;
+    IEnumerable<Product> mostBoughtItems = Model.MostBoughtItems;
+}
+
+<!-------------------
+  Header Section Start
+-------------------->
+@section Styles {
+    <link href="@Url.Content("~/css/custom/_CardScrollerPartial.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/custom/GenderCallTemplate.css")" rel="stylesheet" type="text/css" />
+}
+<div class="background-pattern"></div>
+
+<div class="genderCall-page" id=@category>
+
+    <section id="image-with-userprview">
+        <div id="head-of-page" class="row justify-content-center align-items-center">
+            <div class=" text-center">
+                <img src="" alt="season-image" id="image-for-season" />
+            </div>
+            <div class="">
+                <div id="overflowing-element-for-season" class="p-3 p-md-5">
+                    <div class="text-light">
+                        <div id="custom-season-overflow-text">
+                            Modum
+                            <br />
+                            Discounts
+                            <br />
+                            30%
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center mt-3 mt-md-5">
+                        <a class="btn btn-light text-dark" style="font-weight: 900;" id="button-for-custom-season-overflow">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+    </section>
+
+    <section id="section-for-premium-pr">
+        @if (tenFavItems != null)
+        {
+            <div id="premium-section" class="container">
+                <h2 class="most-added-to-fav-text-container pl-3">Most added to favourites:</h2>
+                @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml",tenFavItems)
+            </div>
+            <br />
+            <br />
+        }
+    </section>
+
+    <section id="section-with-LTC" class="py-5">
+        @if (Model.LimitedTimeCampaign != null)
+        {
+            var link = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-for-ltc-{Model.LimitedTimeCampaign.Id}";
+            <div class="row justify-content-around align-items-center">
+                <div class="col-md-5 col-12 p-3 order-md-1 order-2">
+                    <div class=" col text-truncate">
+                        <div class="h1 row justify-content-lg-start justify-content-center">
+                            @Model.LimitedTimeCampaign.Title
+                        </div>
+                        <div class="h3 row justify-content-lg-start justify-content-center">
+                            @Model.LimitedTimeCampaign.Content
+                        </div>
+                    </div>
+                    @{
+                        var remainingData = Model.LimitedTimeCampaign.EndDate - DateTime.Now;
+                    }
+                    <div class="row pt-3 justify-content-lg-start justify-content-center">
+                        <div id="countdown-container" class="text-center col-xl-8 col-9 col-lg-10 col-md-12" data-enddate="@Model.LimitedTimeCampaign.EndDate">
+                            <div id="countdown" class="row text-white">
+
+                                <div class="col pl-2 pr-2">
+                                    <div class="bg-dark pt-2 rounded-top data-shower">
+                                        @remainingData.Days
+                                    </div>
+                                    <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Days</div>
+                                </div>
+                                <div class="col pl-2 pr-2">
+                                    <div class="bg-dark pt-2 rounded-top data-shower">
+                                        @remainingData.Hours
+                                    </div>
+                                    <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Hours</div>
+                                </div>
+                                <div class="col pl-2 pr-2">
+                                    <div class="bg-dark pt-2 rounded-top data-shower">
+                                        @remainingData.Minutes
+                                    </div>
+                                    <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Minutes</div>
+                                </div>
+                                <div class="col pl-2 pr-2">
+                                    <div class="bg-dark pt-2 rounded-top data-shower">
+                                        @remainingData.Seconds
+                                    </div>
+                                    <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Seconds</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-3 justify-content-lg-start justify-content-center">
+                        @{
+                            var hrefattr = $"/Home/_UserProductsPartial?mainCategoryId={category}&filter.LTCs={Model.LimitedTimeCampaign.Title}";
+                        }
+                        <div class="col-9 col-lg-10 col-xl-12 col-md-12 pr-2 pl-2">
+                            <a id="button-for-limited-time-campaign" class="btn btn-dark col-12 col-xl-8" href="@hrefattr">Buy NOW!</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 order-md-2 order-1">
+                    <img src="@link" style="width:100%;" class="p-3 img-fluid" />
+                </div>
+            </div>
+            <br />
+            <br />
+        }
+    </section>
+
+    <section id="section-for-blogs" class="py-5 row justify-content-center">
+        <div class="h1 row w-100 justify-content-center">Modum Blogs </div>
+        <div class="grid-container pt-3">
+            @{
+                int counter = 0;
+                @foreach (var item in Model.BlogPostsForTemplate)
+                {
+                    string linkForBlog = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/main-image-for-blog-{item.Id}";
+                    <a class="text-decoration-none" asp-area="" asp-controller="Footer" asp-action="BlogPost" asp-route-postId="@item.Id">
+                        <div>
+                            <img class='grid-item grid-item-@counter' src='@linkForBlog' alt=''>
+                            <p>@item.Title</p>
+                        </div>
+                    </a>
+                    counter++;
+                }
+            }
+        </div>
+    </section>
+
+    <section class="align-items-center justify-content-center py-5" id="section-for-delivery">
+        <div id="" class="row">
+            <div class="col-lg-4 col-md-10 col-sm-10 col-12 justify-content-center align-items-center pt-4">
+                <div class="row justify-content-around">
+                    <div class="icon-container justify-content-center row col-5 ml-2 pl-0">
+                        <i class="fa-solid fa-truck fa-7x"></i>
+                    </div>
+                    <div class="helper-additional-discount-section text-container col-7">
+                        <p>
+                            Free Delivery
+                            <br />over 100bgn
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-10 col-sm-10 col-12 justify-content-center align-items-center pt-4">
+                <div class="row justify-content-around">
+                    <div class="icon-container justify-content-center row col-5 ml-2 pl-0">
+                        <i class="fa-solid fa-clock-rotate-left fa-flip-horizontal fa-7x"></i>
+                    </div>
+                    <div class="helper-additional-discount-section text-container col-7">
+                        <p>
+                            Delivery in
+                            <br />2-5 business days
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-10 col-sm-10 col-12  justify-content-center align-items-center pt-4">
+                <div class="row justify-content-around">
+                    <div class="icon-container justify-content-center row col-5 ml-2 pl-0">
+                        <i class="fa-solid fa-piggy-bank fa-flip-horizontal fa-7x"></i>
+                    </div>
+                    <div class="helper-additional-discount-section col-7 text-container">
+                        <p>
+                            Free Refund
+                            <br />over 50bgn
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+    </section>
+</div>
