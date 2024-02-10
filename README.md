@@ -38,6 +38,7 @@ Our commitment to innovation and customer satisfaction drives us to continually 
     <li>Workflow -> Azure Services/Github workflow</li>
     <li>Payment -> Stripe</li>
     <li>OAUTH -> Google/Facebook</li>
+    <li>Images -> Cloudinary</li>
 </ul>
 
 <h2>The main application structure:</h2>
