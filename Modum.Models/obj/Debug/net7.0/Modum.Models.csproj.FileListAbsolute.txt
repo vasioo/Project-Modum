@@ -10,3 +10,15 @@ C:\Users\gosug\source\repos\Modum\Modum.Models\obj\Debug\net7.0\Modum.Models.dll
 C:\Users\gosug\source\repos\Modum\Modum.Models\obj\Debug\net7.0\refint\Modum.Models.dll
 C:\Users\gosug\source\repos\Modum\Modum.Models\obj\Debug\net7.0\Modum.Models.pdb
 C:\Users\gosug\source\repos\Modum\Modum.Models\obj\Debug\net7.0\ref\Modum.Models.dll
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\bin\Debug\net7.0\Modum.Models.deps.json
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\bin\Debug\net7.0\Modum.Models.dll
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\bin\Debug\net7.0\Modum.Models.pdb
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\obj\Debug\net7.0\Modum.Models.csproj.AssemblyReference.cache
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\obj\Debug\net7.0\Modum.Models.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\obj\Debug\net7.0\Modum.Models.AssemblyInfoInputs.cache
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\obj\Debug\net7.0\Modum.Models.AssemblyInfo.cs
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\obj\Debug\net7.0\Modum.Models.csproj.CoreCompileInputs.cache
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\obj\Debug\net7.0\Modum.Models.dll
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\obj\Debug\net7.0\refint\Modum.Models.dll
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\obj\Debug\net7.0\Modum.Models.pdb
+C:\Users\gosug\source\repos\Modum_Production\Modum.Models\obj\Debug\net7.0\ref\Modum.Models.dll

@@ -41,52 +41,42 @@
                     isValid = validator.validateImagesField(images);
 
                 if (isValid) {
+                    const personImageJs = $('#person-image')[0].files[0];
+                    const clothImageJs = $('#clothing-image')[0].files[0];
 
-                    const personImage = $('#person-image')[0].files[0];
-                    const clothImage = $('#clothing-image')[0].files[0];
+                    const formData = new FormData();
+                    formData.append('personImage', personImageJs);
+                    formData.append('clothImage', clothImageJs);
 
-                    const form = new FormData();
-                    form.append('personImage', personImage);
-                    form.append('clothImage', clothImage);
-
-                    const settings = {
-                        async: true,
-                        crossDomain: true,
-                        url: 'https://texel-virtual-try-on.p.rapidapi.com/try-on-file',
-                        method: 'POST',
-                        headers: {
-                            'X-RapidAPI-Key': '118c0ba3f2msh2f51cd3a9d5b701p13df6cjsnc24c9759f30b',
-                            'X-RapidAPI-Host': 'texel-virtual-try-on.p.rapidapi.com'
-                        },
+                    $.ajax({
+                        url: '/Footer/OutfitPickerOnPostQuery',
+                        type: 'POST',
+                        data: formData,
                         processData: false,
                         contentType: false,
-                        mimeType: 'multipart/form-data',
-                        data: form
-                    };
+                        success: function (resp) {
+                            var actualResponse = JSON.parse(resp.message);
+                            var imagePath = actualResponse.response.ouput_path_img;
 
-                    $.ajax(settings)
-                        .done(function (response) {
-                            if (true) {
-                                var imagePath = response.response.ouput_path_img;
+                            $('#additionalPicturePreview').attr('src', imagePath);
+                            $('#resultText').text(actualResponse.message);
 
-                                $('#additionalPicturePreview').attr('src', imagePath);  
-                                $('#resultText').attr('src', response.message);  
+                            $('#hiddenInput').css('display', 'block');
+                            $('.retry-btn').css('display', 'block');
+                            $('.create-image').css('display', 'none');
 
-                                $('#hiddenInput').css('display', 'block');
-                                $('.retry-btn').css('display', 'block');
-                                $('.create-image').css('display', 'none');
-
-                                commonFuncs.hideLoader();
-                            } else {
-                                alert("An unexpected error occurred. Please try again later.");
-                            }
                             commonFuncs.hideLoader();
-                        })
-                        .fail(function (xhr, status, error) {
-                            console.error(xhr.responseText);
-                            alert('Error occurred. Check console for details.');
-                        });
+                        },
+                        error: function (error) {
+                            commonFuncs.hideLoader();
+                            alert('AJAX request failed: ' + error);
+                        }
+
+                    });
+
+                    commonFuncs.hideLoader();
                 }
+
                 else {
                     let errors = validator.getErrors(),
                         errorList = document.createElement("ul");

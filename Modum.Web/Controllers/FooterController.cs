@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Modum.Models.ViewModels;
 using Modum.Services.Interfaces;
 using Modum.Services.Services;
 using Modum.Web.ControllerService.FooterController;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Modum.Web.Controllers
 {
@@ -15,7 +18,6 @@ namespace Modum.Web.Controllers
         private readonly IConfiguration _configuration;
         private readonly IFooterControllerHelper _helper;
 
-
         public FooterController(IFooterControllerHelper helper, IEmailSenderService emailSenderService,
             IFirebaseService firebaseService, IConfiguration configuration
             )
@@ -24,6 +26,7 @@ namespace Modum.Web.Controllers
             _configuration = configuration;
             _helper = helper;
             _emailSenderService = emailSenderService;
+
         }
         #endregion
 
@@ -39,7 +42,7 @@ namespace Modum.Web.Controllers
         public async Task<IActionResult> Campaigns()
         {
             var viewModel = await _helper.GetCampaignInformationData();
-            return View("~/Views/FooterItems/Campaigns.cshtml",viewModel);
+            return View("~/Views/FooterItems/Campaigns.cshtml", viewModel);
         }
         public async Task<IActionResult> ContactUs()
         {
@@ -74,12 +77,7 @@ namespace Modum.Web.Controllers
             return View("~/Views/FooterItems/TermsAndConditions.cshtml");
         }
 
-        public async Task<IActionResult> OutfitPicker()
-        {
-            var model = new OutfitPickerViewModel();
-            return View("~/Views/UserViews/OutfitPicker.cshtml", model);
 
-        }
         #endregion
 
         #region Blog
@@ -150,6 +148,77 @@ namespace Modum.Web.Controllers
                 return Json(new { status = false, Message = "Error Conflicted" });
             }
         }
+        #endregion
+
+        #region OutfitPicker
+
+        [Authorize]
+        public async Task<IActionResult> OutfitPicker()
+        {
+            var model = new OutfitPickerViewModel();
+            return View("~/Views/UserViews/OutfitPicker.cshtml", model);
+
+        }
+
+        [Authorize]
+        public async Task<JsonResult> OutfitPickerOnPostQuery(IFormFile personImage, IFormFile clothImage)
+        {
+            try
+            {
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("https://virtual-try-on2.p.rapidapi.com/clothes-virtual-tryon");
+
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post,
+                    Content = new MultipartFormDataContent
+                    {
+                        // Add person image
+                        new StreamContent(personImage.OpenReadStream())
+                        {
+                            Headers =
+                            {
+                                ContentType = new MediaTypeHeaderValue(personImage.ContentType),
+                                ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                                {
+                                    Name = "personImage",
+                                    FileName = personImage.FileName
+                                }
+                            }
+                        },
+                        new StreamContent(clothImage.OpenReadStream())
+                        {
+                            Headers =
+                            {
+                                ContentType = new MediaTypeHeaderValue(clothImage.ContentType),
+                                ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                                {
+                                    Name = "clothImage",
+                                    FileName = clothImage.FileName
+                                }
+                            }
+                        }
+                    }
+                };
+
+                request.Headers.Add("X-RapidAPI-Key", _configuration.GetSection("ApiKey:ApiKeyValue").Get<string>() ?? "");
+                request.Headers.Add("X-RapidAPI-Host", _configuration.GetSection("ApiKey:ApiKeyPassword").Get<string>() ?? "");
+
+                using (var response = await client.SendAsync(request))
+                {
+                    response.EnsureSuccessStatusCode();
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    return Json(new { status = true, Message = responseContent });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { status = false, Message = "Error Conflicted" });
+            }
+        }
+
+
         #endregion
     }
 }
