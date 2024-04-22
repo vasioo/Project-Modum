@@ -23,6 +23,7 @@ My commitment to innovation and customer satisfaction drives us to continually e
 </ul>
 
 <h2><a href="https://modum.azurewebsites.net/" target="_blank">Visit the website!</a></h2>
+<p>*if the website shows rror 403 connect with me i will start the application</p>
 <br>
 <h3>Used Technologies</h3>
 <ul>
