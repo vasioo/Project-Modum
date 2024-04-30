@@ -1,6 +1,6 @@
 ﻿var userItemsSelectionList = (function () {
     function init($container) {
-        let $mainCategoryId = $container.find('.maincategory-id').attr('id'),
+        let $mainCategoryName = $container.find('input[type="radio"][name="exampleRadios"]:checked').val(),
             $minPrice = $container.find('#fromInput'),
             $maxPrice = $container.find('#toInput'),
             $subcategoryItems = $container.find('.subcategory-item'),
@@ -63,7 +63,7 @@
             }
         }
 
-        if ($mainCategoryId != null) {
+        if ($mainCategoryName != null) {
             const fromSlider = document.querySelector('#fromSlider');
             const toSlider = document.querySelector('#toSlider');
             const fromInput = document.querySelector('#fromInput');
@@ -94,6 +94,11 @@
 
         $subcategoryItems.click(function () {
             $(this).toggleClass('subcategory-selected');
+            filterRequest();
+        });
+
+        $('input[type="radio"][name="exampleRadios"]').change(function () {
+            $mainCategoryName = $(this).val();
             filterRequest();
         });
 
@@ -143,14 +148,14 @@
                 .join('_');
 
             const filterJS = {
-                MainCategoryId: $mainCategoryId,
                 SelectedSubcategories: subcategories,
                 ProductColours: productColours,
                 MinPrice: $minPrice.val(),
                 MaxPrice: $maxPrice.val(),
                 Sizes: sizes,
                 Brands: brandsValues,
-                LTCs: ltcsValues
+                LTCs: ltcsValues,
+                MainCategoryName: $mainCategoryName
             };
             var queryString = Object.keys(filterJS)
                 .filter(function (key) {
@@ -179,7 +184,7 @@
         $('#clear-all-filters').click(function () {
             var currentDomain = window.location.origin;
 
-            var newURL = currentDomain + "/Home/_UserProductsPartial?mainCategoryId=" + $mainCategoryId + "";
+            var newURL = currentDomain + "/Home/_UserProductsPartial?mainCategoryId=" + $mainCategoryName + "";
             setTimeout(function () {
                 window.location.href = newURL;
             }, 0);
@@ -187,6 +192,18 @@
 
         $sortByDropdown.change(function () {
             filterRequest();
+        });
+
+        if ($('#search-input').val() !== '') {
+            $('#search-input').addClass('filled'); 
+        }
+
+        $('#search-input').on('input', function () {
+            if ($(this).val() === '') {
+                $(this).removeClass('filled'); 
+            } else {
+                $(this).addClass('filled'); 
+            }
         });
     }
     return {

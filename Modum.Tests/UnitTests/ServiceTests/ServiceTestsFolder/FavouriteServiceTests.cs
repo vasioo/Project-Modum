@@ -56,7 +56,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             var result = await favouritesService.GetFavouritesIdByUserId(userId);
 
             // Assert
-            Assert.NotEqual(0, result);
+            Assert.NotEqual(Guid.Empty, result);
             Assert.Equal(favouritesContainerToAdd.Id, result);
         }
 
@@ -70,7 +70,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             var result = await favouritesService.GetFavouritesIdByUserId(nonExistentUserId);
 
             // Assert
-            Assert.Equal(0, result);
+            Assert.Equal(Guid.Empty, result);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Modum.Models.BaseModels.Models.BaseStructure
     public class Statistics : IEntity
     {
         [Required]
-        public int Id { get; set; } = 0;
+        public Guid Id { get; set; }
 
         [Required]
         public DateTime TimeOfStatistic { get; set; } = DateTime.Now;

@@ -40,144 +40,242 @@
     @*name: Modum*@
     @*slogan: induite vos bene*@
 
-
 </head>
 <body>
     @using System.Reflection
     <header>
         <div id="head-section pb-5">
             <div class="desktop-menu">
-                <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light box-shadow " id="header-bar">
-                    <div class="container-fluid d-flex justify-content-center align-items-center">
-                        <div class="d-sm-inline-flex justify-content-between">
-                            <ul class=" navbar-nav flex-grow-1 justify-content-center align-items-center">
-                                <li class="nav-item d-none d-sm-block ">
-                                    <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">Women</a>
-                                </li>
-                                <li class="nav-item d-none d-sm-block ">
-                                    <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Men">Men</a>
-                                </li>
-                                <li class="nav-item d-none d-sm-block ">
-                                    <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Girls">Girls</a>
-                                </li>
-                                <li class="nav-item d-none d-sm-block ">
-                                    <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Boys">Boys</a>
-                                </li>
-                            </ul>
-                            <ul class="navbar-nav flex-grow-1 justify-content-center align-items-center">
-                                <li class="nav-item nav-item-image">
-                                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">
-                                        <img src="~/clothes-shop/images/logos/modum-transparent2-removebg-preview.png" />
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <div class="input-group">
-                                        <input class="form-control me-2 border-0 border-bottom border-dark" type="search" id="search-input" placeholder="Search" aria-label="Search" value=@ViewBag.SearchStringContainer />
-                                        <a class="btn btn-outline-dark border-0 text-dark" id="search-link">
-                                            <i class="fas fa-search"></i>
+                <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light box-shadow" id="header-bar">
+                    <div class="container-fluid p-0 m-0 justify-content-center">
+                        <div class="row col-12 p-0 m-0 align-items-center">
+                            <div class="col-5 p-0 m-0">
+                                <ul class="navbar-nav justify-content-lg-end justify-content-center">
+                                    <li class="nav-item d-none d-sm-block">
+                                        <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">Women</a>
+                                    </li>
+                                    <li class="nav-item d-none d-sm-block">
+                                        <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Men">Men</a>
+                                    </li>
+                                    <li class="nav-item d-none d-sm-block">
+                                        <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Girls">Girls</a>
+                                    </li>
+                                    <li class="nav-item d-none d-sm-block">
+                                        <a class="nav-link nav-link-custom gender-section" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Boys">Boys</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-2 p-0 m-0 nav-item-image">
+                                <a class="navbar-brand p-0 m-0" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">
+                                    <img src="~/clothes-shop/images/logos/modum-transparent2-removebg-preview.png" alt="Logo">
+                                </a>
+                            </div>
+                            <div class="col-5 ml-auto">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Home" asp-action="Favourites">
+                                            <i class="far fa-heart fa-2xl"></i>
                                         </a>
-                                    </div>
+                                    </li>
+                                    <li class="nav-item position-relative">
+                                        <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Home" asp-action="Cart">
+                                            <i class="fas fa-shopping-cart fa-2xl"></i>
+                                            @if (Model != null)
+                                            {
+                                                @if (Model.GetType().GetProperty("CartItemsForUser") != null)
+                                                {
+                                                    int itemsCount = Model.CartItemsForUser;
+                                                    if (itemsCount > 0)
+                                                    {
+                                                        if (itemsCount > 9)
+                                                        {
+                                                            <span class="cart-badge">@itemsCount +</span>
 
-                                </li>
-                                <!-- Favourites -->
-                                <li class="nav-item">
-                                    <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Home" asp-action="Favourites">
-                                        <i class="far fa-heart fa-2xl"></i> <!-- Font Awesome heart icon -->
-                                    </a>
-                                </li>
-                                <!-- Cart -->
-                                <li class="nav-item">
-                                    <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Home" asp-action="Cart">
-                                        <i class="fas fa-shopping-cart fa-2xl"></i> <!-- Font Awesome shopping cart icon -->
-                                    </a>
-                                </li>
-                                <!-- User -->
-                                @if (User.Identity != null && User.Identity.IsAuthenticated)
-                                {
-                                    <li class="nav-item">
-                                        <a class="nav-link nav-item fontawesome-icons" asp-area="Identity" asp-page="/Account/Manage/Index">
-                                            <i class="fas fa-user fa-2xl"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="cart-badge">@itemsCount</span>
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         </a>
                                     </li>
-                                }
-                                else
-                                {
-                                    <li class="nav-item">
-                                        <a class="nav-link nav-item fontawesome-icons" asp-area="Identity" asp-page="/Account/Register">
-                                            <i class="far fa-user fa-2xl"></i>
-                                        </a>
-                                    </li>
-                                }
+                                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link nav-item fontawesome-icons" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                                <i class="fas fa-user fa-2xl"></i>
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link nav-item fontawesome-icons" asp-area="Identity" asp-page="/Account/Register">
+                                                <i class="far fa-user fa-2xl"></i>
+                                            </a>
+                                        </li>
+                                    }
 
-                                @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
-                                {
-                                    <li class="nav-item">
-                                        <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Admin" asp-action="ManageUsers">
-                                            <i class="fa-solid fa-lock fa-2xl"></i>
-                                        </a>
-                                    </li>
-                                }
-                                @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Worker") || User.IsInRole("SuperAdmin"))
-                                {
-                                    <li class="nav-item">
-                                        <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Worker" asp-action="ManageProducts">
-                                            <i class="fa-solid fa-screwdriver-wrench fa-2xl"></i>
-                                        </a>
-                                    </li>
-                                }
-                                <!-- End User -->
-                            </ul>
+                                    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Worker") || User.IsInRole("SuperAdmin"))
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Worker" asp-action="ManageProducts">
+                                                <i class="fa-solid fa-screwdriver-wrench fa-2xl"></i>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </nav>
-                <div id="undersection" class="d-flex justify-content-center align-items-center">
+                <div id="undersection" class="d-flex px-5 align-items-center justify-content-between">
                     @if (Model != null)
                     {
                         @if (Model.GetType().GetProperty("UnderNavCategories") != null)
                         {
                             IEnumerable<Category> categoryList = Model.UnderNavCategories;
-                            IEnumerable<Brands> basicBrandList = Model.BasicBrands;
-                            IEnumerable<Brands> premiumBrandList = Model.PremiumBrands;
-                            @foreach (var category in categoryList)
-                            {
-                                <div class="item">
-                                    @category.Name
-                                    <div class="hover-container">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="col-1">
-                                                <h4 class="row pb-1 subheaders">Categories</h4>
-                                                @foreach (var subcategory in category.Subcategories)
+                            List<string> basicBrandList = Model.BasicBrands;
+                            List<string> premiumBrandList = Model.PremiumBrands;
+                            int brandsItemsCount = basicBrandList.Count();
+                            int brandsContainerCount = (int)Math.Ceiling((double)brandsItemsCount / 7);
+                            int premiumBrandsItemsCount = premiumBrandList.Count();
+                            int premiumBrandsContainerCount = (int)Math.Ceiling((double)premiumBrandsItemsCount / 7);
+                            <div class="col-8">
+                                @foreach (var category in categoryList)
+                                {
+                                    var categoryCount = category.Subcategories.Count();
+                                    <div class="item">
+                                        @category.Name
+                                        <div class="hover-container px-5 pt-4">
+                                            <div class="row align-items-start">
+                                                @{
+                                                    int categoriesItemsCount = category.Subcategories.Count;
+                                                    int categoriesContainerCount = (int)Math.Ceiling((double)categoriesItemsCount / 7);
+                                                }
+                                                @for (int containerIndex = 0; containerIndex < categoriesContainerCount; containerIndex++)
                                                 {
-                                                    string hrefAttr = $"/Home/_UserProductsPartial?filter.MainCategoryId={category.MainCategoryId}&filter.CategoryId={category.Id}&filter.SelectedSubcategories={subcategory.Id}";
-                                                    <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@subcategory.Name</a></i></div>
+
+                                                    <div class="col-auto py-3">
+                                                        @if (containerIndex == 0)
+                                                        {
+                                                            <h4 class="pb-2 text-left subheaders mb-1">Categories</h4>
+
+                                                            <div class="container col">
+                                                                @for (int i = containerIndex * 7; i < Math.Min((containerIndex + 1) * 7, categoriesItemsCount); i++)
+                                                                {
+                                                                    if (i < categoriesItemsCount && category.Subcategories[i] != null)
+                                                                    {
+                                                                        var subcategory = category.Subcategories[i];
+                                                                        string hrefAttr = $"/Home/_UserProductsPartial?filter.MainCategoryId={category.MainCategoryId}&filter.CategoryId={category.Id}&filter.SelectedSubcategories={subcategory.Id}";
+                                                                        <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@subcategory.Name</a></i></div>
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="container col pt-4 mt-3">
+                                                                @for (int i = containerIndex * 7; i < Math.Min((containerIndex + 1) * 7, categoriesItemsCount); i++)
+                                                                {
+                                                                    if (i < categoriesItemsCount && category.Subcategories[i] != null)
+                                                                    {
+                                                                        var subcategory = category.Subcategories[i];
+                                                                        string hrefAttr = $"/Home/_UserProductsPartial?filter.MainCategoryId={category.MainCategoryId}&filter.CategoryId={category.Id}&filter.SelectedSubcategories={subcategory.Id}";
+                                                                        <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@subcategory.Name</a></i></div>
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                }
+                                                @for (int containerIndex = 0; containerIndex < brandsContainerCount; containerIndex++)
+                                                {
+                                                    <div class="col-auto py-3">
+                                                        @if (containerIndex == 0)
+                                                        {
+                                                            <h4 class="pb-2 text-left subheaders mb-1">Brands</h4>
+                                                            <div class="container col">
+                                                                @for (int i = containerIndex * 7; i < Math.Min((containerIndex + 1) * 7, brandsItemsCount); i++)
+                                                                {
+                                                                    var brand = basicBrandList[i];
+                                                                    string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={brand}";
+                                                                    <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@brand</a></i></div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="container col pt-4 mt-3">
+                                                                @for (int i = containerIndex * 7; i < Math.Min((containerIndex + 1) * 7, brandsItemsCount); i++)
+                                                                {
+                                                                    var brand = basicBrandList[i];
+                                                                    string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={brand}";
+                                                                    <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@brand</a></i></div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                }
+                                                @for (int containerIndex = 0; containerIndex < premiumBrandsContainerCount; containerIndex++)
+                                                {
+                                                    <div class="col-auto py-3">
+                                                        @if (containerIndex == 0)
+                                                        {
+                                                            <h4 class="pb-2 text-left subheaders mb-1">Premium</h4>
+                                                            <div class="container col">
+                                                                @for (int i = containerIndex * 7; i < Math.Min((containerIndex + 1) * 7, premiumBrandsItemsCount); i++)
+                                                                {
+                                                                    var brand = premiumBrandList[i];
+                                                                    string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={brand}";
+                                                                    <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@brand</a></i></div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="container col pt-4 mt-3">
+                                                                @for (int i = containerIndex * 7; i < Math.Min((containerIndex + 1) * 7, premiumBrandsItemsCount); i++)
+                                                                {
+                                                                    var brand = premiumBrandList[i];
+                                                                    string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={brand}";
+                                                                    <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@brand</a></i></div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
                                                 }
                                             </div>
-                                            @if (basicBrandList != null)
-                                            {
-                                                <div class="col-1">
-                                                    <h4 class="row pb-1 subheaders">Brands</h4>
-                                                    @foreach (var brand in basicBrandList)
-                                                    {
-                                                        string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={brand.BrandName}";
-                                                        <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@brand.BrandName</a></i></div>
-                                                    }
-                                                </div>
-                                            }
-                                            @if (premiumBrandList != null)
-                                            {
-                                                <div class="col-1">
-                                                    <h4 class="row pb-1 subheaders">Brands</h4>
-                                                    @foreach (var brand in premiumBrandList)
-                                                    {
-                                                        string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={brand.BrandName}";
-                                                        <div class="row custom-subsection-desktop-item"><i><a href=@hrefAttr>@brand.BrandName</a></i></div>
-                                                    }
-                                                </div>
-                                            }
                                         </div>
                                     </div>
-                                </div>
-                            }
+                                }
+                            </div>
+                            <div class="py-3" style="z-index:1000">
+                                @if (ViewBag.SearchString != null)
+                                {
+                                    <div class="col-auto text-end">
+                                        <div class="input-group">
+                                            <input class="form-control me-2 border-0 border-bottom border-dark filled" value="@ViewBag.SearchString" type="search" id="search-input" placeholder="Search" aria-label="Search" value=@ViewBag.SearchStringContainer />
+                                            <a class="btn btn-outline-dark border-0 text-dark" id="search-link">
+                                                <i class="fas fa-search"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-auto text-end">
+                                        <div class="input-group">
+                                            <input class="form-control me-2 border-0 border-bottom border-dark" type="search" id="search-input" placeholder="Search" aria-label="Search" value=@ViewBag.SearchStringContainer />
+                                            <a class="btn btn-outline-dark border-0 text-dark" id="search-link">
+                                                <i class="fas fa-search"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
                         }
                     }
                 </div>
@@ -185,40 +283,46 @@
             <div class="mobile-menu">
                 <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light border-bottom box-shadow " id="header-bar">
                     <div class="container-fluid">
-                        <div class="row pl-3">
-
-                            <a class="btn" id="hamburger-menu">
+                        <div class="row pl-2">
+                            <a class="btn text-center align-self-center" id="hamburger-menu">
                                 <span class="navbar-toggler-icon"></span>
                             </a>
-                            <div class="pl-3">
+                            <div class="col p-0 m-0">
                                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">
                                     <img src="~/clothes-shop/images/logos/modum-transparent2.png" style="width:4em" />
                                 </a>
                             </div>
                         </div>
-                        <div class="row pr-4">
-                            <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Home" asp-action="Favourites">
-                                <i class="far fa-heart fa-2xl"></i> <!-- Font Awesome heart icon -->
+                        <div class="row pr-2">
+                            <a class="nav-link nav-item fontawesome-icons px-2" asp-area="" asp-controller="Home" asp-action="Favourites">
+                                <i class="far fa-heart fa-xl"></i>
                             </a>
-                            <a class="nav-link nav-item fontawesome-icons" asp-area="" asp-controller="Home" asp-action="Cart">
-                                <i class="fas fa-shopping-cart fa-2xl"></i> <!-- Font Awesome shopping cart icon -->
+                            <a class="nav-link nav-item fontawesome-icons px-2" asp-area="" asp-controller="Home" asp-action="Cart">
+                                <i class="fas fa-shopping-cart fa-xl"></i>
                             </a>
 
                             @if (User.Identity != null && User.Identity.IsAuthenticated)
                             {
-                                <a class="nav-link nav-item fontawesome-icons" asp-area="Identity" asp-page="/Account/Manage/Index">
-                                    <i class="fas fa-user fa-2xl"></i>
+                                <a class="nav-link nav-item fontawesome-icons px-2" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                    <i class="fas fa-user fa-xl"></i>
                                 </a>
                             }
                             else
                             {
-                                <a class="nav-link nav-item fontawesome-icons" asp-area="Identity" asp-page="/Account/Register">
-                                    <i class="far fa-user fa-2xl"></i>
+                                <a class="nav-link nav-item fontawesome-icons px-2" asp-area="Identity" asp-page="/Account/Register">
+                                    <i class="far fa-user fa-xl"></i>
                                 </a>
+                            }
+                            @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Worker") || User.IsInRole("SuperAdmin"))
+                            {
+
+                                <a class="nav-link nav-item fontawesome-icons px-2" asp-area="" asp-controller="Worker" asp-action="ManageProducts">
+                                        <i class="fa-solid fa-screwdriver-wrench fa-xl"></i>
+                                    </a>
                             }
                         </div>
                         <div class="hamburger-menu" id="hamburger-menu-popup">
-                            <span class="close d-flex row pr-4" id="closePopupHamburgerMenu">&times;</span>
+                            <span class="close d-flex row pr-5" id="closePopupHamburgerMenu">&times;</span>
 
                             <div class="hamburger-content">
                                 <ul class="align-items-center justify-content-center d-flex row">
@@ -242,98 +346,132 @@
                                         @if (Model.GetType().GetProperty("UnderNavCategories") != null)
                                         {
                                             IEnumerable<Category> categoryList = Model.UnderNavCategories;
-                                            IEnumerable<Brands> basicBrandList = Model.BasicBrands;
-                                            IEnumerable<Brands> premiumBrandList = Model.PremiumBrands;
-                                            @foreach (var category in categoryList)
+                                            List<string> basicBrandList = Model.BasicBrands;
+                                            List<string> premiumBrandList = Model.PremiumBrands;
+                                            @if (categoryList.Count() > 0)
                                             {
-                                                string headingId = $"heading-{category.Name}";
-                                                string collapseId = $"collapse-{category.Name}";
+                                                <button class="btn mobile-main-text-sections col pl-2  h1 py-3 text-left p-0 text-dark" type="button" data-toggle="collapse" data-target="#categoriesCollapse" aria-expanded="true" aria-controls="categoriesCollapse">
+                                                    <h3 class="text-dark">Categories</h3>
+                                                    <span class="icon">
+                                                        <i class="fas fa-plus"></i>
+                                                        <i class="fas fa-minus"></i>
+                                                    </span>
+                                                </button>
 
-                                                <div class="card">
-                                                    @if (category.Subcategories.Count() > 0)
+                                                <div class="collapse show" id="categoriesCollapse">
+                                                    @foreach (var category in categoryList)
                                                     {
-                                                        <a class="btn btn-link text-dark collapsed subcategories-list" data-toggle="collapse" data-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
-                                                            <div class="row card-header" id="@headingId">
-                                                                <i class='fa-solid fa-chevron-down rotate mr-2 ml-4 down' id="collapse-color-icon"></i>
-                                                                <h5 class="mb-0 pl-3">
-                                                                    @category.Name
-                                                                </h5>
-                                                            </div>
-                                                        </a>
+                                                        string headingId = $"heading-{category.Name}";
+                                                        string collapseId = $"collapse-{category.Name}";
 
-                                                        <div id="@collapseId" class="subcategories-collapse collapse" aria-labelledby="@headingId" data-parent="#accordion">
-                                                            @foreach (var subcategory in category.Subcategories)
+                                                        <div class="card">
+                                                            @if (category.Subcategories.Count() > 0)
                                                             {
-                                                                string hrefAttr = $"/Home/_UserProductsPartial?filter.MainCategoryId={category.MainCategoryId}&filter.CategoryId={category.Id}&filter.SelectedSubcategories={subcategory.Id}";
-                                                                <div class="row">
-                                                                    <a class="btn text-dark btn-link" href="@hrefAttr">
-                                                                        <div class="pl-5 row text-dark">
-                                                                            <div>@subcategory.Name</div>
+                                                                <a class="btn btn-link text-dark collapsed subcategories-list" data-toggle="collapse" data-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                                                                    <div class="row card-header" id="@headingId">
+                                                                        <i class='fa-solid fa-chevron-down rotate mr-2 down' id="collapse-color-icon"></i>
+                                                                        <h5 class="mb-0 pl-3">
+                                                                            @category.Name
+                                                                        </h5>
+                                                                    </div>
+                                                                </a>
+
+                                                                <div id="@collapseId" class="subcategories-collapse collapse" aria-labelledby="@headingId" data-parent="#accordion">
+                                                                    @foreach (var subcategory in category.Subcategories)
+                                                                    {
+                                                                        string hrefAttr = $"/Home/_UserProductsPartial?filter.MainCategoryId={category.MainCategoryId}&filter.CategoryId={category.Id}&filter.SelectedSubcategories={subcategory.Id}";
+                                                                        <div class="row pl-5">
+                                                                            <a class="btn text-dark btn-link" href="@hrefAttr">
+                                                                                <div class="pl-5 row text-dark">
+                                                                                    <div>@subcategory.Name</div>
+                                                                                </div>
+                                                                            </a>
                                                                         </div>
-                                                                    </a>
+                                                                    }
                                                                 </div>
                                                             }
+                                                            else
+                                                            {
+
+                                                                string hrefAttr = $"/Home/_UserProductsPartial?filter.MainCategoryId={category.MainCategoryId}&filter.CategoryId={category.Id}";
+                                                                <a class="btn text-dark btn-link" href="@hrefAttr">
+                                                                    <div class="row card-header">
+                                                                        <h5 class="mb-0">
+                                                                            @category.Name
+                                                                        </h5>
+                                                                    </div>
+                                                                </a>
+                                                            }
+
+
                                                         </div>
                                                     }
-                                                    else
-                                                    {
-                                                        string hrefAttr = $"/Home/_UserProductsPartial?filter.MainCategoryId={category.MainCategoryId}&filter.CategoryId={category.Id}";
-                                                        <a class="btn text-dark btn-link" href="@hrefAttr">
-                                                            <div class="row card-header">
-                                                                <h5 class="mb-0">
-                                                                    @category.Name
-                                                                </h5>
-                                                            </div>
-                                                        </a>
-                                                    }
-
-
                                                 </div>
                                             }
-
-
-                                            @if (basicBrandList != null)
+                                            @if (basicBrandList != null && basicBrandList.Count() > 0)
                                             {
-                                                @foreach (var basicBrand in basicBrandList)
-                                                {
-                                                    string headingId = $"heading-{basicBrand.BrandName}";
-                                                    string collapseId = $"collapse-{basicBrand.BrandName}";
+                                                <button class="btn mobile-main-text-sections col pl-2 border-top h1 py-3 text-left p-0 text-dark" type="button" data-toggle="collapse" data-target="#brandsCollapse" aria-expanded="true" aria-controls="brandsCollapse">
+                                                    <h3 class="text-dark">Brands</h3>
+                                                    <span class="icon">
+                                                        <i class="fas fa-plus"></i>
+                                                        <i class="fas fa-minus"></i>
+                                                    </span>
+                                                </button>
 
-                                                    <div class="card">
-                                                        @{
-                                                            string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={basicBrand.BrandName}";
-                                                        }
-                                                        <a class="btn text-dark btn-link" href="@hrefAttr">
-                                                            <div class="row card-header">
-                                                                <h5 class="mb-0">
-                                                                    @basicBrand.BrandName
-                                                                </h5>
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                }
+                                                <div class="collapse show" id="brandsCollapse">
+                                                    @foreach (var basicBrand in basicBrandList)
+                                                    {
+                                                        string headingId = $"heading-{basicBrand}";
+                                                        string collapseId = $"collapse-{basicBrand}";
+
+                                                        <div class="card">
+                                                            @{
+                                                                string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={basicBrand}";
+                                                            }
+                                                            <a class="btn text-dark btn-link" href="@hrefAttr">
+                                                                <div class="row card-header">
+                                                                    <h5 class="mb-0">
+                                                                        @basicBrand
+                                                                    </h5>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                </div>
+
                                             }
 
-                                            @if (premiumBrandList != null)
+                                            @if (premiumBrandList != null && premiumBrandList.Count() > 0)
                                             {
-                                                @foreach (var premiumBrand in premiumBrandList)
-                                                {
-                                                    string headingId = $"heading-{premiumBrand.BrandName}";
-                                                    string collapseId = $"collapse-{premiumBrand.BrandName}";
+                                                <button class="btn mobile-main-text-sections col pl-2 border-top h1 py-3 text-left p-0 text-dark" type="button" data-toggle="collapse" data-target="#premiumBrandsCollapse" aria-expanded="true" aria-controls="premiumBrandsCollapse">
+                                                    <h3 class="text-dark ">Premium Brands</h3>
+                                                    <span class="icon">
+                                                        <i class="fas fa-plus"></i>
+                                                        <i class="fas fa-minus"></i>
+                                                    </span>
+                                                </button>
 
-                                                    <div class="card">
-                                                        @{
-                                                            string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={premiumBrand.BrandName}";
-                                                        }
-                                                        <a class="btn text-dark" href="@hrefAttr">
-                                                            <div class="row card-header">
-                                                                <h5 class="mb-0">
-                                                                    @premiumBrand.BrandName
-                                                                </h5>
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                }
+                                                <div class="collapse show" id="premiumBrandsCollapse">
+
+                                                    @foreach (var premiumBrand in premiumBrandList)
+                                                    {
+                                                        string headingId = $"heading-{premiumBrand}";
+                                                        string collapseId = $"collapse-{premiumBrand}";
+
+                                                        <div class="card">
+                                                            @{
+                                                                string hrefAttr = $"/Home/_UserProductsPartial?filter.Brands={premiumBrand}";
+                                                            }
+                                                            <a class="btn text-dark" href="@hrefAttr">
+                                                                <div class="row card-header">
+                                                                    <h5 class="mb-0">
+                                                                        @premiumBrand
+                                                                    </h5>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                </div>
                                             }
                                         }
                                     }
@@ -354,7 +492,7 @@
             @RenderBody()
         </main>
     </div>
-    <div class="row">
+    <div class="row" id="botsonic-widget-custom-panel">
         <script>
             (function (w, d, s, o, f, js, fjs) {
                 w["botsonic_widget"] = o;
@@ -375,7 +513,7 @@
             });
         </script>
     </div>
-    <footer class="border-top footer text-muted pt-5">
+    <footer class="border-top footer text-muted pt-5 bg-white">
         <div id="footer-main" class="row pb-5">
             <div class="col-12 col-lg-6 col-md-6 col-sm-6 col-xl-3 border-right-custom-footer">
                 <div class="footer-main-subsections">
@@ -429,9 +567,10 @@
         </div>
         <div class="container-fluid">
             <div id="footer-trademark" class="row align-items-center justify-content-center">
-                <div class="col-12 text-center py-3">
-                    The content of this website is prohibited for external use protected by CL & MIT.
+                <div class="col-12 text-center py-2">
+                    𝓜𝓪𝓭𝓮 𝔀𝓲𝓽𝓱 𝓹𝓪𝓼𝓼𝓲𝓸𝓷 𝓫𝔂 𝓥𝓪𝓼𝓲𝓵 𝓞𝓻𝓪𝓴𝓸𝓿
                 </div>
+                
             </div>
         </div>
     </footer>
@@ -474,6 +613,7 @@
             registerUser.init($('.register-page'));
             shopPage.init($('.shop-page'));
             userItemsSelectionList.init($('.user-items-selection-list'));
+            deliveryLocationPage.init($('.delivery-location-page'));
         });
     </script>
 

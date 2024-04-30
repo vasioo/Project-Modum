@@ -49,12 +49,32 @@
             var originalText = $(this).data('original-text');
             originalText = originalText.replace(/\s+/g, ' ').trim();
 
-            $.post('/Home/RemoveFromCart', { productId: $(this).attr('id'), addToFavourites: true, size: originalText }, function (response) {
+            $.post('/Home/RemoveFromCart', {
+                productId: $(this).attr('id'),
+                addToFavourites: true,
+                size: originalText
+            }, function (response) {
                 commonFuncs.hideLoader();
-                location.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Completed',
+                    text: 'The action has been completed successfully.',
+                    showConfirmButton: false,
+                    timer: 2000 
+                }).then(() => {
+                    location.reload();
+                });
             }).fail(function (error) {
-                alert('AJAX request failed: ', error);
+                commonFuncs.hideLoader();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while processing your request.',
+                    showConfirmButton: true 
+                });
+                console.error('AJAX request failed: ', error);
             });
+
         });
     }
     return {

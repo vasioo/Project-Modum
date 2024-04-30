@@ -13,7 +13,7 @@ namespace Modum.Models.ViewModels
         public SelectList SubcategoryList { get; set; }
         public Array Sizes { get; set; } = new string[0];
 
-        public Product Product{ get; set; }
+        public List<ProductSizesHelpingTable> Product{ get; set; }
         public string CloudinaryImageContainerId { get; set; } = "";
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 using Modum.Services.Interfaces;
 using Modum.Services.Services;
 using System.ComponentModel.DataAnnotations;

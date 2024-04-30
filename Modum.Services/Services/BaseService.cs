@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Modum.DataAccess;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 using Modum.Services.Interfaces;
 using System.Linq.Expressions;
 using IEntity = Modum.Models.BaseModels.Interfaces.IEntity;
@@ -16,12 +16,11 @@ namespace Modum.Services.Services
             _context = context;
         }
 
-        public async Task<int> AddAsync(T entity)
+        public async Task<Guid> AddAsync(T entity)
         {
             _context.Set<T>().Add(entity);
             await _context.SaveChangesAsync();
 
-            // Access the primary key value and return it
             return entity.Id;
         }
 
@@ -30,7 +29,6 @@ namespace Modum.Services.Services
             _context.Set<T>().AddRange(entities);
             await _context.SaveChangesAsync();
 
-            // Return the number of entities added
             return entities.Count();
         }
 
@@ -49,7 +47,7 @@ namespace Modum.Services.Services
             return _context.Set<T>();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(Guid id)
         {
             var entity = await _context.Set<T>().FindAsync(id);
             if (entity == null)
@@ -64,7 +62,7 @@ namespace Modum.Services.Services
             return await _context.Set<T>().CountAsync();
         }
 
-        public async Task<int> RemoveAsync(int id)
+        public async Task<int> RemoveAsync(Guid id)
         {
             var entity = await _context.Set<T>().FindAsync(id);
             if (entity == null)
@@ -108,7 +106,16 @@ namespace Modum.Services.Services
                          select user);
             return users;
         }
-
-
+        public IQueryable<ApplicationUser> IQueryableGetUsersThatAreAdmins()
+        {
+            var users = (from user in _context.Users
+                         join userRole in _context.UserRoles
+                         on user.Id equals userRole.UserId
+                         join role in _context.Roles
+                         on userRole.RoleId equals role.Id
+                         where role.Name == "WORKER"
+                         select user);
+            return users;
+        }
     }
 }

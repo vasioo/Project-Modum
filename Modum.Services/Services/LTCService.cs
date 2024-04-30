@@ -43,7 +43,7 @@ namespace Modum.Services.Services
                     File = new FileDescription(image.Image),
                     DisplayName = image.ImageName,
                     PublicId = image.PublicId,
-                    Overwrite = false,
+                    Overwrite = true,
                 });
 
                 return true;
@@ -72,7 +72,8 @@ namespace Modum.Services.Services
                 }
                 else
                 {
-                    var alternative= await _context.LTCs.Where(x => x.EndDate > DateTime.Now && DateTime.Now > x.StartDate).OrderByDescending(x => x.StartDate).FirstOrDefaultAsync();
+                    var alternative= await _context.LTCs.Where(x => x.EndDate > DateTime.Now && DateTime.Now > x.StartDate)
+                            .OrderByDescending(x => x.StartDate).FirstOrDefaultAsync();
                     if (alternative!=null)
                     {
                         return alternative;

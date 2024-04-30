@@ -1,16 +1,13 @@
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Modum.DataAccess;
-using Modum.DataAccess.MainModel;
-using Modum.Models.BaseModels.Interfaces;
+using Modum.Models.MainModel;
 using Modum.Models.BaseModels.Models.PaymentStructure;
 using Modum.Services.Interfaces;
 using Modum.Services.Services;
 using Modum.Web.Extensions;
 using Stripe;
-using System;
 using System.Net;
 
 namespace Modum.Web
@@ -143,7 +140,9 @@ namespace Modum.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error/500");
+                app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
+
                 app.UseHsts();
             }
 
@@ -160,23 +159,22 @@ namespace Modum.Web
             {
                 Authorization = new[]
                 {
-        new Hangfire.Dashboard.BasicAuthorization.BasicAuthAuthorizationFilter(
-            new Hangfire.Dashboard.BasicAuthorization.BasicAuthAuthorizationFilterOptions
-            {
-                RequireSsl = false,
-                SslRedirect = false,
-                LoginCaseSensitive = true,
-                Users = new []
-                {
-                    new Hangfire.Dashboard.BasicAuthorization.BasicAuthAuthorizationUser
+                    new Hangfire.Dashboard.BasicAuthorization.BasicAuthAuthorizationFilter(
+                    new Hangfire.Dashboard.BasicAuthorization.BasicAuthAuthorizationFilterOptions
                     {
-                        Login = builder.Configuration.GetSection("Hangfire:DashboardUsername").Get<string>(),
-                        PasswordClear = builder.Configuration.GetSection("Hangfire:DashboardPassword").Get<string>()
-                    }
+                        RequireSsl = false,
+                        SslRedirect = false,
+                        LoginCaseSensitive = true,
+                        Users = new []
+                        {
+                            new Hangfire.Dashboard.BasicAuthorization.BasicAuthAuthorizationUser
+                            {
+                                Login = builder.Configuration.GetSection("Hangfire:DashboardUsername").Get<string>(),
+                                PasswordClear = builder.Configuration.GetSection("Hangfire:DashboardPassword").Get<string>()
+                            }
+                        }
+                    })
                 }
-            }
-        )
-    }
             });
 
             app.UseSession();

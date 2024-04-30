@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 using Modum.Models.ViewModels;
 using Modum.Services.Services.ControllerService.HomeController;
 using Modum.Web.Controllers;
@@ -71,11 +71,11 @@ namespace Modum.Tests.UnitTests.ControllerTests.HomeControllerFolder
             var username = "testuser";
             SetupUser(username);
 
-            controllerHelperMock.Setup(x => x._UserProductsPartialHelper(null, null, null, 0, null, It.IsAny<ApplicationUser>()))
+            controllerHelperMock.Setup(x => x._UserProductsPartialHelper(null, null,null, null, It.IsAny<ApplicationUser>()))
                 .ReturnsAsync(new _UserProductsPartialViewModel());
 
             // Act
-            var result = await controller._UserProductsPartial(null, null!, null!, 0, null!) as ViewResult;
+            var result = await controller._UserProductsPartial(null, null!, null!, null!) as ViewResult;
 
             // Assert
             Assert.NotNull(result);
@@ -91,11 +91,11 @@ namespace Modum.Tests.UnitTests.ControllerTests.HomeControllerFolder
             var username = "testuser";
             SetupUser(username);
 
-            controllerHelperMock.Setup(x => x.AddToFavouritesHelper(It.IsAny<int>(), It.IsAny<ApplicationUser>()))
+            controllerHelperMock.Setup(x => x.AddToFavouritesHelper(It.IsAny<Guid>(), It.IsAny<ApplicationUser>()))
                 .Returns(Task.CompletedTask);
 
             // Act
-            var result = await controller.AddToFavourites(123) as JsonResult;
+            var result = await controller.AddToFavourites(Guid.NewGuid()) as JsonResult;
 
             // Assert
             Assert.NotNull(result);
@@ -110,10 +110,10 @@ namespace Modum.Tests.UnitTests.ControllerTests.HomeControllerFolder
             var username = "testuser";
             SetupUser(username);
 
-            controllerHelperMock.Setup(x => x.RemoveFromFavourites(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<ApplicationUser>()))
+            controllerHelperMock.Setup(x => x.RemoveFromFavourites(It.IsAny<Guid>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<ApplicationUser>()))
                 .Returns(Task.CompletedTask);
             // Act
-            var result = await controller.RemoveFromFavourites(123, true, "size") as JsonResult;
+            var result = await controller.RemoveFromFavourites(Guid.NewGuid(), true, "size") as JsonResult;
 
             // Assert
             Assert.NotNull(result);
@@ -149,7 +149,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.HomeControllerFolder
             var username = "testuser";
             SetupUser(username);
 
-            controllerHelperMock.Setup(x => x.AddToCartHelper(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<ApplicationUser>()))
+            controllerHelperMock.Setup(x => x.AddToCartHelper(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<ApplicationUser>()))
                 .Returns(Task.CompletedTask);
 
             var controller = new HomeController(controllerHelperMock.Object, userManagerMock.Object)
@@ -158,7 +158,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.HomeControllerFolder
             };
 
             // Act
-            var result = await controller.AddToCart(123, "size") as JsonResult;
+            var result = await controller.AddToCart(Guid.NewGuid(), "size") as JsonResult;
 
             // Assert
             Assert.NotNull(result);
@@ -173,7 +173,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.HomeControllerFolder
             var username = "testuser";
             SetupUser(username);
 
-            controllerHelperMock.Setup(x => x.RemoveFromCartHelper(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<ApplicationUser>()))
+            controllerHelperMock.Setup(x => x.RemoveFromCartHelper(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<ApplicationUser>()))
                 .Returns(Task.CompletedTask);
 
             var controller = new HomeController(controllerHelperMock.Object, userManagerMock.Object)
@@ -182,7 +182,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.HomeControllerFolder
             };
 
             // Act
-            var result = await controller.RemoveFromCart(123, true, "size") as JsonResult;
+            var result = await controller.RemoveFromCart(Guid.NewGuid(), true, "size") as JsonResult;
 
             // Assert
             Assert.NotNull(result);
@@ -221,7 +221,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.HomeControllerFolder
         {
             // Arrange
             var category = "TestCategory";
-            controllerHelperMock.Setup(x => x.GenderCallTemplateHelper(category))
+            controllerHelperMock.Setup(x => x.GenderCallTemplateHelper(category,""))
                 .ReturnsAsync(new GenderCallTemplateViewModel());
 
             // Act

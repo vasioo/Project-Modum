@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 using System.Text;
 
 namespace Modum.Web.Areas.Identity.Pages.Account

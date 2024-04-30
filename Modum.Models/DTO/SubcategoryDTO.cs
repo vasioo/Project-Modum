@@ -3,8 +3,8 @@
     public class SubcategoryDTO
     {
         public string SubcategoryName { get; set; } = "";
-        public int CategoryId { get; set; } = 0;
-        public int MainCategoryId { get; set; } = 0;
+        public Guid CategoryId { get; set; } = Guid.NewGuid();
+        public Guid MainCategoryId { get; set; } = Guid.NewGuid();
         public string CategoryName { get; set; } = "";
     }
 }

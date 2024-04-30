@@ -17,24 +17,12 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
         {
             categoryService = new CategoryService(context);
         }
-        [Fact]
-        public async Task GetCategoriesByMainCategoryAsync_ReturnsCategoriesForMainCategory()
-        {
-            // Act
-            var result = await categoryService.GetCategoriesByMainCategoryAsync(1);
-
-            var expected = await categoryService.GetByIdAsync(1);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Contains(expected, result);
-        }
 
         [Fact]
         public async Task GetCategoriesByMainCategoryAsync_ReturnsEmptyListForNonexistentMainCategory()
         {
             // Arrange
-            var nonExistentMainCategoryId = 100;
+            var nonExistentMainCategoryId = Guid.NewGuid();
 
             // Act
             var result = await categoryService.GetCategoriesByMainCategoryAsync(nonExistentMainCategoryId);

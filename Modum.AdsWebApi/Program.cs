@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Modum.AdsWebApi.DataGetting;
 using Modum.DataAccess;
-using MongoDB.Driver.Core.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -20,7 +20,7 @@ namespace Modum.Services.Services
             return Task.FromResult(userFavourites);
         }
 
-        public Task<int> GetFavouritesIdByUserId(string userId)
+        public Task<Guid> GetFavouritesIdByUserId(string userId)
         {
             var favourites = _dataContext.Favourites.FirstOrDefault(item => item.UserId == userId);
 
@@ -29,7 +29,7 @@ namespace Modum.Services.Services
                 return Task.FromResult(favourites.Id);
             }
 
-            return Task.FromResult(0);
+            return Task.FromResult(Guid.Empty);
         }
 
     }

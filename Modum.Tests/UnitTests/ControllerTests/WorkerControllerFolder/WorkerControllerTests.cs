@@ -86,7 +86,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
         public async Task ManageSubSelectionPost_ReturnsJsonResult()
         {
             // Arrange
-            var mainCategoryId = 1;
+            var mainCategoryId = Guid.NewGuid();
             var categoriesDTO = new List<CategoryDTO>();
             var subcategoriesDTO = new List<SubcategoryDTO>();
 
@@ -126,7 +126,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
         [Fact]
         public async Task EditProduct_ReturnsViewResult()
         {
-            var productId = 1;
+            var productId = Guid.NewGuid();
             controllerHelperMock.Setup(x => x.EditProductHelper(productId)).ReturnsAsync(new EditProductViewModel());
 
             // Act
@@ -141,7 +141,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
         public async Task DeleteProduct_ReturnsJsonResult()
         {
             // Arrange
-            var productId = 1;
+            var productId = Guid.NewGuid();
 
             // Act
             var result = await controller.DeleteProduct(productId) as JsonResult;
@@ -179,7 +179,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
         [Fact]
         public async Task EditLTC_ReturnsViewResult()
         {
-            var ltcId = 1;
+            var ltcId = Guid.NewGuid();
             controllerHelperMock.Setup(x => x.EditLTCHelper(ltcId)).ReturnsAsync(new LTC());
 
             // Act
@@ -194,7 +194,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
         public async Task DeleteLTC_ReturnsJsonResult()
         {
             //Arrange
-            var ltcId = 1;
+            var ltcId = Guid.NewGuid();
 
             // Act
             var result = await controller.DeleteLTC(ltcId) as JsonResult;

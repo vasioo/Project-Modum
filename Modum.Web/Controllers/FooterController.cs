@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Modum.Models.MainModel;
 using Modum.Models.ViewModels;
 using Modum.Services.Interfaces;
-using Modum.Services.Services;
 using Modum.Web.ControllerService.FooterController;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 
 namespace Modum.Web.Controllers
@@ -17,73 +17,166 @@ namespace Modum.Web.Controllers
         private readonly IEmailSenderService _emailSenderService;
         private readonly IConfiguration _configuration;
         private readonly IFooterControllerHelper _helper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public FooterController(IFooterControllerHelper helper, IEmailSenderService emailSenderService,
-            IFirebaseService firebaseService, IConfiguration configuration
-            )
+            IFirebaseService firebaseService, IConfiguration configuration, UserManager<ApplicationUser> userManager)
         {
             _firebaseService = firebaseService;
             _configuration = configuration;
             _helper = helper;
             _emailSenderService = emailSenderService;
-
+            _userManager = userManager;
         }
         #endregion
 
         #region Views
+
         public async Task<IActionResult> AboutUs()
         {
-            return View("~/Views/FooterItems/AboutUs.cshtml");
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CartElementsCountViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+
+            return View("~/Views/FooterItems/AboutUs.cshtml", viewModel);
         }
+
         public async Task<IActionResult> Ads()
         {
-            return View("~/Views/FooterItems/Ads.cshtml");
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CartElementsCountViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+
+            return View("~/Views/FooterItems/Ads.cshtml", viewModel);
         }
+
         public async Task<IActionResult> Campaigns()
         {
-            var viewModel = await _helper.GetCampaignInformationData();
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CampaignsPageViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+            viewModel.LTCs = await _helper.GetCampaignInformationData();
+
             return View("~/Views/FooterItems/Campaigns.cshtml", viewModel);
         }
+
         public async Task<IActionResult> ContactUs()
         {
-            return View("~/Views/FooterItems/ContactUs.cshtml");
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CartElementsCountViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+
+            return View("~/Views/FooterItems/ContactUs.cshtml", viewModel);
         }
+
         public async Task<IActionResult> MostAskedQuestions()
         {
-            return View("~/Views/FooterItems/MostAskedQuestions.cshtml");
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CartElementsCountViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+
+            return View("~/Views/FooterItems/MostAskedQuestions.cshtml", viewModel);
         }
+
         public async Task<IActionResult> OnlinePayment()
         {
-            return View("~/Views/FooterItems/OnlinePayment.cshtml");
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CartElementsCountViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+
+            return View("~/Views/FooterItems/OnlinePayment.cshtml", viewModel);
         }
+
         public async Task<IActionResult> Partnership()
         {
-            return View("~/Views/FooterItems/Partnership.cshtml");
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CartElementsCountViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+
+            return View("~/Views/FooterItems/Partnership.cshtml", viewModel);
         }
+
         public async Task<IActionResult> PaymentOnDelivery()
         {
-            return View("~/Views/FooterItems/PaymentOnDelivery.cshtml");
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CartElementsCountViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+
+            return View("~/Views/FooterItems/PaymentOnDelivery.cshtml", viewModel);
         }
+
         public async Task<IActionResult> Privacy()
         {
-            return View("~/Views/FooterItems/Privacy.cshtml");
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CartElementsCountViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+
+            return View("~/Views/FooterItems/Privacy.cshtml", viewModel);
         }
+
         public async Task<IActionResult> Returning()
         {
-            return View("~/Views/FooterItems/Returning.cshtml");
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CartElementsCountViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+
+            return View("~/Views/FooterItems/Returning.cshtml", viewModel);
         }
+
         public async Task<IActionResult> TermsAndConditions()
         {
-            return View("~/Views/FooterItems/TermsAndConditions.cshtml");
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
+            var viewModel = new CartElementsCountViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
+
+            return View("~/Views/FooterItems/TermsAndConditions.cshtml",viewModel);
         }
 
 
         #endregion
 
         #region Blog
-        public IActionResult Blog()
+        public async Task<IActionResult> Blog()
         {
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
             var viewModel = new BlogViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
             var model = _firebaseService.GetAllBlogPosts();
             viewModel.BlogPosts = model;
             return View("~/Views/FooterItems/Blog.cshtml", viewModel);
@@ -91,7 +184,12 @@ namespace Modum.Web.Controllers
 
         public async Task<IActionResult> BlogPost(Guid postId)
         {
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
             var viewModel = new BlogPostViewModel();
+            viewModel.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
             viewModel.Post = await _firebaseService.GetBlogPostById(postId);
             if (viewModel.Post != null)
             {
@@ -155,7 +253,12 @@ namespace Modum.Web.Controllers
         [Authorize]
         public async Task<IActionResult> OutfitPicker()
         {
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+
             var model = new OutfitPickerViewModel();
+            model.CartItemsForUser = await _helper.GetAmountOfCartItemsForUser(userId);
             return View("~/Views/UserViews/OutfitPicker.cshtml", model);
 
         }
@@ -217,7 +320,6 @@ namespace Modum.Web.Controllers
                 return Json(new { status = false, Message = "Error Conflicted" });
             }
         }
-
 
         #endregion
     }

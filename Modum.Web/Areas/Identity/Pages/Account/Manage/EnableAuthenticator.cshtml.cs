@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text;

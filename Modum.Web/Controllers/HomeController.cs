@@ -1,15 +1,12 @@
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
+using Modum.Models.BaseModels.Error;
 using Modum.Models.BaseModels.Models.ProductStructure;
-using Modum.Models.ViewModels;
-using Modum.Services.Services;
 using Modum.Services.Services.ControllerService.HomeController;
-using Modum.Web.Areas.Identity.Pages;
 using Stripe.Checkout;
-using System.Diagnostics;
+using System.Net;
 
 namespace Modum.Web.Controllers
 {
@@ -44,18 +41,17 @@ namespace Modum.Web.Controllers
             return View("~/Views/UserViews/Shop.cshtml", viewModel);
         }
 
-        
         #endregion
 
         #region Checkout
         [Authorize]
-        public async Task<IActionResult> Checkout()
+        public async Task<IActionResult> Checkout(string location,string deliveryPlan)
         {
             var username = HttpContext.User?.Identity?.Name ?? "";
             var user = await _userManager.FindByNameAsync(username);
             if (user?.Id != null || user?.Id != "")
             {
-                var options = await _helper.CheckoutHelper(user!, HttpContext);
+                var options = await _helper.CheckoutHelper(user!, HttpContext, location,deliveryPlan);
                 if (options.Mode == "payment")
                 {
                     var service = new SessionService();
@@ -76,7 +72,7 @@ namespace Modum.Web.Controllers
                 var username = HttpContext.User?.Identity?.Name ?? "";
                 var user = await _userManager.FindByEmailAsync(username);
 
-                if (await _helper.ProcessPayment(user!))
+                if (await _helper.ProcessPayment(user!,HttpContext))
                 {
                     return View("~/Views/UserViews/SuccessfullPayment.cshtml");
                 }
@@ -88,12 +84,12 @@ namespace Modum.Web.Controllers
 
         #region UserProducts
 
-        public async Task<IActionResult> _UserProductsPartial(int? page, ProductFilter filter, string sortBy, int mainCategoryId, string searchProducts)
+        public async Task<IActionResult> _UserProductsPartial(int? page, ProductFilter filter, string sortBy, string searchProducts)
         {
             var username = HttpContext.User?.Identity?.Name ?? "";
             var user = await _userManager.FindByNameAsync(username);
-
-            var viewModel = await _helper._UserProductsPartialHelper(page, filter, sortBy, mainCategoryId, searchProducts, user!);
+            ViewBag.SearchString = searchProducts;
+            var viewModel = await _helper._UserProductsPartialHelper(page, filter, sortBy, searchProducts, user!);
 
             return View("~/Views/UserViews/_UserProductsPartial.cshtml", viewModel);
         }
@@ -101,7 +97,7 @@ namespace Modum.Web.Controllers
 
         #region Favourites
         [Authorize]
-        public async Task<JsonResult> AddToFavourites(int productId)
+        public async Task<JsonResult> AddToFavourites(Guid productId)
         {
             try
             {
@@ -117,7 +113,7 @@ namespace Modum.Web.Controllers
             return Json(new { status = true, Message = "The item was added successfully" });
         }
         [Authorize]
-        public async Task<JsonResult> RemoveFromFavourites(int productId, bool addToCart, string size)
+        public async Task<JsonResult> RemoveFromFavourites(Guid productId, bool addToCart, string size)
         {
             try
             {
@@ -151,7 +147,7 @@ namespace Modum.Web.Controllers
 
         #region Cart
         [Authorize]
-        public async Task<JsonResult> AddToCart(int productId, string size)
+        public async Task<JsonResult> AddToCart(Guid productId, string size)
         {
             try
             {
@@ -166,7 +162,7 @@ namespace Modum.Web.Controllers
             return Json(new { status = true, Message = "The item was added successfully" });
         }
         [Authorize]
-        public async Task<JsonResult> RemoveFromCart(int productId, bool addToFavourites, string size)
+        public async Task<JsonResult> RemoveFromCart(Guid productId, bool addToFavourites, string size)
         {
             try
             {
@@ -175,7 +171,7 @@ namespace Modum.Web.Controllers
 
                 await _helper.RemoveFromCartHelper(productId, size, user!);
 
-                if (addToFavourites && productId > 0)
+                if (addToFavourites && productId != Guid.Empty)
                 {
                     await AddToFavourites(productId);
                 }
@@ -201,24 +197,75 @@ namespace Modum.Web.Controllers
         #region GenderCallTemplate
         public async Task<IActionResult> GenderCallTemplate(string category)
         {
-            var viewModel = await _helper.GenderCallTemplateHelper(category);
+            var username = HttpContext.User?.Identity?.Name ?? "";
+            var user = await _userManager.FindByNameAsync(username);
+            var userId = user != null ? user.Id : "";
+            var viewModel = await _helper.GenderCallTemplateHelper(category, userId);
 
             return View("~/Views/UserViews/GenderCallTemplate.cshtml", viewModel);
         }
 
         #endregion
 
-        #region HelperMethods
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        #region DeliveryLocation
+
+        [Authorize]
+        public async Task<IActionResult> DeliveryLocation()
         {
-            return View("~/Areas/Identity/Pages/Error.cshtml", new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var referringUrl = HttpContext.Request.Headers["Referer"].ToString();
+            var currentDomain = HttpContext.Request.Host.Value.ToLower();
+            var expectedURL = $"https://{currentDomain}/Home/Cart";
+            var expectedDeliveryReload = $"https://{currentDomain}/Home/Delivery";
+
+            if (!string.Equals(referringUrl, expectedURL, StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(referringUrl, expectedDeliveryReload, StringComparison.OrdinalIgnoreCase))
+            {
+                return Error(401);
+            }
+
+
+            return View("~/Views/UserViews/DeliveryLocation.cshtml");
         }
+
+        #endregion
+
+        #region HelperMethods
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error(int? errorCode = null)
+        {
+            var errorMessage = GetHttpStatusMessage(errorCode ?? HttpContext.Response.StatusCode);
+
+            var customErrorModel = new CustomErrorModel
+            {
+                StatusCode = errorCode ?? HttpContext.Response.StatusCode,
+                CustomErrorMessage = errorMessage
+            };
+            return View("~/Views/Home/Error.cshtml", customErrorModel);
+        }
+
+        private string GetHttpStatusMessage(int statusCode)
+        {
+            return statusCode switch
+            {
+                (int)HttpStatusCode.BadRequest => "Bad Request",
+                (int)HttpStatusCode.Unauthorized => "Unauthorized",
+                (int)HttpStatusCode.Forbidden => "Forbidden",
+                (int)HttpStatusCode.NotFound => "Not Found",
+                (int)HttpStatusCode.InternalServerError => "Server Error",
+                (int)HttpStatusCode.NotImplemented => "Server Error",
+                (int)HttpStatusCode.BadGateway => "Bad Gateway",
+                (int)HttpStatusCode.ServiceUnavailable => "Currently Unavailable",
+                (int)HttpStatusCode.LoopDetected => "Detected Loop",
+                _ => "Unknown Error"
+            };
+        }
+
         public IActionResult NotImplemented()
         {
             return View("~/Views/Home/NotImplemented.cshtml");
         }
-        #endregion
 
+        #endregion
     }
 }

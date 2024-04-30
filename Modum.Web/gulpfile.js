@@ -10,9 +10,6 @@
 gulp.task('bundle-common-js', function () {
     return gulp.src(["Scripts/Common/*.js"])
         .pipe(concat('common.js'))
-        .pipe(uglify().on('error', function (e) {
-            console.log(e);
-        }))
         .pipe(gulp.dest('./wwwroot/clothes-shop/js'));
 });
 
@@ -21,9 +18,6 @@ gulp.task('bundle-common-js', function () {
 gulp.task('bundle-workerLayout-js', function () {
     return gulp.src(["Scripts/Pages/WorkerLayout/*.js"])
         .pipe(concat('workerLayout.js'))
-        .pipe(uglify().on('error', function (e) {
-            console.log(e);
-        }))
         .pipe(gulp.dest('./wwwroot/clothes-shop/js'));
 });
 
@@ -31,9 +25,6 @@ gulp.task('bundle-workerLayout-js', function () {
 gulp.task('bundle-adminLayout-js', function () {
     return gulp.src(["Scripts/Pages/AdminLayout/*.js"])
         .pipe(concat('adminLayout.js'))
-        .pipe(uglify().on('error', function (e) {
-            console.log(e);
-        }))
         .pipe(gulp.dest('./wwwroot/clothes-shop/js'));
 });
 
@@ -41,9 +32,6 @@ gulp.task('bundle-adminLayout-js', function () {
 gulp.task('bundle-mainLayout-js', function () {
     return gulp.src(["Scripts/Pages/MainLayout/*.js"])
         .pipe(concat('mainLayout.js'))
-        .pipe(uglify().on('error', function (e) {
-            console.log(e);
-        }))
         .pipe(gulp.dest('./wwwroot/clothes-shop/js'));
 });
 

@@ -10,14 +10,15 @@ namespace Modum.Models.ViewModels
         public PaginatedList<Product> PaginatedProducts { get; set; }
         public IEnumerable<Product> TenFavItems { get; set; } = new List<Product>();
         public IEnumerable<Category> UnderNavCategories { get; set; } = new List<Category>();
-        public IEnumerable<Brands> BasicBrands { get; set; } = new List<Brands>();
-        public IEnumerable<Brands> PremiumBrands { get; set; } = new List<Brands>();
+        public List<string> BasicBrands { get; set; } = new List<string>();
+        public List<string> PremiumBrands { get; set; } = new List<string>();
         public IEnumerable<Category> Categories { get; set; } = new List<Category>();
         public IEnumerable<Subcategory> Subcategories { get; set; } = new List<Subcategory>();
         public IEnumerable<Product> LastViewedProducts { get; set; } = Enumerable.Empty<Product>();
+        public int CartItemsForUser { get; set; }
 
         public Array Sizes { get; set; } = Enum.GetValues(typeof(ClothesSizes));
-        public List<int> SelectedSubcategoriesItems { get; set; } = new List<int>();
+        public List<Guid> SelectedSubcategoriesItems { get; set; } = new List<Guid>();
         public List<string> DistinctColours { get; set; } = new List<string>();
         public List<string> DistinctBrands { get; set; } = new List<string>();
         public List<string> DistinctLTCs { get; set; } = new List<string>();
@@ -26,7 +27,7 @@ namespace Modum.Models.ViewModels
         public int CurrentPage { get; set; }
         public int TotalPages => PaginatedProducts?.TotalPages ?? 0;
 
-        public int MainCategoryId { get; set; }
+        public string MainCategoryName { get; set; }
         public decimal MaxPrice { get; set; }
         public decimal MinPrice { get; set; }
 
@@ -36,7 +37,6 @@ namespace Modum.Models.ViewModels
         public string[] FilterColors { get; set; } = new string[0];
         public string[] FilterBrands { get; set; } = new string[0];
         public string[] FilterLTCs { get; set; } = new string[0];
-
 
         public _UserProductsPartialViewModel()
         {

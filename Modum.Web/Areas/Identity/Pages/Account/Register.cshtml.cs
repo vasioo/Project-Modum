@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 using Modum.Models.BaseModels.Enums;
 using NuGet.Versioning;
 using System.ComponentModel.DataAnnotations;

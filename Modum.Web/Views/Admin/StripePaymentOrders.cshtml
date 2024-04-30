@@ -1,0 +1,67 @@
+﻿@using Modum.Models.BaseModels.Models.BaseStructure;
+@using Modum.Models.BaseModels.Models.PaymentStructure;
+@using Modum.Web.Models.Models.Pagination;
+@using Stripe;
+@model PaginatedList<Charge>
+@{
+    SelectList orderStatusList = ViewBag.OrderStatus;
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
+<style>
+
+</style>
+<div class="stripe-payment-orders-page">
+    <div class="display-4 py-3 text-center col">Stripe Payments</div>
+    <div id="order-filtering" class="d-flex pt-4 pb-4 justify-content-center">
+        <form asp-action="ManageOrders" method="get">
+            <div class="form-actions no-color row">
+                <div class="h5 row p-0 m-0 pr-2 align-items-center pl-2 pb-1" style="font-weight:400">
+                    Find by Order Id:
+                </div>
+                <div class="">
+                    <input type="text" name="SearchString" class="form-control" value="@ViewData["CurrentFilter"]" />
+                </div>
+                <div class="pl-3">
+                    <input type="submit" value="Search" class="btn btn-dark" /> |
+                    <a class="btn btn-danger" asp-action="ManageOrders">Clear</a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div id="orders-section">
+        <table class="table table-striped" border="1">
+            <thead>
+                <tr class="header-row">
+                    <th>Public Order Id</th>
+                    <th>User Email</th>
+                    <td>Amount</td>
+                    <th>Order Registered On</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td><a href="@order.ReceiptUrl" target="_blank">@order.Id </a></td>
+                        <td>@order.BillingDetails.Email</td>
+                        <td>@(order.Amount / 100M)</td>
+                        <td>@order.Created</td>
+                        <td><button class="btn btn-warning additional-btn" id=@order.Id>Additional Information</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            @{
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            }
+
+            <a asp-action="ManageOrders" asp-route-page="@(Model.PageIndex - 1)" class="btn btn-default @(Model.HasPreviousPage ? "" : "disabled")">Previous</a>
+            <a asp-action="ManageOrders" asp-route-page="@(Model.PageIndex + 1)" class="btn btn-default @(Model.HasNextPage ? "" : "disabled")">Next</a>
+
+        </div>
+    </div>
+</div>

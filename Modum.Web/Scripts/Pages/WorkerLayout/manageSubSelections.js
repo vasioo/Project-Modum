@@ -3,33 +3,30 @@
         let $submitBtn = $container.find('#save-btn'),
             $btnAddCategoryRow = $container.find('#add-category-row-btn'),
             $selectMainCategoryDropdown = $container.find('#selectMainCategoryDropdownId'),
-            $saveBtnDivRow = $container.find('#save-btn-div-row'),
             $mainCategoryTableDiv = $container.find('#mainCategoryTable'),
             counter = 0,
             newTemplateCategoryRow =
                 '<tr class="cat-row">' +
                 '   <td><input type="text" class="form-control category-name" required></td>' +
                 '   <td id="for-subcategories">' +
-                '       <a class="btn btn-primary col" data-toggle="collapse" href="" role="button" aria-expanded="false" aria-controls="">' +
-                '           Subcategories' +
+                '       <a class="btn btn-primary col" data-toggle="collapse" href="" role="button" aria-expanded="true" aria-controls="">' +
+                '           Show Subcategories' +
                 '       </a> ' +
-                '       <div class="card subcategoryTable" id="">' +
-                '               <div class="card-header"></div>' +
-                '               <div class="card-body">' +
-                '                 <table>' +
-                '                     <thead>' +
-                '                         <tr>' +
-                '                             <th>Subcategory Name</th>' +
-                '                             <th></th>' +
-                '                         </tr>' +
-                '                     </thead>' +
-                '                     <tbody class="subcategory-tbody">' +
-                '                         <!--Add options for change-->' +
-                '                     </tbody>' +
-                '                 </table>' +
-                '                 <button type="button" class="btn btn-primary add-subcategory-row-btn" id=""><i class="fas fa-plus"></i> Add Subcategory</button>' +
-                '              </div>' +
-                '           </div>' +
+                '       <div class="pt-3 subcategoryTable collapse show" id="">' +
+                '           <table class="col-12">' +
+                '              <thead>' +
+                '                  <tr>' +
+                '                      <th>Subcategory Name</th>' +
+                '                      <th></th>' +
+                '                  </tr>' +
+                '              </thead>' +
+                '              <tbody class="subcategory-tbody">' +
+                '              </tbody>' +
+                '          </table>' +
+                '          <div class="pt-2">'+
+                '               <button type="button" class="btn btn-primary add-subcategory-row-btn" id=""><i class="fas fa-plus"></i> Add Subcategory</button>' +
+                '          </div>' +
+                '       </div>' +
                 '   </td>' +
                 '   <td>' +
                 '       <button type="button" class="btn btn-danger delete-row m-1"><i class="fa fa-trash"></i></button>' +
@@ -37,8 +34,6 @@
                 '</tr>';
 
         $submitBtn.click(function () {
-            //when submitting the event should be binded to find the nearest maincategory / category so that 
-            //the element could be binded to its parent
             commonFuncs.showLoader();
             let selectedMainCategoryId = $selectMainCategoryDropdown.val(),
                 selectedCategoriesDTO = [],
@@ -49,7 +44,6 @@
             $categoriesTable.find('tbody .cat-row').each(function () {
                 const $row = $(this),
                     categoryName = $row.find('.category-name').val().trim();
-                // Create an object representing the category field and add it to the array
                 const category = {
                     CategoryName: categoryName,
                 };
@@ -72,8 +66,6 @@
                 isValid = validator.validateMainCategory(selectedMainCategoryId, selectedCategoriesDTO, selectedSubcategoriesDTO);
             if (isValid) {
 
-                // If form data is valid, make the AJAX POST request
-
                 $.post('/Worker/ManageSubSelection', {
                     mainCategoryId: selectedMainCategoryId,
                     categoriesDTO: selectedCategoriesDTO,
@@ -95,8 +87,6 @@
                     location.reload();
 
                 }).fail(function (error) {
-                    // Handle the AJAX request failure
-                    // This function will be executed if the AJAX request encounters an error
                     commonFuncs.hideLoader();
                     console.log('AJAX request failed:', error);
                 });
@@ -197,14 +187,13 @@
 
             $nearestTbody.append($newRow);
 
-            bindRowEvents($newRow);
         });
 
         $selectMainCategoryDropdown.change(function () {
             var selectedMainCategoryId = $(this).val();
             $mainCategoryTableDiv.find('tbody').empty();
             $mainCategoryTableDiv.css("display", $selectMainCategoryDropdown.val() !== "" ? "block" : "none");
-            $saveBtnDivRow.css("display", $selectMainCategoryDropdown.val() !== "" ? "block" : "none");
+            $submitBtn.css("display", $selectMainCategoryDropdown.val() !== "" ? "block" : "none");
 
 
             if (selectedMainCategoryId) {
@@ -232,7 +221,7 @@
                             let subcategoryRow = '<tr class="sub-row">' +
                                 '   <td><input type="text" class="form-control subcategory-name" required value="' + subcategory.name + '"></td>' +
                                 '   <td>' +
-                                '       <button type="button" class="btn btn-danger delete-subcategory-row m-1"><i class="fa fa-trash"></i></button>' +
+                                '       <button type="button" class="btn btn-danger delete-row m-1"><i class="fa fa-trash"></i></button>' +
                                 '   </td>' +
                                 '</tr>';
 
@@ -247,7 +236,7 @@
                     commonFuncs.hideLoader();
                     alert('AJAX request failed: ', error);
                 });
-            }
+            } commonFuncs.hideLoader();
         });
 
         $btnAddCategoryRow.click(function () {
@@ -255,7 +244,6 @@
             counter++;
 
             let $newRow = $(newTemplateCategoryRow);
-
             let $aTag = $newRow.find('a');
             let $subcategoryDiv = $newRow.find('.subcategoryTable');
 
@@ -266,27 +254,31 @@
 
 
             $mainCategoryTableDiv.find('#category-tbody').append($newRow);
-
-            bindRowEvents($newRow);
         });
 
-        function bindRowEvents($newRow) {
-            $newRow.find('.delete-row').click(function () {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this row!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, Delete!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $(this).closest('tr').remove();
-                    }
-                })
+        $(document).on('click', '.delete-row', function () {
+            var clickedElement = this;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this row!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(clickedElement).closest('tr').remove();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: "The item was removed temporary until Save is clicked(for returning refresh page)",
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                }
             });
-        }
+        });
 
         $container.on('change', '.category-name', function () {
             let $subcategoryTable = $mainCategoryTableDiv.closest('#subcategoryTable')

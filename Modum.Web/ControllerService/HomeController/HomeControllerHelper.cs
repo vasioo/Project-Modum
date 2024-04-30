@@ -1,11 +1,12 @@
 ﻿using Hangfire;
 using Microsoft.AspNetCore.Identity;
-using Modum.DataAccess.MainModel;
+using Microsoft.EntityFrameworkCore;
 using Modum.Models.BaseModels.Enums;
 using Modum.Models.BaseModels.Models.BaseStructure;
 using Modum.Models.BaseModels.Models.Payment;
 using Modum.Models.BaseModels.Models.PaymentStructure;
 using Modum.Models.BaseModels.Models.ProductStructure;
+using Modum.Models.MainModel;
 using Modum.Models.ViewModels;
 using Modum.Services.Interfaces;
 using Stripe;
@@ -23,12 +24,13 @@ namespace Modum.Services.Services.ControllerService.HomeController
         private readonly ICategoryService _categoryService;
         private readonly ISubcategoryService _subcategoryService;
         private readonly IMainCategoryService _mainCategoryService;
-        private readonly IBrandService _brandService;
         private readonly IFirebaseService _firebaseService;
         private readonly ILTCService _ltcService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IEmailSenderService _emailSenderService;
+        private readonly IOrderService _orderService;
+        private readonly IProductSizesService _productSizesService;
         public HomeControllerHelper(
             IFavouriteService favouriteService,
             IProductService productService,
@@ -36,10 +38,13 @@ namespace Modum.Services.Services.ControllerService.HomeController
             ICategoryService categoryService,
             ISubcategoryService subcategoryService,
             IMainCategoryService mainCategoryService,
-            IBrandService brandService,
             UserManager<ApplicationUser> userManager,
-            IFirebaseService firebaseService, ILTCService ltcService,
-            IConfiguration configuration, IEmailSenderService emailSenderService)
+            IFirebaseService firebaseService,
+            ILTCService ltcService,
+            IConfiguration configuration,
+            IEmailSenderService emailSenderService,
+            IOrderService orderService,
+            IProductSizesService productSizesService)
         {
             _ltcService = ltcService;
             _favouriteService = favouriteService;
@@ -48,56 +53,72 @@ namespace Modum.Services.Services.ControllerService.HomeController
             _categoryService = categoryService;
             _subcategoryService = subcategoryService;
             _mainCategoryService = mainCategoryService;
-            _brandService = brandService;
             _userManager = userManager;
             _firebaseService = firebaseService;
             _configuration = configuration;
             _emailSenderService = emailSenderService;
+            _orderService = orderService;
+            _productSizesService = productSizesService;
         }
         #endregion
 
         #region ShopHelper
+
         public async Task<ShopViewModel> ShopHelper(string productId, ApplicationUser user)
         {
             var shopViewModel = new ShopViewModel();
 
             await _firebaseService.AddLastViewedProduct(user.Id, productId);
 
-            shopViewModel.Product = await _productService.GetByIdAsync(int.Parse(productId));
+            shopViewModel.Product = await _productSizesService.GetSizesByProductId(Guid.Parse(productId));
             if (user != null)
             {
                 shopViewModel.Cart = await _cartService.GetCartContainerByUserId(user.Id.ToString());
                 shopViewModel.Favourites = await _favouriteService.GetFavouritesContainerByUserId(user.Id.ToString());
             }
-
+            var userCart = await _cartService.GetCartContainerByUserId(user.Id);
+            if (userCart != null)
+            {
+                shopViewModel.CartItemsForUser = userCart.CartItems.Count();
+            }
             shopViewModel.TenFavItems = await _productService.GetProductsByTenMostAddedToFavourites();
-            shopViewModel.UnderNavCategories = await _categoryService.GetAllAsync();
-            shopViewModel.BasicBrands = await _brandService.GetMostFavouriteBrandsBySoldItemsBySection("normal");
-            shopViewModel.PremiumBrands = await _brandService.GetMostFavouriteBrandsBySoldItemsBySection("premium");
+            shopViewModel.UnderNavCategories = _categoryService.IQueryableGetAllAsync()
+                .Where(x => x.MainCategoryId == _mainCategoryService.IQueryableGetAllAsync()
+                    .Where(y => y.Name == "Women").Select(z => z.Id).FirstOrDefault());
+            shopViewModel.BasicBrands = await _productService.GetMostFavouriteBrandsBySoldItemsBySection("normal");
+            shopViewModel.PremiumBrands = await _productService.GetMostFavouriteBrandsBySoldItemsBySection("premium");
 
             if (user != null)
             {
                 var productIds = await _firebaseService.GetLastViewedProducts(user!.Id!);
                 var myNewDic = productIds.OrderByDescending(x => x.Value.Timestamp);
-                var productList = await Task.WhenAll(myNewDic.Select(product => _productService.GetByIdAsync(int.Parse(product.Key))));
+                var productList = await Task.WhenAll(myNewDic.Select(product => _productService.GetByIdAsync(Guid.Parse(product.Key))));
                 shopViewModel.LastViewedProducts = productList.ToList();
             }
 
 
             return shopViewModel;
         }
+
         #endregion
 
         #region FavouritesHelper
+
         public async Task<FavouritesViewModel> FavouritesHelper(ApplicationUser user)
         {
             var viewModel = new FavouritesViewModel();
 
             viewModel.TenFavItems = await _productService.GetProductsByTenMostAddedToFavourites();
-            viewModel.UnderNavCategories = await _categoryService.GetAllAsync();
-            viewModel.BasicBrands = await _brandService.GetMostFavouriteBrandsBySoldItemsBySection("normal");
-            viewModel.PremiumBrands = await _brandService.GetMostFavouriteBrandsBySoldItemsBySection("premium");
-
+            viewModel.UnderNavCategories = _categoryService.IQueryableGetAllAsync()
+                .Where(x => x.MainCategoryId == _mainCategoryService.IQueryableGetAllAsync()
+                    .Where(y => y.Name == "Women").Select(z => z.Id).FirstOrDefault());
+            viewModel.BasicBrands = await _productService.GetMostFavouriteBrandsBySoldItemsBySection("normal");
+            viewModel.PremiumBrands = await _productService.GetMostFavouriteBrandsBySoldItemsBySection("premium");
+            var userCart = await _cartService.GetCartContainerByUserId(user.Id);
+            if (userCart != null)
+            {
+                viewModel.CartItemsForUser = userCart.CartItems.Count();
+            }
             if (user != null && !string.IsNullOrEmpty(user.Id))
             {
                 var items = await _favouriteService.GetFavouritesContainerByUserId(user.Id);
@@ -106,26 +127,26 @@ namespace Modum.Services.Services.ControllerService.HomeController
 
                 if (items?.Products != null && items.Products.Any())
                 {
-                    viewModel.FavoriteProducts = items.Products;
+                    viewModel.FavoriteProducts =await _productSizesService.GetSizesOfProducts(items.Products);
                 }
             }
             else
             {
                 viewModel.Cart = new Cart();
-                viewModel.FavoriteProducts = new List<Models.BaseModels.Models.ProductStructure.Product>();
+                viewModel.FavoriteProducts = new List<ProductSizesHelpingTable>();
             }
             if (user != null)
             {
                 var productIds = await _firebaseService.GetLastViewedProducts(user!.Id!);
                 var myNewDic = productIds.OrderByDescending(x => x.Value.Timestamp);
-                var productList = await Task.WhenAll(myNewDic.Select(product => _productService.GetByIdAsync(int.Parse(product.Key))));
+                var productList = await Task.WhenAll(myNewDic.Select(product => _productService.GetByIdAsync(Guid.Parse(product.Key))));
                 viewModel.LastViewedProducts = productList.ToList();
             }
 
             return viewModel;
         }
 
-        public async Task AddToFavouritesHelper(int productId, ApplicationUser user)
+        public async Task AddToFavouritesHelper(Guid productId, ApplicationUser user)
         {
             if (user != null)
             {
@@ -133,7 +154,6 @@ namespace Modum.Services.Services.ControllerService.HomeController
 
                 if (product != null)
                 {
-                    var brand = await _brandService.GetBrandByStringName(product.Brand);
 
                     var favourites = await _favouriteService.GetFavouritesContainerByUserId(user.Id) ?? new Favourites
                     {
@@ -157,13 +177,7 @@ namespace Modum.Services.Services.ControllerService.HomeController
                         await _productService.UpdateAsync(product);
                     }
 
-                    if (brand != null)
-                    {
-                        brand.AmountOfTimesInFavourites++;
-                        await _brandService.UpdateAsync(brand);
-                    }
-
-                    if (favourites.Id <= 0)
+                    if (favourites.Id == Guid.Empty)
                     {
                         await _favouriteService.AddAsync(favourites);
                     }
@@ -175,13 +189,11 @@ namespace Modum.Services.Services.ControllerService.HomeController
             }
         }
 
-        public async Task RemoveFromFavourites(int productId, bool addToCart, string size, ApplicationUser user)
+        public async Task RemoveFromFavourites(Guid productId, bool addToCart, string size, ApplicationUser user)
         {
             var product = await _productService.GetByIdAsync(productId);
             var favouritesId = await _favouriteService.GetFavouritesIdByUserId($"{user?.Id}");
             var favourites = await _favouriteService.GetByIdAsync(favouritesId);
-            var brand = await _brandService.GetBrandByStringName(product.Brand);
-
 
             if (favourites != null)
             {
@@ -207,25 +219,27 @@ namespace Modum.Services.Services.ControllerService.HomeController
                 product.AmountOfTimesInFavourites--;
                 await _productService.UpdateAsync(product);
             }
-            if (brand != null)
-            {
-                brand.AmountOfTimesInFavourites--;
-                await _brandService.UpdateAsync(brand);
-            }
         }
 
         #endregion
 
         #region CartHelper
+
         public async Task<CartViewModel> CartHelper(ApplicationUser user)
         {
             var viewModel = new CartViewModel();
 
             viewModel.TenFavItems = await _productService.GetProductsByTenMostAddedToFavourites();
-            viewModel.UnderNavCategories = await _categoryService.GetAllAsync();
-            viewModel.BasicBrands = await _brandService.GetMostFavouriteBrandsBySoldItemsBySection("normal");
-            viewModel.PremiumBrands = await _brandService.GetMostFavouriteBrandsBySoldItemsBySection("premium");
-
+            viewModel.UnderNavCategories = _categoryService.IQueryableGetAllAsync()
+                .Where(x => x.MainCategoryId == _mainCategoryService.IQueryableGetAllAsync()
+                    .Where(y => y.Name == "Women").Select(z => z.Id).FirstOrDefault());
+            viewModel.BasicBrands = await _productService.GetMostFavouriteBrandsBySoldItemsBySection("normal");
+            viewModel.PremiumBrands = await _productService.GetMostFavouriteBrandsBySoldItemsBySection("premium");
+            var userCart = await _cartService.GetCartContainerByUserId(user.Id);
+            if (userCart != null)
+            {
+                viewModel.CartItemsForUser = userCart.CartItems.Count();
+            }
             if (user != null && !string.IsNullOrEmpty(user.Id))
             {
                 var items = await _cartService.GetCartContainerByUserId(user.Id);
@@ -241,15 +255,18 @@ namespace Modum.Services.Services.ControllerService.HomeController
             {
                 var productIds = await _firebaseService.GetLastViewedProducts(user!.Id!);
                 var myNewDic = productIds.OrderByDescending(x => x.Value.Timestamp);
-                var productList = await Task.WhenAll(myNewDic.Select(product => _productService.GetByIdAsync(int.Parse(product.Key))));
-                viewModel.LastViewedProducts = productList.ToList();
+                if (myNewDic.Count() > 0)
+                {
+                    var productList = await Task.WhenAll(myNewDic.Select(product => _productService.GetByIdAsync(Guid.Parse(product.Key))));
+                    viewModel.LastViewedProducts = productList.ToList();
+                }
             }
 
 
             return viewModel;
         }
 
-        public async Task AddToCartHelper(int productId, string size, ApplicationUser user)
+        public async Task AddToCartHelper(Guid productId, string size, ApplicationUser user)
         {
             if (user != null)
             {
@@ -276,7 +293,7 @@ namespace Modum.Services.Services.ControllerService.HomeController
                         cart.CartItems.Add(cartItem);
                     }
 
-                    if (cart.Id == 0)
+                    if (cart.Id == Guid.Empty)
                     {
                         await _cartService.AddAsync(cart);
                     }
@@ -288,7 +305,7 @@ namespace Modum.Services.Services.ControllerService.HomeController
             }
         }
 
-        public async Task RemoveFromCartHelper(int productId, string size, ApplicationUser user)
+        public async Task RemoveFromCartHelper(Guid productId, string size, ApplicationUser user)
         {
             var product = await _productService.GetByIdAsync(productId);
             var cartId = await _cartService.GetCartIdByUserId($"{user?.Id}");
@@ -316,34 +333,52 @@ namespace Modum.Services.Services.ControllerService.HomeController
         #endregion
 
         #region GenderCallTemplateHelper
-        public async Task<GenderCallTemplateViewModel> GenderCallTemplateHelper(string category)
+        public async Task<GenderCallTemplateViewModel> GenderCallTemplateHelper(string category, string userId)
         {
             var viewModel = new GenderCallTemplateViewModel();
             viewModel.Category = category;
             viewModel.TenFavItems = await _productService.GetProductsByTenMostAddedToFavourites();
             viewModel.MostBoughtItems = await _productService.GetProductsByTenMostBought();
-            viewModel.UnderNavCategories = await _categoryService.GetAllAsync();
-            viewModel.BasicBrands = await _brandService.GetMostFavouriteBrandsBySoldItemsBySection("normal");
-            viewModel.PremiumBrands = await _brandService.GetMostFavouriteBrandsBySoldItemsBySection("premium");
+            viewModel.UnderNavCategories = _categoryService.IQueryableGetAllAsync()
+                .Where(x => x.MainCategoryId == _mainCategoryService.IQueryableGetAllAsync()
+                    .Where(y => y.Name == category).Select(z => z.Id).FirstOrDefault());
+            viewModel.BasicBrands = await _productService.GetMostFavouriteBrandsBySoldItemsBySection("normal");
+            viewModel.PremiumBrands = await _productService.GetMostFavouriteBrandsBySoldItemsBySection("premium");
             viewModel.LimitedTimeCampaign = await _ltcService.GetBestLTCNow();
             viewModel.BlogPostsForTemplate = _firebaseService.GetAllBlogPosts().OrderByDescending(x => x.DateOfCreation).Take(10);
-
+            var userCart = await _cartService.GetCartContainerByUserId(userId);
+            if (userCart != null)
+            {
+                viewModel.CartItemsForUser = userCart.CartItems.Count();
+            }
             return viewModel;
         }
 
-      
+
         #endregion
 
         #region UserProductsHelper
 
-        public async Task<_UserProductsPartialViewModel> _UserProductsPartialHelper(int? page, ProductFilter filter, string sortBy, int mainCategoryId, string searchProducts, ApplicationUser user)
+        public async Task<_UserProductsPartialViewModel> _UserProductsPartialHelper(int? page, ProductFilter filter, string sortBy, string searchProducts, ApplicationUser user)
         {
             var viewModel = new _UserProductsPartialViewModel();
+            var mainCategory = _mainCategoryService.IQueryableGetAllAsync()
+                .Where(x => x.Name == filter.MainCategoryName)
+                .FirstOrDefault();
+
+            Guid mainCategoryId = mainCategory != null ? mainCategory.Id : Guid.NewGuid();
 
             viewModel.TenFavItems = await _productService.GetProductsByTenMostAddedToFavourites();
-            viewModel.UnderNavCategories = await _categoryService.GetAllAsync();
-            viewModel.BasicBrands = await _brandService.GetMostFavouriteBrandsBySoldItemsBySection("normal");
-            viewModel.PremiumBrands = await _brandService.GetMostFavouriteBrandsBySoldItemsBySection("premium");
+            viewModel.BasicBrands = await _productService.GetMostFavouriteBrandsBySoldItemsBySection("normal");
+            viewModel.PremiumBrands = await _productService.GetMostFavouriteBrandsBySoldItemsBySection("premium");
+            if (user != null)
+            {
+                var userCart = await _cartService.GetCartContainerByUserId(user.Id);
+                if (userCart != null)
+                {
+                    viewModel.CartItemsForUser = userCart.CartItems.Count();
+                }
+            }
             if (page == null)
             {
                 page = 1;
@@ -355,28 +390,34 @@ namespace Modum.Services.Services.ControllerService.HomeController
             }
             var products = _productService.IQueryableGetAllAsync();
 
-            var categories = await _categoryService.GetAllAsync();
-            var subcategories = await _subcategoryService.GetAllAsync();
-
+            var categories = _categoryService.IQueryableGetAllAsync().Where(x => x.MainCategoryId == mainCategoryId).AsEnumerable();
+            var subcategories = _subcategoryService.IQueryableGetAllAsync().Where(x => x.MainCategoryId == mainCategoryId).AsEnumerable();
+            if (mainCategoryId == Guid.Empty)
+            {
+                categories = await _categoryService.GetAllAsync();
+                subcategories = await _subcategoryService.GetAllAsync();
+            }
             var currentSeason = GetCurrentSeason();
 
-            var mainCategory = mainCategoryId;
-
-            if (mainCategory == 0)
+            if (mainCategoryId == Guid.Empty)
             {
                 var tempdata = await _mainCategoryService.GetDefaultMainCategory();
-                mainCategory = tempdata.Id;
+                mainCategoryId = tempdata.Id;
             }
-            if (mainCategory != 0)
+            if (mainCategoryId != Guid.Empty)
             {
-                viewModel.Subcategories = subcategories.Where(sub => sub.MainCategoryId == mainCategory);
-                viewModel.Categories = categories.Where(cat => cat.MainCategoryId == mainCategory);
-                viewModel.MainCategoryId = mainCategory;
+                var mainCategoryEntity = _mainCategoryService.IQueryableGetAllAsync().Where(x => x.Name == filter.MainCategoryName).FirstOrDefault();
+                viewModel.Subcategories = subcategories.Where(sub => sub.MainCategoryId == mainCategoryId);
+                viewModel.Categories = categories.Where(cat => cat.MainCategoryId == mainCategoryId);
+                if (mainCategoryEntity != null)
+                {
+                    viewModel.MainCategoryName = mainCategoryEntity.Name;
+                }
             }
             if (!string.IsNullOrEmpty(filter.SelectedSubcategories))
             {
-                List<int> selectedSubs = filter.SelectedSubcategories.Split('_').Select(int.Parse).ToList();
-                List<int> subcategoryItemsSelected = new List<int>();
+                List<Guid> selectedSubs = filter.SelectedSubcategories.Split('_').Select(Guid.Parse).ToList();
+                List<Guid> subcategoryItemsSelected = new List<Guid>();
 
                 if (selectedSubs != null && selectedSubs.Any())
                 {
@@ -436,23 +477,18 @@ namespace Modum.Services.Services.ControllerService.HomeController
             {
                 case "lowest-price":
                     sortBy = "Lowest Price";
-                    products = products.OrderByDescending(pr => pr.Price - pr.DiscountFromPrice);
                     break;
                 case "highest-price":
                     sortBy = "Highest Price";
-                    products = products.OrderBy(pr => pr.Price - pr.DiscountFromPrice);
                     break;
                 case "newest":
                     sortBy = "Newest";
-                    products = products.OrderByDescending(pr => pr.UploadedOrUpdatedOn);
                     break;
                 case "most-popular":
                     sortBy = "Most Popular";
-                    products = products.OrderByDescending(pr => pr.AmountOfTimesInFavourites);
                     break;
                 default:
                     sortBy = "Most Popular";
-                    products = products.OrderByDescending(pr => pr.Price - pr.DiscountFromPrice);
                     break;
             }
             viewModel.SortBy = sortBy;
@@ -474,7 +510,7 @@ namespace Modum.Services.Services.ControllerService.HomeController
             {
                 var productIds = await _firebaseService.GetLastViewedProducts(user!.Id!);
                 var myNewDic = productIds.OrderByDescending(x => x.Value.Timestamp);
-                var productList = await Task.WhenAll(myNewDic.Select(product => _productService.GetByIdAsync(int.Parse(product.Key))));
+                var productList = await Task.WhenAll(myNewDic.Select(product => _productService.GetByIdAsync(Guid.Parse(product.Key))));
                 viewModel.LastViewedProducts = productList.ToList();
             }
 
@@ -485,8 +521,6 @@ namespace Modum.Services.Services.ControllerService.HomeController
                 (pr.Season == "Summer" && currentSeason == "Spring") ||
                 (pr.Season == "Autumn" && currentSeason == "Summer") ||
                 (pr.Season == "Winter" && currentSeason == "Autumn") ? 2 : 1);
-
-
 
             viewModel.PaginateProducts(products);
             return viewModel;
@@ -506,7 +540,6 @@ namespace Modum.Services.Services.ControllerService.HomeController
             DateTime summerStart = new DateTime(currentDate.Year, 5, 21);
             DateTime summerEnd = new DateTime(currentDate.Year, 8, 25);
 
-            // Check if the current date is within the specified date ranges
             if (currentDate >= winterStart && currentDate <= winterEnd)
             {
                 return "Winter";
@@ -528,11 +561,12 @@ namespace Modum.Services.Services.ControllerService.HomeController
         #endregion
 
         #region CheckoutHelper
-        public async Task<SessionCreateOptions> CheckoutHelper(ApplicationUser user, HttpContext context)
+        public async Task<SessionCreateOptions> CheckoutHelper(ApplicationUser user, HttpContext context, string location, string deliveryPlan)
         {
             try
             {
                 var items = await _cartService.GetCartContainerByUserId(user!.Id);
+               
 
                 if (items != null && items.CartItems != null && items.CartItems.Count() > 0)
                 {
@@ -545,6 +579,10 @@ namespace Modum.Services.Services.ControllerService.HomeController
                         CancelUrl = domain + "Home/Cart",
                         LineItems = new List<SessionLineItemOptions>(),
                         Mode = "payment",
+                        Metadata = new Dictionary<string, string>
+                        {
+                            { "location", location },
+                        }
                     };
 
                     var orderedProducts = new List<string>();
@@ -553,20 +591,27 @@ namespace Modum.Services.Services.ControllerService.HomeController
                     {
                         var product = _productService.IQueryableGetAllAsync().Where(pr => pr.Id == item.ProductId).FirstOrDefault();
 
+                        decimal percentageToBeRemoved = 0;
+                        foreach (var ltc in product.LTCs)
+                        {
+                            percentageToBeRemoved += ltc.PercentageOfDiscount;
+                        }
+
+                        var discFromPrice = product.DiscountFromPrice + ((product.Price + product.DiscountFromPrice) * Math.Round((percentageToBeRemoved / 100m), 2));
                         if (product != null)
                         {
                             var sessionListItem = new SessionLineItemOptions
                             {
                                 PriceData = new SessionLineItemPriceDataOptions
                                 {
-                                    UnitAmount = (long)(product.Price * 100 - product.DiscountFromPrice * 100),
+                                    UnitAmount = (long)(product.Price * 100 - discFromPrice * 100),
                                     Currency = "USD",
                                     ProductData = new SessionLineItemPriceDataProductDataOptions
                                     {
                                         Name = $"{product.Brand}-{product.Title}"
                                     }
                                 },
-                                Quantity = 1
+                                Quantity = 1,
                             };
                             options.LineItems.Add(sessionListItem);
 
@@ -577,9 +622,67 @@ namespace Modum.Services.Services.ControllerService.HomeController
                         }
                     }
 
-                    var service = new SessionService();
+                    double deliveryFee = 5;
 
+                    if (deliveryPlan == "custom-standart")
+                    {
+                        deliveryFee = 2.99;
+                    }
+                    else if (deliveryPlan == "custom-express")
+                    {
+                        deliveryFee = 5.99;
+                    }
+                    else if (deliveryPlan == "econt-standart")
+                    {
+                        deliveryFee = 2.54;
+                    }
+                    else if (deliveryPlan == "econt-express")
+                    {
+                        deliveryFee = 4.79;
+                    }
+                    else if (deliveryPlan == "speedy-standart")
+                    {
+                        deliveryFee = 2.77;
+                    }
+                    else if (deliveryPlan == "speedy-express")
+                    {
+                        deliveryFee = 4.39;
+                    }
+                    context.Session.SetString("delivery", deliveryPlan);
+                    context.Session.SetString("location", location);
+                    var deliveryFeeItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(deliveryFee * 100),
+                            Currency = "USD",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "Delivery Fee"
+                            }
+                        },
+                        Quantity = 1,
+                    };
+                    options.LineItems.Add(deliveryFeeItem);
+
+                    var service = new SessionService();
                     Session session = service.Create(options);
+
+                    var stripeCustomer = new Customer();
+                    stripeCustomer.Email = user.Email;
+                    stripeCustomer.Name = $"{user.FirstName} {user.LastName}";
+                    if (stripeCustomer.Shipping == null)
+                    {
+                        stripeCustomer.Shipping = new Shipping();
+                    }
+
+                    if (stripeCustomer.Shipping.Address == null)
+                    {
+                        stripeCustomer.Shipping.Address = new Address();
+                    }
+                    stripeCustomer.Shipping.Address.Line1 = location;
+                    session.Customer = stripeCustomer;
+
                     context.Response.Headers.Add("Location", session.Url);
                     context.Response.StatusCode = 303;
 
@@ -596,7 +699,7 @@ namespace Modum.Services.Services.ControllerService.HomeController
             }
         }
 
-        public async Task<bool> ProcessPayment(ApplicationUser user)
+        public async Task<bool> ProcessPayment(ApplicationUser user, HttpContext context)
         {
             if (user?.Id != null)
             {
@@ -606,115 +709,173 @@ namespace Modum.Services.Services.ControllerService.HomeController
                     var userName = !string.IsNullOrEmpty(user.FirstName) ? user.FirstName : user.UserName;
 
                     var orderedProducts = new List<string>();
-                    decimal totalValue = 0;
-                    decimal priceValue = 0;
-                    decimal discountValue = 0;
+                    double totalValue = 0.00;
+                    double priceValue = 0.00;
+                    double discountValue = 0.00;
+
+                    var productLinkEntites = new List<ProductSizesHelpingTable>();
+
                     if (userCart != null)
                     {
-
                         foreach (var cartItem in userCart.CartItems)
                         {
                             var product = await _productService.GetByIdAsync(cartItem.ProductId);
 
                             if (product != null)
                             {
-                                string link = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-1-for-{product.ImageContainerId}.png";
-                                var prodPrice = product.Price - product.DiscountFromPrice;
+                                productLinkEntites.Add(await _productSizesService.GetSizeBasedOnItsName(product.Id, cartItem.Size));
 
+                                string link = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-1-for-{product.ImageContainerId}.png";
+                                decimal percentageToBeRemoved = 0;
+                                foreach (var ltc in product.LTCs)
+                                {
+                                    percentageToBeRemoved += ltc.PercentageOfDiscount;
+                                }
+                                double discFromPrice = Convert.ToDouble(product.DiscountFromPrice + ((product.Price + product.DiscountFromPrice) * Math.Round((percentageToBeRemoved / 100m), 2)));
+                                double prodPrice = Convert.ToDouble(product.Price) - discFromPrice;
                                 var prLink = $"https://modum.azurewebsites.net/Home/Shop?productId={product.Id}";
+                                prodPrice = Math.Round(prodPrice, 2);
+                                discFromPrice = Math.Round(discFromPrice, 2);
 
                                 var productInfo = $@"
-                            <tr style='font-family:Arial,sans-serif'>
-                                <td align='none' style='font-size:0px;padding:8px 0;word-break:break-word;font-family:Arial,sans-serif'>
-                                    <div style='font-size:13px;line-height:1;text-align:none;color:#000000;font-family:Arial,sans-serif'>
-                                        <table style='width:100%;font-family:Arial,sans-serif' width='100%'>
-                                            <tbody>
-                                                <tr style='font-family:Arial,sans-serif'>
-                                                    <td style='font-size:12px;line-height:20px;font-weight:bold;padding:0;width:300px;font-family:Arial,sans-serif' width='300'>
-                                                        Product
-                                                    </td>
-                                                    <td style='display:block;width:210px;font-family:Arial,sans-serif' width='210'></td>
-                                                    <td style='font-size:12px;line-height:20px;font-weight:bold;padding:0;width:15%;text-align:right;white-space:nowrap;font-family:Arial,sans-serif' width='15%' align='left'>
-                                                        Price
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style='font-family:Arial,sans-serif'>
-                                <td align='none' style='font-size:0px;padding:12px 0;word-break:break-word;font-family:Arial,sans-serif'>
-                                    <div style='font-size:13px;line-height:1;text-align:none;color:#000000;font-family:Arial,sans-serif'>
-                                        <table style='width:100%;font-family:Arial,sans-serif' width='100%'>
-                                            <tbody>
-                                                <tr style='font-family:Arial,sans-serif'>
-                                                    <td rowspan='6' style='height:109px;min-width:72px;padding-right:24px;font-family:Arial,sans-serif' height='109'>
-                                                        <table border='0' cellpadding='0' cellspacing='0' role='presentation' style='border-collapse:collapse;border-spacing:0px;font-family:Arial,sans-serif'>
-                                                            <tbody>
-                                                                <tr style='font-family:Arial,sans-serif'>
-                                                                    <td style='width:72px;font-family:Arial,sans-serif' width='72'>
-                                                                        <a href='{prLink}' style='text-decoration:underline;height:109px;min-width:72px;font-family:Arial,sans-serif;color:black' target='_blank' data-saferedirecturl='{prLink}'>
-                                                                            <img height='109' src='{link}' style='border:0;display:block;outline:none;text-decoration:none;height:109px;width:100%' width='72' class='CToWUd' data-bit='iit'>
-                                                                        </a>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                    <td style='font-size:12px;line-height:20px;width:200px;max-width:250px;font-family:Arial,sans-serif' width='200'>
-                                                            {product.Title} - {product.Brand}
-                                                    </td>
-                                                    <td style='display:block;width:210px;font-family:Arial,sans-serif' width='210'></td>
-                                                    <td style='width:15%;text-align:left;white-space:nowrap;font-size:12px;line-height:20px;font-weight:bold;font-family:Arial,sans-serif' width='15%' align='left'>
-                                                        <div style='display:block;font-weight:900;color:#000000;text-align:right;font-size:12px;line-height:20px;font-family:Arial,sans-serif'>
-                                                            {prodPrice}&nbsp;$
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr style='white-space:nowrap;font-family:Arial,sans-serif'>
-                                                    <td style='height:8px;font-family:Arial,sans-serif' height='8'></td>
-                                                </tr>
-                                                <tr style='white-space:nowrap;font-family:Arial,sans-serif'>
-                                                    <td style='font-size:12px;line-height:20px;width:200px;max-width:250px;font-family:Arial,sans-serif' width='200'>
-                                                        Size: {cartItem.Size}
-                                                    </td>
-                                                </tr>
-                                                <tr style='white-space:nowrap;font-family:Arial,sans-serif'>
-                                                    <td style='font-size:12px;line-height:20px;width:200px;max-width:250px;font-family:Arial,sans-serif' width='200'>
-                                                        Colour: {product.Colour}
-                                                    </td>
-                                                </tr>
-                                                <tr style='white-space:nowrap;font-family:Arial,sans-serif'>
-                                                    <td style='font-size:12px;line-height:20px;width:200px;max-width:250px;font-family:Arial,sans-serif' width='200'>
-                                                        Quantity: 1
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style='width:100%;white-space:nowrap;font-family:Arial,sans-serif'>
-                                <td style='border-bottom:1px solid #ededed;font-size:12px;line-height:20px;width:200px;max-width:250px;font-family:Arial,sans-serif' width='200'></td>
-                            </tr>";
+                                <tr style='font-family:Arial,sans-serif'>
+                                    <td align='none' style='font-size:0px;padding:8px 0;word-break:break-word;font-family:Arial,sans-serif'>
+                                        <div style='font-size:13px;line-height:1;text-align:none;color:#000000;font-family:Arial,sans-serif'>
+                                            <table style='width:100%;font-family:Arial,sans-serif' width='100%'>
+                                                <tbody>
+                                                    <tr style='font-family:Arial,sans-serif'>
+                                                        <td style='font-size:12px;line-height:20px;font-weight:bold;padding:0;width:300px;font-family:Arial,sans-serif' width='300'>
+                                                            Product
+                                                        </td>
+                                                        <td style='display:block;width:210px;font-family:Arial,sans-serif' width='210'></td>
+                                                        <td style='font-size:12px;line-height:20px;font-weight:bold;padding:0;width:15%;text-align:right;white-space:nowrap;font-family:Arial,sans-serif' width='15%' align='left'>
+                                                            Price
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr style='font-family:Arial,sans-serif'>
+                                    <td align='none' style='font-size:0px;padding:12px 0;word-break:break-word;font-family:Arial,sans-serif'>
+                                        <div style='font-size:13px;line-height:1;text-align:none;color:#000000;font-family:Arial,sans-serif'>
+                                            <table style='width:100%;font-family:Arial,sans-serif' width='100%'>
+                                                <tbody>
+                                                    <tr style='font-family:Arial,sans-serif'>
+                                                        <td rowspan='6' style='height:109px;min-width:72px;padding-right:24px;font-family:Arial,sans-serif' height='109'>
+                                                            <table border='0' cellpadding='0' cellspacing='0' role='presentation' style='border-collapse:collapse;border-spacing:0px;font-family:Arial,sans-serif'>
+                                                                <tbody>
+                                                                    <tr style='font-family:Arial,sans-serif'>
+                                                                        <td style='width:72px;font-family:Arial,sans-serif' width='72'>
+                                                                            <a href='{prLink}' style='text-decoration:underline;height:109px;min-width:72px;font-family:Arial,sans-serif;color:black' target='_blank' data-saferedirecturl='{prLink}'>
+                                                                                <img height='109' src='{link}' style='border:0;display:block;outline:none;text-decoration:none;height:109px;width:100%' width='72' class='CToWUd' data-bit='iit'>
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td style='font-size:12px;line-height:20px;width:200px;max-width:250px;font-family:Arial,sans-serif' width='200'>
+                                                                {product.Title} - {product.Brand}
+                                                        </td>
+                                                        <td style='display:block;width:210px;font-family:Arial,sans-serif' width='210'></td>
+                                                        <td style='width:15%;text-align:left;white-space:nowrap;font-size:12px;line-height:20px;font-weight:bold;font-family:Arial,sans-serif' width='15%' align='left'>
+                                                            <div style='display:block;font-weight:900;color:#000000;text-align:right;font-size:12px;line-height:20px;font-family:Arial,sans-serif'>
+                                                                {prodPrice.ToString("0.00")}&nbsp;$
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style='white-space:nowrap;font-family:Arial,sans-serif'>
+                                                        <td style='height:8px;font-family:Arial,sans-serif' height='8'></td>
+                                                    </tr>
+                                                    <tr style='white-space:nowrap;font-family:Arial,sans-serif'>
+                                                        <td style='font-size:12px;line-height:20px;width:200px;max-width:250px;font-family:Arial,sans-serif' width='200'>
+                                                            Size: {cartItem.Size}
+                                                        </td>
+                                                    </tr>
+                                                    <tr style='white-space:nowrap;font-family:Arial,sans-serif'>
+                                                        <td style='font-size:12px;line-height:20px;width:200px;max-width:250px;font-family:Arial,sans-serif' width='200'>
+                                                            Colour: {product.Colour}
+                                                        </td>
+                                                    </tr>
+                                                    <tr style='white-space:nowrap;font-family:Arial,sans-serif'>
+                                                        <td style='font-size:12px;line-height:20px;width:200px;max-width:250px;font-family:Arial,sans-serif' width='200'>
+                                                            Quantity: 1
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr style='width:100%;white-space:nowrap;font-family:Arial,sans-serif'>
+                                    <td style='border-bottom:1px solid #ededed;font-size:12px;line-height:20px;width:200px;max-width:250px;font-family:Arial,sans-serif' width='200'></td>
+                                </tr>";
                                 orderedProducts.Add(productInfo);
                                 totalValue += prodPrice;
-                                priceValue += product.Price;
-                                discountValue += product.DiscountFromPrice;
+                                priceValue += Convert.ToDouble(product.Price);
+                                discountValue += discFromPrice;
                             }
                         }
+
+
                         var service = new ChargeService();
 
                         var options = new ChargeListOptions
                         {
                             Expand = new List<string> { "data.source" },
-                            Limit = 100000000000
+                            Limit = 100
                         };
 
+                        var deliveryPlan = context.Session.GetString("delivery");
+                        var location = context.Session.GetString("location");
 
-                        var charge = service.ListAsync(options).Result.OrderByDescending(x => x.Created).FirstOrDefault();
+                        context.Session.Remove("delivery");
+                        context.Session.Remove("location");
 
+                        var charge = service.ListAsync(options).Result.OrderByDescending(x => x.ReceiptEmail == user.Email).FirstOrDefault();
+
+                        var orderElementForLocalDb = new Models.BaseModels.Models.PaymentStructure.Order();
+
+                        orderElementForLocalDb.ApplicationUser = user;
+                        orderElementForLocalDb.StripeReceiptURL = charge.ReceiptUrl;
+                        orderElementForLocalDb.DateOfOrdering = DateTime.Now;
+                        orderElementForLocalDb.TypeOfDelivery = deliveryPlan;
+                        orderElementForLocalDb.DeliveryLocation = location;
+                        orderElementForLocalDb.PricePaid = charge.Amount / 100M;
+                        orderElementForLocalDb.Products = productLinkEntites;
+                        orderElementForLocalDb.OrderStatus = "new";
+                        orderElementForLocalDb.StripeId = charge.Id;
+                        await _orderService.AddAsync(orderElementForLocalDb);
+
+                        double deliveryFee = 5.00;
+
+                        if (deliveryPlan == "custom-standart")
+                        {
+                            deliveryFee = 2.99;
+                        }
+                        else if (deliveryPlan == "custom-express")
+                        {
+                            deliveryFee = 5.99;
+                        }
+                        else if (deliveryPlan == "econt-standart")
+                        {
+                            deliveryFee = 2.54;
+                        }
+                        else if (deliveryPlan == "econt-express")
+                        {
+                            deliveryFee = 4.79;
+                        }
+                        else if (deliveryPlan == "speedy-standart")
+                        {
+                            deliveryFee = 2.77;
+                        }
+                        else if (deliveryPlan == "speedy-express")
+                        {
+                            deliveryFee = 4.39;
+                        }
+                        totalValue += deliveryFee;
                         var emailBody = $@"
                          <html>
                            <body>
@@ -782,7 +943,7 @@ namespace Modum.Services.Services.ControllerService.HomeController
                                                                                                                            Product Prices
                                                                                                                        </td>
                                                                                                                        <td style='text-align:right;font-weight:900;font-size:12px;line-height:20px;width:25%;font-family:Arial,sans-serif' width='25%' align='right'>
-                                                                                                                           {priceValue}&nbsp;$
+                                                                                                                           {priceValue.ToString("0.00")}&nbsp;$
                                                                                                                        </td>
                                                                                                                    </tr>
                                                                                                                    <tr style='font-family:Arial,sans-serif'>
@@ -792,7 +953,17 @@ namespace Modum.Services.Services.ControllerService.HomeController
                                                                                                                            Discount
                                                                                                                        </td>
                                                                                                                        <td style='text-align:right;font-weight:900;font-size:12px;line-height:20px;width:25%;font-family:Arial,sans-serif' width='25%' align='right'>
-                                                                                                                          {discountValue}&nbsp;$
+                                                                                                                          {discountValue.ToString("0.00")}&nbsp;$
+                                                                                                                       </td>
+                                                                                                                   </tr>
+                                                                                                                   <tr style='font-family:Arial,sans-serif'>
+                                                                                                                       <td style='display:block;font-size:12px;line-height:20px;width:25%;font-family:Arial,sans-serif' width='25%'></td>
+                                                                                                                       <td style='display:block;font-size:12px;line-height:20px;width:25%;font-family:Arial,sans-serif' width='25%'></td>
+                                                                                                                       <td style='font-size:12px;line-height:20px;width:25%;font-family:Arial,sans-serif' width='25%'>
+                                                                                                                           Delivery Fee
+                                                                                                                       </td>
+                                                                                                                       <td style='text-align:right;font-weight:900;font-size:12px;line-height:20px;width:25%;font-family:Arial,sans-serif' width='25%' align='right'>
+                                                                                                                          {deliveryFee.ToString("0.00")}&nbsp;$
                                                                                                                        </td>
                                                                                                                    </tr>
                                                                                                                    <tr style='font-family:Arial,sans-serif'>
@@ -800,7 +971,7 @@ namespace Modum.Services.Services.ControllerService.HomeController
                                                                                                                        <td style='display:block;font-size:12px;line-height:20px;width:25%;font-family:Arial,sans-serif' width='25%'></td>
                                                                                                                        <td style='font-weight:900;width:25%;font-size:16px;line-height:18px;padding-top:27px;font-family:Arial,sans-serif' width='25%'>Total:</td>
                                                                                                                        <td style='text-align:right;font-weight:900;width:25%;font-size:16px;line-height:18px;padding-top:27px;font-family:Arial,sans-serif' width='25%' align='right'>
-                                                                                                                           <div style='font-family:Arial,sans-serif'>{totalValue}&nbsp;$</div>
+                                                                                                                           <div style='font-family:Arial,sans-serif'>{totalValue.ToString("0.00")}&nbsp;$</div>
                                                                                                                        </td>
                                                                                                                    </tr>
                                                                                                                </tbody>
@@ -834,7 +1005,6 @@ namespace Modum.Services.Services.ControllerService.HomeController
                         if (userCart != null)
                         {
                             await _cartService.RemoveAsync(userCart.Id);
-
                         }
                         user.NumberOfCardTransactions++;
                         await _userManager.UpdateAsync(user);

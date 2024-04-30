@@ -1,4 +1,4 @@
-﻿using Modum.DataAccess.MainModel;
+﻿using Modum.Models.MainModel;
 using Modum.Models.ViewModels;
 
 namespace Modum.Services.Services.ControllerService.AdminController
@@ -12,5 +12,6 @@ namespace Modum.Services.Services.ControllerService.AdminController
         Task RemoveUserFromPosition(ApplicationUser user);
         Task<Worker> GetWorkerByUserIdHelper(string userId);
         IQueryable<Worker> GetAllWorkers();
+        Task<StatisticsViewModel> GetApplicationStatisticsViewModel(DateTime startDate, DateTime endDate);
     }
 }

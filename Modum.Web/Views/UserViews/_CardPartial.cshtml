@@ -10,14 +10,25 @@
     <div class="card-body">
         <h2 class="card-title d-flex align-items-center justify-content-center">@Model.Brand</h2>
         <h5 class="d-flex align-items-center justify-content-center" style="color:grey">@Model.Title</h5>
-        @if (Model.DiscountFromPrice > 0)
+        @{
+            decimal percentageToBeRemoved = 0;
+            foreach (var ltc in Model.LTCs)
+            {
+                percentageToBeRemoved += ltc.PercentageOfDiscount;
+            }
+        }
+        @if (Model.DiscountFromPrice > 0 || percentageToBeRemoved > 0)
         {
             var newValue = Model.Price - Model.DiscountFromPrice;
+            decimal percentValue = newValue != 0 ? newValue * percentageToBeRemoved / 100m : 0;
+            var totalDiscount = Model.DiscountFromPrice + Math.Round(percentValue,2);
+            newValue = newValue - Math.Round(percentValue, 2);
             <div class="row d-flex align-items-center justify-content-center">
                 <h6 class="" style="text-decoration:line-through; color:gray">$@Model.Price </h6>
-                <h6 class="discount-container" style="color:green">- $@Model.DiscountFromPrice</h6>
+                <h6 class="discount-container" style="color:green">- $@totalDiscount    </h6>
             </div>
-            <h4 class="price-container d-flex align-items-center justify-content-center discounted-price" >$ @newValue </h4>
+            <h4 class="price-container d-flex align-items-center justify-content-center discounted-price">$ @newValue </h4>
+
         }
         else
         {

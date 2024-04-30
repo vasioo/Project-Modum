@@ -1,8 +1,8 @@
-﻿using Modum.Models.BaseModels.Models.BaseStructure;
+﻿using Modum.Models.BaseModels.Models.PaymentStructure;
 
 namespace Modum.Services.Interfaces
 {
-    public interface IOrderService : IBaseService<OrderLog>
+    public interface IOrderService:IBaseService<Order>
     {
     }
 }

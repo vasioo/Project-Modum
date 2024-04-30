@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Modum.Models.BaseModels.Models.FooterItems;
 using Modum.Models.BaseModels.Models.LTCs;
+using Modum.Models.BaseModels.Models.PaymentStructure;
 using Modum.Models.BaseModels.Models.ProductStructure;
 using Modum.Models.DTO;
 using Modum.Services.Services.ControllerService.WorkerController;
@@ -27,11 +28,13 @@ namespace Modum.Web.Controllers
         #endregion
 
         #region ManageBlogs
+
         [Authorize(Roles = "Admin,SuperAdmin,Worker")]
         public IActionResult AddABlog()
         {
             return View("~/Views/Worker/AddABlog.cshtml");
         }
+
         [HttpPost]
         public async Task<IActionResult> AddAPostAction(BlogPost model, List<ImageDTO> imagesDTO)
         {
@@ -39,12 +42,14 @@ namespace Modum.Web.Controllers
 
             return RedirectToAction("AddABlog", "Worker");
         }
+
         public async Task<IActionResult> EditBlog(Guid blogId)
         {
             var blog = await _helper.GetBlogById(blogId);
 
             return View("~/Views/Worker/EditBlogPost.cshtml", blog);
         }
+
         #endregion
 
         #region ManageSubSelection
@@ -71,7 +76,7 @@ namespace Modum.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> ManageSubSelection(int mainCategoryId, List<CategoryDTO> categoriesDTO, List<SubcategoryDTO> subcategoriesDTO)
+        public async Task<JsonResult> ManageSubSelection(Guid mainCategoryId, List<CategoryDTO> categoriesDTO, List<SubcategoryDTO> subcategoriesDTO)
         {
 
             try
@@ -98,16 +103,18 @@ namespace Modum.Web.Controllers
                 return Json(new { status = false, Message = "Unexpected error occured while saving data. " + ex.Message });
             }
         }
+
+       
         
         #region HelperMethods
         [HttpPost]
-        public async Task<JsonResult> LoadMainCategoryData(int mainCategoryId)
+        public async Task<JsonResult> LoadMainCategoryData(Guid mainCategoryId)
         {
             var model = await _helper.LoadMainCategoryHelper(mainCategoryId);
             return Json(model);
         }
         [HttpPost]
-        public async Task<JsonResult> FilterMainCategoryData(int mainCategoryId, int categoryId)
+        public async Task<JsonResult> FilterMainCategoryData(Guid mainCategoryId, Guid categoryId)
         {
             try
             {
@@ -127,11 +134,11 @@ namespace Modum.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetCategoryBySubcategory(int subcategoryId)
+        public async Task<JsonResult> GetCategoryBySubcategory(Guid subcategoryId)
         {
             try
             {
-                if (subcategoryId != 0)
+                if (subcategoryId != Guid.Empty)
                 {
                     var categoryId = await _helper.GetCategoryBySubcategoryAsyncHelper(subcategoryId);
 
@@ -165,15 +172,13 @@ namespace Modum.Web.Controllers
             {
                 searchString = currentFilter;
             }
-
             var products = _helper.ManageProductsJSON();
-            products = products.Include(x => x.ProductSizes);
             if (!String.IsNullOrEmpty(searchString))
             {
-                products = products.Where(prdct => prdct.Title.Contains(searchString));
+                products = products.Where(prdct => prdct.Product.Title.Contains(searchString));
             }
             int pageSize = 30;
-            var paginatedList = PaginatedList<Product>.CreateAsync(products.AsNoTracking(), page ?? 1, pageSize);
+            var paginatedList = PaginatedList<ProductSizesHelpingTable>.CreateAsync(products.AsNoTracking(), page ?? 1, pageSize);
             return View("~/Views/Worker/ManageProducts.cshtml", paginatedList);
         }
 
@@ -202,7 +207,7 @@ namespace Modum.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditProduct(int productId)
+        public async Task<IActionResult> EditProduct(Guid productId)
         {
             try
             {
@@ -238,7 +243,7 @@ namespace Modum.Web.Controllers
             return Json(true);
         }
 
-        public async Task<JsonResult> DeleteProduct(int productId)
+        public async Task<JsonResult> DeleteProduct(Guid productId)
         {
             try
             {
@@ -297,7 +302,7 @@ namespace Modum.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditLTC(int ltcId)
+        public async Task<IActionResult> EditLTC(Guid ltcId)
         {
             try
             {
@@ -330,7 +335,7 @@ namespace Modum.Web.Controllers
             return Json(true);
         }
 
-        public async Task<JsonResult> DeleteLTC(int ltcId)
+        public async Task<JsonResult> DeleteLTC(Guid ltcId)
         {
             try
             {
@@ -344,6 +349,56 @@ namespace Modum.Web.Controllers
         }
         #endregion
 
-       
+        #region ManageOrders
+        public async Task<IActionResult> ManageOrders(int? page, string searchString, string currentFilter, string orderCategory)
+        {
+            ViewData["CurrentFilter"] = searchString;
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            if (String.IsNullOrEmpty(orderCategory))
+            {
+                orderCategory = "new";
+            }
+            ViewData["CurrentOrderCategory"] = orderCategory;
+            var orders = _helper.GetAllOrdersFromCategory(orderCategory);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                orders = orders.Where(order=>order.ApplicationUser.Email.Contains(searchString));
+            }
+            int pageSize = 30;
+            var paginatedList = PaginatedList<Order>.CreateAsync(orders.AsNoTracking(), page ?? 1, pageSize);
+            return View("~/Views/Worker/ManageOrders.cshtml", orders);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ChangeDeliveryStatus(Guid orderId,string newStatus)
+        {
+            try
+            {
+                if (orderId==Guid.Empty||String.IsNullOrEmpty(newStatus))
+                {
+                    return Json(new { status = false, Message = "Error with parameters!" });
+                }
+                if (await _helper.ChangeDeliveryStatusHelper(orderId, newStatus))
+                {
+                    return Json(new { status = true, Message = "The order status was updated!" });
+                }
+                else
+                {
+                    return Json(new { status = false, Message = "Error with updating the information!" });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { status = false, Message = "Error Conflicted on Server-Side!" });
+            }
+        }
+        #endregion
     }
 }

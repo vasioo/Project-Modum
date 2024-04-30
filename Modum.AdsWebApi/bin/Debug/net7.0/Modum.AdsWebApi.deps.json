@@ -147,7 +147,7 @@
           }
         }
       },
-      "FireSharp/2.0.3": {
+      "FireSharp/2.0.4": {
         "dependencies": {
           "Microsoft.Bcl.Async": "1.0.168",
           "Microsoft.Net.Http": "2.2.28",
@@ -1801,7 +1801,7 @@
       "Modum.Services/1.0.0": {
         "dependencies": {
           "CloudinaryDotNet": "1.22.0",
-          "FireSharp": "2.0.3",
+          "FireSharp": "2.0.4",
           "Google.Cloud.Firestore": "3.4.0",
           "MailKit": "4.2.0",
           "Microsoft.AspNetCore.Authentication.Facebook": "7.0.13",
@@ -1896,12 +1896,12 @@
       "path": "dnsclient/1.6.1",
       "hashPath": "dnsclient.1.6.1.nupkg.sha512"
     },
-    "FireSharp/2.0.3": {
+    "FireSharp/2.0.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-GXnydHRxJgPrWaUiBoU6ZGr5kYve/dEjCfr2Yxnbezazzmi94NNij4fbYA7nix7VksWlow+sKDWt+gjkgCjutg==",
-      "path": "firesharp/2.0.3",
-      "hashPath": "firesharp.2.0.3.nupkg.sha512"
+      "sha512": "sha512-laSHpVUBG6iCTUixmpeUmYxie2zbziOBM+LU0v2A0ETE9dUyBA+8aY63xql/o8LXj+kFybBLYUKBUrLCZWaq+A==",
+      "path": "firesharp/2.0.4",
+      "hashPath": "firesharp.2.0.4.nupkg.sha512"
     },
     "Google.Api.CommonProtos/2.10.0": {
       "type": "package",

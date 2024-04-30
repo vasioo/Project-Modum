@@ -8,14 +8,12 @@ namespace Modum.Models.BaseModels.Models.BaseStructure
     public class Favourites : IEntity
     {
         [Key]
-        public int Id { get; set; } = 0;
+        public Guid Id { get; set; } 
 
         [ForeignKey("User")]
         public string UserId { get; set; } = "";
 
 
         public List<Product> Products { get; set; } = new List<Product>();
-
-        //statistics can be gathered from here
     }
 }

@@ -4,8 +4,9 @@
 @{
     SelectList categoryList = Model.CategoryList;
     SelectList subcategoryList = Model.SubcategoryList;
-    var selectedCategoryValue = categoryList.Select(cat => cat.Value == Model.Product.CategoryId.ToString());
-    var selectedSubcategoryValue = subcategoryList.Select(sub => sub.Value == Model.Product.SubcategoryId.ToString());
+    var product = Model.Product.FirstOrDefault().Product;
+    var selectedCategoryValue = categoryList.Select(cat => cat.Value == product.CategoryId.ToString());
+    var selectedSubcategoryValue = subcategoryList.Select(sub => sub.Value == product.SubcategoryId.ToString());
     var imgCntrId = Model.CloudinaryImageContainerId;
     var hrefLink1 = "https://res.cloudinary.com/dzaicqbce/image/upload/v1694344569/image-1-for-" + imgCntrId + ".png";
     var hrefLink2 = "https://res.cloudinary.com/dzaicqbce/image/upload/v1694344569/image-2-for-" + imgCntrId + ".png";
@@ -19,6 +20,8 @@
 }
 
 <div class="edit-product">
+    <div class="display-4 py-3 text-center col">Edit Product</div>
+
     <div class="image-container row justify-content-around" id=@imgCntrId>
         <div class="col">
             <label class="form-label" for="product-image-1">Image 1</label>
@@ -87,11 +90,11 @@
         <div class="row justify-content-between">
             <div class="col-md-6">
                 <label class="form-label" for="title-input-field">Title</label>
-                <input id="title-input-field" type="text" placeholder="Title" class="form-control" value="@Model.Product.Title" />
+                <input id="title-input-field" type="text" placeholder="Title" class="form-control" value="@product.Title" />
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="brand-input-field">Brand</label>
-                <input id="brand-input-field" type="text" placeholder="Brand" class="form-control" value="@Model.Product.Brand" />
+                <input id="brand-input-field" type="text" placeholder="Brand" class="form-control" value="@product.Brand" />
             </div>
         </div>
 
@@ -112,7 +115,7 @@
                         @foreach (var size in Model.Sizes)
                         {
                             <td>
-                                @if (Model.Product.ProductSizes.Any(ps => ps.ProductSize.ToString().ToLower() == size.ToString().ToLower()))
+                                @if (Model.Product.Any(ps => ps.ProductSize.ToString().ToLower() == size.ToString().ToLower()))
                                 {
                                     <input class="sizes-input-fields" id=@size type="checkbox" checked />
                                 }
@@ -132,11 +135,11 @@
         <div class="row justify-content-between">
             <div class="col-md-6">
                 <label class="form-label" for="price-input-field">Price</label>
-                <input id="price-input-field" type="number" placeholder="Price" class="form-control" value="@Model.Product.Price" />
+                <input id="price-input-field" type="number" placeholder="Price" class="form-control" value="@product.Price" />
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="discount-from-price-input-field">Discount From Price</label>
-                <input id="discount-from-price-input-field" type="number" placeholder="Discount From Price" class="form-control" value="@Model.Product.DiscountFromPrice" />
+                <label class="form-label" for="discount-from-price-input-field">Discount From Price (*apart from campaigns)</label>
+                <input id="discount-from-price-input-field" type="number" placeholder="Discount From Price" class="form-control" value="@product.DiscountFromPrice" />
             </div>
         </div>
 
@@ -152,11 +155,11 @@
         <div class="row justify-content-between">
             <div class="col-md-5">
                 <label class="form-label" for="description-input-field">Description</label>
-                <textarea id="description-input-field" type="text" placeholder="Description" class="form-control" rows="10">@Model.Product.Description</textarea>
+                <textarea id="description-input-field" type="text" placeholder="Description" class="form-control" rows="10">@product.Description</textarea>
             </div>
             <div class="col-md-5 pt-2">
                 <label class="form-label" for="return-policy-input-field">Return Policy</label>
-                <textarea id="return-policy-input-field" placeholder="Return Policy" class="form-control" rows="10">@Model.Product.ReturnPolicy</textarea>
+                <textarea id="return-policy-input-field" placeholder="Return Policy" class="form-control" rows="10">@product.ReturnPolicy</textarea>
             </div>
         </div>
 
@@ -170,8 +173,16 @@
                 <div class="">
                     @foreach (var item in Model.MainCategoryList)
                     {
-                        <label for=@item.Id>@item.Name: </label>
-                        <input class="main-category-input-fields-edit" id="@item.Id" type="radio" name="mainCategory" value="@item.Id" @(item.Id.ToString() == Model.Product.MainCategoryId.ToString() ? "checked='checked'" : "") />
+                        if (item.Id.ToString() == product.MainCategoryId.ToString())
+                        {
+                            <label for="@item.Id">@item.Name:</label>
+                            <input class="main-category-input-fields-edit" id="@item.Id" type="radio" name="mainCategory" value="@item.Id" checked />
+                        }
+                        else
+                        {
+                            <label for="@item.Id">@item.Name:</label>
+                            <input class="main-category-input-fields-edit" id="@item.Id" type="radio" name="mainCategory" value="@item.Id" />
+                        }
                         <br />
                     }
                 </div>
@@ -179,7 +190,7 @@
             <div class="row">
                 <div class="col">
                     @Html.DropDownListFor(
-                    model => model.Product.CategoryId,
+                    model => product.CategoryId,
                     new SelectList(categoryList, "Value", "Text", selectedCategoryValue),
                     "--Select existing category--",
                     new { @class = "form-control", id = "selectCategoryDropdownId" }
@@ -187,7 +198,7 @@
                 </div>
                 <div class="col">
                     @Html.DropDownListFor(
-                    model => model.Product.SubcategoryId,
+                    model => product.SubcategoryId,
                     new SelectList(subcategoryList, "Value", "Text", selectedSubcategoryValue),
                     "--Select existing subcategory--",
                     new { @class = "form-control", id = "selectSubcategoryDropdownId" }
@@ -199,7 +210,7 @@
         <br />
         <br />
 
-        @foreach (var size in Model.Product.ProductSizes)
+        @foreach (var size in Model.Product)
         {
             <div class="" id="available-items-container-@size.AllTimeAvailableItems">
                 <label>
@@ -218,15 +229,26 @@
         <div class="row pb-4">
             <div class="col-12 mb-3">
                 <h4>Limited Time Campaigns</h4>
+                <div>
+                    <label>Selecting it would remove the % from the price and discount</label>
+                </div>
+                <div>
+                    <label>* Selecting more than one would be appended</label>
+                </div>
+                <div>
+                    <label>(12% and 10% would be 22% of the initial price and discount)</label>
+                </div>
             </div>
             @foreach (var item in Model.LTCs)
             {
                 <div class="col-md-4 mb-3">
                     <div class="form-check ltc-item">
-                        @if (Model.Product.LTCs.Contains(item))
+                        @if (product.LTCs.Contains(item))
                         {
                             <input class="form-check-input ltc-input-box" type="checkbox" checked id="@item.Id" @(item.EndDate < DateTime.Now ? "disabled" : "")>
-                            <label class="form-check-label" for="@item.Id"><strong>@item.Title</strong></label>
+                            <label class="form-check-label" for="@item.Id">
+                                <strong>@item.Title - @item.PercentageOfDiscount</strong>
+                            </label>
                         }
                         else
                         {
@@ -237,8 +259,8 @@
                 </div>
             }
         </div>
-        <div>
-            <button id=@Model.Product.Id class="edit-btn-save btn-success">Save Product</button>
+        <div class="pb-5 pt-1 d-flex">
+            <button class="btn-save btn-success col-12 py-1">Save Product</button>
         </div>
     </div>
 </div>

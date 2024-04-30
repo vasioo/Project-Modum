@@ -6,7 +6,7 @@ namespace Modum.Models.BaseModels.Models.BaseStructure
     public class Subcategory : IEntity
     {
         [Required]
-        public int Id { get; set; } = 0;
+        public Guid Id { get; set; } 
 
         [Required]
         public string Name { get; set; } = "";
@@ -16,9 +16,8 @@ namespace Modum.Models.BaseModels.Models.BaseStructure
 
         public string CategoryName { get; set; } = "";
         public Category Category { get; set; } = new Category();
-        public int CategoryId { get; set; } = 0;
         public bool IsSelectedForNav { get; set; } = false;
-        public int MainCategoryId { get; set; } = 0;
+        public Guid MainCategoryId { get; set; }
 
     }
 }

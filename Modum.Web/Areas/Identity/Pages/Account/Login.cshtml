@@ -1,5 +1,5 @@
 ﻿@page
-@using Modum.DataAccess.MainModel;
+@using Modum.Models.MainModel;
 @inject SignInManager<ApplicationUser> SignInManager
 @model LoginModel
 @{
@@ -30,7 +30,7 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
                         <div class="custom-input-group">
-                            <input asp-for="Input.Email" class="custom-input" autocomplete="username" aria-required="true" required>
+                            <input asp-for="Input.Email" class="custom-input"  aria-required="true" required autocomplete="off">
                             <span class="custom-highlight"></span>
                             <span class="custom-bar"></span>
                             <label class="custom-label">Email</label>
@@ -39,7 +39,7 @@
 
                         <div class="custom-input-group">
                             <i id="togglePassword" class="far fa-eye position-absolute end-0 top-50 translate-middle-y p-4 user-select-none" style="cursor:pointer"></i>
-                            <input asp-for="Input.Password" class="custom-input" id="custom-password-eye-orienter" autocomplete="current-password" aria-required="true" required>
+                            <input asp-for="Input.Password" class="custom-input" id="custom-password-eye-orienter"  aria-required="true" required>
 
                             <span class="custom-highlight"></span>
                             <span class="custom-bar"></span>

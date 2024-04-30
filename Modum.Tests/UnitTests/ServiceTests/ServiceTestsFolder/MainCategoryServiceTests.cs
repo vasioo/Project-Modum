@@ -33,13 +33,13 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             {
                 new Category
                 {
-                    Id=1,Name="Test",
+                    Id=Guid.NewGuid(),Name="Test",
                     CreatorName="Vasio",
                     Subcategories = new List<Subcategory>
                         {
-                            new Subcategory{Id=2,Name="Test-Subc",CreatorName="Vasio"}
+                            new Subcategory{Id=Guid.NewGuid(),Name="Test-Subc",CreatorName="Vasio"}
                         } ,
-                    MainCategoryId=1
+                    MainCategoryId=Guid.NewGuid()
                 },
             };
 
@@ -57,18 +57,18 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             {
                 new Category
                 {
-                    Id=1,Name="Test",
+                    Id=Guid.NewGuid(),Name="Test",
                     CreatorName="Vasio",
                     Subcategories = new List<Subcategory>
                         {
-                            new Subcategory{Id=2,Name="Test-Subc",CreatorName="Vasio"}
+                            new Subcategory{Id=Guid.NewGuid(),Name="Test-Subc",CreatorName="Vasio"}
                         } ,
-                    MainCategoryId=1
+                    MainCategoryId=Guid.NewGuid()
                 },
             };
 
             var mockCategoryService = new Mock<ICategoryService>();
-            mockCategoryService.Setup(service => service.GetCategoriesByMainCategoryAsync(It.IsAny<int>()))
+            mockCategoryService.Setup(service => service.GetCategoriesByMainCategoryAsync(It.IsAny<Guid>()))
                 .Throws(new Exception("Simulated exception"));
 
             var failingMainCategoryService = new MainCategoryService(context, mockCategoryService.Object);

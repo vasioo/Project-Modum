@@ -6,7 +6,10 @@
 }
 <div class="product-cards-container">
     <div class="container prod-container-scroller-activator">
-        <button class="arr arr-prev prevBtn">&#8249;</button>
+        @if (Model.Count() > 4)
+        {
+            <button class="arr arr-prev prevBtn">&#8249;</button>
+        }
         <ul class="cards" id="card-slider">
             @if (Model != null)
             {
@@ -16,6 +19,9 @@
                 }
             }
         </ul>
-        <button class="arr arr-next nextBtn" >&#8250;</button>
+        @if (Model.Count() > 4)
+        {
+            <button class="arr arr-next nextBtn">&#8250;</button>
+        }
     </div>
 </div>

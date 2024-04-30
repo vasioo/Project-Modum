@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 
 namespace Modum.Web.Areas.Identity.Pages.Account.Manage
 {

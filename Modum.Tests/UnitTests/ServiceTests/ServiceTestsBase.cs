@@ -1,5 +1,5 @@
 ﻿using Modum.DataAccess;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 using Modum.Models.BaseModels.Models.BaseStructure;
 using Modum.Models.BaseModels.Models.LTCs;
 using Modum.Models.BaseModels.Models.ProductStructure;
@@ -24,10 +24,10 @@ namespace Modum.Tests.UnitTests.ServiceTests
         public void SeedMainCategories()
         {
             // Seed the main categories
-            this.context.Add(new MainCategory { Id = 1, Name = "Man" });
-            this.context.Add(new MainCategory { Id = 2, Name = "Women" });
-            this.context.Add(new MainCategory { Id = 3, Name = "Girls" });
-            this.context.Add(new MainCategory { Id = 4, Name = "Boys" });
+            this.context.Add(new MainCategory {Name = "Man" });
+            this.context.Add(new MainCategory {Name = "Women" });
+            this.context.Add(new MainCategory {Name = "Girls" });
+            this.context.Add(new MainCategory {Name = "Boys" });
 
             this.context.SaveChanges();
         }
@@ -37,40 +37,30 @@ namespace Modum.Tests.UnitTests.ServiceTests
 
             this.context.Add(new Product
             {
-                Id = 1,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
             });
             this.context.Add(new Product
             {
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
@@ -78,40 +68,30 @@ namespace Modum.Tests.UnitTests.ServiceTests
             this.context.Add(new Product
             {
 
-                Id = 3,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
             });
             this.context.Add(new Product
             {
-                Id = 4,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
@@ -119,120 +99,90 @@ namespace Modum.Tests.UnitTests.ServiceTests
             this.context.Add(new Product
             {
 
-                Id = 5,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
             });
             this.context.Add(new Product
             {
-                Id = 6,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
             });
             this.context.Add(new Product
             {
-                Id = 7,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
             });
             this.context.Add(new Product
             {
-                Id = 8,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
             });
             this.context.Add(new Product
             {
-                Id = 9,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
             });
             this.context.Add(new Product
             {
-                Id = 10,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
@@ -266,7 +216,7 @@ namespace Modum.Tests.UnitTests.ServiceTests
             {
                 var user = new ShortUserModel
                 {
-                    Id = i,
+                    Id = Guid.NewGuid(),
                     UserId = i.ToString(),
                     ReasonOfBanning = $"Reason for User {i} ban",
                     DateOfBan = DateTime.Now.AddMonths(-i),
@@ -283,45 +233,45 @@ namespace Modum.Tests.UnitTests.ServiceTests
 
             var category = new Category
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test1",
                 CreatorName = "Vasio",
                 Subcategories = new List<Subcategory>
                 {
-                    new Subcategory { Id = 1, Name = "Test-Subc", CreatorName = "Vasio",CategoryName="Test1" },
-                    new Subcategory { Id = 2, Name = "Test-Subc2", CreatorName = "Vasio",CategoryName="Test1" },
+                    new Subcategory { Id = Guid.NewGuid(), Name = "Test-Subc", CreatorName = "Vasio",CategoryName="Test1" },
+                    new Subcategory { Id = Guid.NewGuid(), Name = "Test-Subc2", CreatorName = "Vasio",CategoryName="Test1" },
                 },
-                MainCategoryId = 1
+                MainCategoryId = Guid.NewGuid()
             };
 
             this.context.Add(category);
 
             var category2 = new Category
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "Test2",
                 CreatorName = "Vasio",
                 Subcategories = new List<Subcategory>
                 {
-                    new Subcategory { Id = 3, Name = "Test-Subc", CreatorName = "Vasio",CategoryName="Test2" },
-                    new Subcategory { Id = 4, Name = "Test-Subc2", CreatorName = "Vasio",CategoryName="Test2" },
+                    new Subcategory { Id = Guid.NewGuid(), Name = "Test-Subc", CreatorName = "Vasio",CategoryName="Test2" },
+                    new Subcategory { Id = Guid.NewGuid(), Name = "Test-Subc2", CreatorName = "Vasio",CategoryName="Test2" },
                 },
-                MainCategoryId = 1
+                MainCategoryId = Guid.NewGuid()
             };
 
             this.context.Add(category2);
 
             var category3 = new Category
             {
-                Id = 3,
+                Id = Guid.NewGuid(),
                 Name = "Test3",
                 CreatorName = "Vasio",
                 Subcategories = new List<Subcategory>
                 {
-                    new Subcategory { Id = 5, Name = "Test-Subc", CreatorName = "Vasio",CategoryName="Test3" },
-                    new Subcategory { Id = 6, Name = "Test-Subc2", CreatorName = "Vasio",CategoryName="Test3" },
+                    new Subcategory { Id = Guid.NewGuid(), Name = "Test-Subc", CreatorName = "Vasio",CategoryName="Test3" },
+                    new Subcategory { Id = Guid.NewGuid(), Name = "Test-Subc2", CreatorName = "Vasio",CategoryName="Test3" },
                 },
-                MainCategoryId = 1
+                MainCategoryId = Guid.NewGuid()
             };
 
             this.context.Add(category3);

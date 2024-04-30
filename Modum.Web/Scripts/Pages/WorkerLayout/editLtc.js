@@ -6,6 +6,7 @@
             $contentInputField = $container.find('#content-input-field'),
             $startDateInputField = $container.find('#startdate-input-field'),
             $saveProductsBtn = $container.find('.btn-save'),
+            $discountInputField = $container.find('#discount-input-field'),
             $endDateInputField = $container.find('#enddate-input-field');
 
         $ltcImages.change(function (event) {
@@ -32,12 +33,13 @@
         $saveProductsBtn.click(function () {
             commonFuncs.showLoader();
             const ltc = {
+                Id: $('#model-id').data('model-id'),
                 Title: $titleInputField.val(),
                 Description: $descriptionInputField.val(),
                 Content: $contentInputField.val(),
                 StartDate: $startDateInputField.val(),
                 EndDate: $endDateInputField.val(),
-
+                PercentageOfDiscount:$discountInputField.val()
             };
             const image = {
                 Image: $('.uploaded-image:first').attr('src'),
@@ -131,7 +133,9 @@
                 if (!ltc.EndDate || ltc.EndDate.trim() === '') {
                     this.errors.push('End Date field is required.');
                 }
-
+                if (!ltc.PercentageOfDiscount || ltc.PercentageOfDiscount.trim() === '') {
+                    this.errors.push('Discount field is required.');
+                }
             }
 
             validateImage(image) {

@@ -2,6 +2,6 @@
 {
     public class MainCategoryDTO
     {
-        public int MainCategoryId { get; set; }
+        public Guid MainCategoryId { get; set; }
     }
 }

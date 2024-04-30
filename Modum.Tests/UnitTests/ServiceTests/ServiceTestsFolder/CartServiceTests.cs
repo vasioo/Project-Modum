@@ -60,7 +60,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             var result = await cartService.GetCartIdByUserId(userId);
 
             // Assert
-            Assert.NotEqual(0, result);
+            Assert.NotEqual(Guid.Empty, result);
             Assert.Equal(cartToAdd.Id, result);
         }
 
@@ -74,7 +74,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             var result = await cartService.GetCartIdByUserId(nonExistentUserId);
 
             // Assert
-            Assert.Equal(0, result);
+            Assert.Equal(Guid.Empty, result);
         }
     }
 }

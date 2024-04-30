@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 using Modum.Services.Services.ControllerService.AdminController;
 using Modum.Web.Models.Models.Pagination;
 using Stripe;
@@ -28,131 +28,131 @@ namespace Modum.Web.Controllers
 
         #region ManageUsers
 
-            [Authorize(Roles = "SuperAdmin")]
-            public async Task<IActionResult> ManageUsers(int? page, string searchString, string currentFilter)
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<IActionResult> ManageUsers(int? page, string searchString, string currentFilter)
+        {
+            ViewData["CurrentFilter"] = searchString;
+            if (searchString != null)
             {
-                ViewData["CurrentFilter"] = searchString;
-                if (searchString != null)
-                {
-                    page = 1;
-                }
-                else
-                {
-                    searchString = currentFilter;
-                }
-
-                var users = _userManager.Users;
-                if (!String.IsNullOrEmpty(searchString))
-                {
-                    users = users.Where(usr => usr.LastName.Contains(searchString) || usr.FirstName.Contains(searchString));
-                }
-                int pageSize = 30;
-                var paginatedList = PaginatedList<ApplicationUser>.CreateAsync(users.AsNoTracking(), page ?? 1, pageSize);
-                return View("~/Views/Admin/ManageUsers.cshtml", paginatedList);
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
             }
 
-            [Authorize(Roles = "SuperAdmin")]
-            public async Task<JsonResult> BanUser(string userId, string reasonOfBanning)
+            var users = _userManager.Users;
+            if (!String.IsNullOrEmpty(searchString))
             {
-                try
-                {
-                    var user = await _userManager.FindByIdAsync(userId);
-
-                    await _helper.BanUserHelper(user!, reasonOfBanning);
-                }
-                catch (Exception)
-                {
-                    return Json(new { status = true, Message = "Error Conflicted" });
-                }
-                return Json(new { status = true, Message = "The user was banned successfully" });
+                users = users.Where(usr => usr.LastName.Contains(searchString) || usr.FirstName.Contains(searchString));
             }
+            int pageSize = 30;
+            var paginatedList = PaginatedList<ApplicationUser>.CreateAsync(users.AsNoTracking(), page ?? 1, pageSize);
+            return View("~/Views/Admin/ManageUsers.cshtml", paginatedList);
+        }
 
-            [Authorize(Roles = "SuperAdmin")]
-            public async Task<JsonResult> MakeAdmin(string userId)
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<JsonResult> BanUser(string userId, string reasonOfBanning)
+        {
+            try
             {
-                try
-                {
-                    var user = await _userManager.FindByIdAsync(userId);
-                    if (user != null)
-                    {
-                        await _userManager.AddToRoleAsync(user, "Admin");
-                    }
-                }
-                catch (Exception)
-                {
-                    return Json(new { status = true, Message = "Error Conflicted" });
-                }
-                return Json(new { status = true, Message = "The user was given rights of admin" });
+                var user = await _userManager.FindByIdAsync(userId);
+
+                await _helper.BanUserHelper(user!, reasonOfBanning);
             }
-
-            [Authorize(Roles = "SuperAdmin")]
-            public async Task<JsonResult> RemoveAdmin(string userId)
+            catch (Exception)
             {
-                try
-                {
-                    var user = await _userManager.FindByIdAsync(userId);
-                    if (user != null)
-                    {
-                        await _userManager.RemoveFromRoleAsync(user, "Admin");
-                    }
-                }
-                catch (Exception)
-                {
-                    return Json(new { status = true, Message = "Error Conflicted" });
-                }
-                return Json(new { status = true, Message = "The user was given rights of admin" });
+                return Json(new { status = true, Message = "Error Conflicted" });
             }
+            return Json(new { status = true, Message = "The user was banned successfully" });
+        }
 
-            [Authorize(Roles = "SuperAdmin,Admin")]
-            public async Task<JsonResult> MakeWorker(string userId, string position)
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<JsonResult> MakeAdmin(string userId)
+        {
+            try
             {
-                try
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user != null)
                 {
-                    var user = await _userManager.FindByIdAsync(userId);
-
-                    if (user != null)
-                    {
-                        var res = await _helper.AddUserToPosition(user!, position);
-                        if (res == "")
-                        {
-                            await _userManager.AddToRoleAsync(user, "Worker");
-                            return Json(new { status = true, Message = "The user now has worker's rights" });
-                        }
-                    }
-                    return Json(new { status = true, Message = "Error Conflicted" });
-                }
-                catch (Exception)
-                {
-                    return Json(new { status = false, Message = "Error Conflicted" });
+                    await _userManager.AddToRoleAsync(user, "Admin");
                 }
             }
-
-            [Authorize(Roles = "SuperAdmin,Admin")]
-            public async Task<JsonResult> RemoveWorker(string userId)
+            catch (Exception)
             {
-                try
-                {
-                    var user = await _userManager.FindByIdAsync(userId);
+                return Json(new { status = true, Message = "Error Conflicted" });
+            }
+            return Json(new { status = true, Message = "The user was given rights of admin" });
+        }
 
-                    if (user != null)
-                    {
-                        await _helper.RemoveUserFromPosition(user!);
-                        await _userManager.RemoveFromRoleAsync(user, "Worker");
-                        return Json(new { status = true, Message = "The user does not have worker's rights anymore" });
-                    }
-                    return Json(new { status = true, Message = "Error Conflicted" });
-                }
-                catch (Exception)
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<JsonResult> RemoveAdmin(string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user != null)
                 {
-                    return Json(new { status = false, Message = "Error Conflicted" });
+                    await _userManager.RemoveFromRoleAsync(user, "Admin");
                 }
             }
-        #endregion
-
-        #region ManageOrders
+            catch (Exception)
+            {
+                return Json(new { status = true, Message = "Error Conflicted" });
+            }
+            return Json(new { status = true, Message = "The user was given rights of admin" });
+        }
 
         [Authorize(Roles = "SuperAdmin,Admin")]
-        public async Task<IActionResult> ManageOrders(int page, string searchString, string currentFilter)
+        public async Task<JsonResult> MakeWorker(string userId, string position)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user != null)
+                {
+                    var res = await _helper.AddUserToPosition(user!, position);
+                    if (res == "")
+                    {
+                        await _userManager.AddToRoleAsync(user, "Worker");
+                        return Json(new { status = true, Message = "The user now has worker's rights" });
+                    }
+                }
+                return Json(new { status = true, Message = "Error Conflicted" });
+            }
+            catch (Exception)
+            {
+                return Json(new { status = false, Message = "Error Conflicted" });
+            }
+        }
+
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        public async Task<JsonResult> RemoveWorker(string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user != null)
+                {
+                    await _helper.RemoveUserFromPosition(user!);
+                    await _userManager.RemoveFromRoleAsync(user, "Worker");
+                    return Json(new { status = true, Message = "The user does not have worker's rights anymore" });
+                }
+                return Json(new { status = true, Message = "Error Conflicted" });
+            }
+            catch (Exception)
+            {
+                return Json(new { status = false, Message = "Error Conflicted" });
+            }
+        }
+        #endregion
+
+        #region ManageStripePayments
+
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        public async Task<IActionResult> StripePaymentOrders(int page, string searchString, string currentFilter)
         {
             ViewData["CurrentFilter"] = searchString;
             if (searchString != null || page < 1)
@@ -189,7 +189,7 @@ namespace Modum.Web.Controllers
 
             var paginatedList = PaginatedList<Charge>.CreateStripeCustomAsync(paginatedOrders, page, pageSize, count);
 
-            return View("~/Views/Admin/ManageOrders.cshtml", paginatedList);
+            return View("~/Views/Admin/StripePaymentOrders.cshtml", paginatedList);
         }
 
 
@@ -231,12 +231,12 @@ namespace Modum.Web.Controllers
                 searchString = currentFilter;
             }
 
-             var users = _helper.GetAllWorkers();
+            var users = _helper.GetAllWorkers();
 
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                users = users.Where(usr => usr.User.LastName.Contains(searchString) || usr.User.FirstName.Contains(searchString));
+                users = users.Where(usr => usr.AppUser.LastName.Contains(searchString) || usr.AppUser.FirstName.Contains(searchString));
             }
 
             int pageSize = 30;
@@ -245,7 +245,7 @@ namespace Modum.Web.Controllers
 
         public async Task<IActionResult> EditWorkerInformation(string userId)
         {
-            var worker = _helper.GetWorkerByUserIdHelper(userId);
+            var worker =await _helper.GetWorkerByUserIdHelper(userId);
 
             return View("~/Views/Admin/EditWorkerInformation.cshtml", worker);
         }
@@ -253,12 +253,22 @@ namespace Modum.Web.Controllers
         public async Task<IActionResult> EditInformationForWorker(Worker worker)
         {
             var position = worker.Position;
-            var userId = worker.User.Id;
+            var userId = worker.AppUser.Id;
             await RemoveWorker(userId);
             await MakeWorker(userId, position);
 
             return View("~/Views/Admin/EditWorkerInformation.cshtml", worker);
         }
+        #endregion
+
+        #region ApplicationStatistics
+
+        public async Task<IActionResult> ApplicationStatistics(DateTime startDate, DateTime endDate)
+        {
+            var viewModel = await _helper.GetApplicationStatisticsViewModel(DateTime.Now.AddMonths(-1),DateTime.Now);
+            return View("~/Views/Admin/ApplicationStatistics.cshtml", viewModel);
+        }
+
         #endregion
     }
 }

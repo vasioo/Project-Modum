@@ -6,7 +6,7 @@ namespace Modum.Models.BaseModels.Models.PaymentStructure
     public class Discount : IEntity
     {
         [Key]
-        public int Id { get; set; } = 0;
+        public Guid Id { get; set; } 
 
         public string DiscountKey { get; set; } = "";
 

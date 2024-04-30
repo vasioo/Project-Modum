@@ -13,6 +13,7 @@
 }
 
 <div class="add-product">
+    <div class="display-4 py-3 col text-center">Add Products</div>
     <div class="image-container row justify-content-around">
         @for (int i = 1; i <= 5; i++)
         {
@@ -77,7 +78,7 @@
                 <input id="price-input-field" type="number" min="1" step="any" placeholder="Price" class="form-control" />
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="discount-from-price-input-field">Discount From Price</label>
+                <label class="form-label" for="discount-from-price-input-field">Discount From Price (*apart from campaigns)</label>
                 <input id="discount-from-price-input-field" type="number" min="1" step="any" placeholder="Discount From Price" class="form-control" />
             </div>
         </div>
@@ -114,7 +115,7 @@
                     {
                         <label for=@item.Id>@item.Name: </label>
                         <input class="main-category-input-fields" id=@item.Id type="radio" name="mainCategory"
-                               value=@item.Id @if (item.Id == 1)
+                               value=@item.Id @if (item.Name == "Women")
                         {
                             <text>checked</text>
                         }/>
@@ -122,7 +123,6 @@
                     }
                 </div>
             </div>
-            @*if there are more than one selected load data which both of the main categories have*@
             <div class="row">
                 <div class="col">
                     @Html.DropDownList("SelectedCategory",categoryList , "--Select existing category--",
@@ -163,6 +163,15 @@
         <div class="row pb-4">
             <div class="col-12 mb-3">
                 <h4>Limited Time Campaigns</h4>
+                <div>
+                    <label>Selecting it would remove the % from the price and discount</label>
+                </div>
+                <div>
+                    <label>* Selecting more than one would be appended</label>
+                </div>
+                <div>
+                    <label>(12% and 10% would be 22% of the initial price and discount)</label>
+                </div>
             </div>
             @foreach (var item in Model.LTCs)
             {
@@ -170,14 +179,14 @@
                     <div class="form-check ltc-item">
                         <input class="form-check-input ltc-input-box" type="checkbox" id="@item.Id" @(item.EndDate < DateTime.Now ? "disabled" : "")>
                         <label class="form-check-label" for="@item.Id">
-                            <strong>@item.Title</strong>
+                            <strong>@item.Title - @item.PercentageOfDiscount</strong>
                         </label>
                     </div>
                 </div>
             }
         </div>
-        <div>
-            <button class="btn-save btn-success row">Save Product</button>
+        <div class="pb-5 pt-1 d-flex">
+            <button class="btn-save btn-success col-12 py-1">Save Product</button>
         </div>
     </div>
 </div>

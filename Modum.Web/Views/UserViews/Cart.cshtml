@@ -21,7 +21,7 @@
 <div class="cart-page container-fluid">
     <div class="centered-container">
         <div id="personalized-header" class="d-flex align-items-center">
-            <div class="display-4 pl-5 pt-5 pr-5" style="font-weight:500">Cart</div>
+            <div class="display-3 pl-5 pt-5 pr-5" style="font-weight:500; font-family:monospace">Cart</div>
         </div>
         <div class="row pb-5 pt-5">
             @if (Model == null || Model.Products.Count() == 0)
@@ -40,14 +40,20 @@
                             }
                             @foreach (var item in Model.Products)
                             {
+                                decimal percentageToBeRemoved = 0;
+                                foreach (var ltc in item.LTCs)
+                                {
+                                    percentageToBeRemoved += ltc.PercentageOfDiscount;
+                                }
                                 var sizesForItem = sizes.Where(s => s.ProductId == item.Id).ToList();
                                 @foreach (var size in sizesForItem)
                                 {
+
                                     string link = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-1-for-{item.ImageContainerId}.png";
 
                                     initialPrice += item.Price;
-                                    discount += item.DiscountFromPrice;
-                                    var prodPrice = item.Price - item.DiscountFromPrice;
+                                    discount += Math.Round(item.DiscountFromPrice + ((item.Price + item.DiscountFromPrice) * (percentageToBeRemoved / 100m)),2);
+                                    var prodPrice = item.Price - (item.DiscountFromPrice + ((item.Price + item.DiscountFromPrice) * Math.Round((percentageToBeRemoved / 100m),2)));
                                     <div class="row">
                                         <div class=" p-md-4 m-md-4 col-12 col-md-4 col-lg-3 col-xl-3">
                                             <a class=""><img src=@link class="w-100 h-100" /></a>
@@ -78,11 +84,11 @@
 
                                             <div class="row pb-2">
                                                 <div class="pr-1 h3">Price:</div>
-                                                <div class="pl-1 h3">$ @prodPrice</div>
+                                                <div class="pl-1 h3">$ @Math.Round(prodPrice,2)</div>
                                             </div>
                                             <div class="row pb-2">
                                                 <div>
-                                                    <select id='amount-of-that-item' name='number'>
+                                                    <select id='amount-of-that-item' name='number' style="display:none">
                                                         @* @for (int i = 1; i < item.ProductSizes.First(s=>s.AvailableItems); i++)
                                             {
                                             <option value=@i>@i</option>
@@ -120,7 +126,11 @@
                         <div class="pl-1" id="totalAmount">$@(initialPrice - discount)</div>
                     </div>
                     <div class="p-3">
-                        <a style="font-size:23px" asp-area="" asp-controller="Home" asp-action="Checkout" class="h3 btn btn-success d-flex justify-content-center align-items-center" id="checkoutButton"><i class="fa-regular fa-credit-card pr-3"></i>Checkout</a>
+                        <a style="font-size:23px" asp-area="" asp-controller="Home" asp-action="DeliveryLocation" class="h3 btn btn-success d-flex justify-content-center align-items-center" id="checkoutButton">
+                            <i class="fa-regular fa-credit-card pr-3">
+
+                            </i>Checkout
+                        </a>
                     </div>
                 </div>
             </div>

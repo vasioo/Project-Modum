@@ -7,6 +7,7 @@
 @{
     IEnumerable<Product> tenFavItems = Model.TenFavItems;
     IEnumerable<Product> lastViewedProducts = Model.LastViewedProducts;
+    var listOfProducts = Model.FavoriteProducts.Select(x => x.Product).Distinct().ToList();
 }
 @section Styles {
     <link href="@Url.Content("~/css/custom/_CardScrollerPartial.css")" rel="stylesheet" type="text/css" />
@@ -16,11 +17,10 @@
     <br />
     <br />
     <div class="centered-container">
-        <!-- Your provided code here -->
         <div class="favourites-container">
             <div id="personalized-items" class="pb-5">
                 <div id="personalized-header" class="d-flex align-items-center">
-                    <h2 class="display-4 p-sm-5 p-3" style="font-weight:500">Favourites</h2>
+                    <h2 class="display-3 p-sm-5 p-3" style="font-weight:500; font-family:monospace">Favourites</h2>
                 </div>
                 <div id="personalized-items-section">
                     @if (Model.FavoriteProducts == null || Model.FavoriteProducts.Count() == 0)
@@ -40,8 +40,14 @@
                     else
                     {
                         <div class="row">
-                            @foreach (var product in Model.FavoriteProducts)
+                            @foreach (var product in listOfProducts)
                             {
+                                decimal percentageToBeRemoved = 0;
+                                foreach (var ltc in product.LTCs)
+                                {
+                                    percentageToBeRemoved += ltc.PercentageOfDiscount;
+                                }
+
                                 string link = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-1-for-{product.ImageContainerId}.png";
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                                     <div class="card">
@@ -55,14 +61,17 @@
                                         </a>
                                         <div class="card-body">
                                             <h1 class="card-title">@product.Brand @product.Title</h1>
-                                            @if (product.DiscountFromPrice > 0)
+                                            @if (product.DiscountFromPrice > 0 || percentageToBeRemoved>0)
                                             {
-                                                var newValue = product.Price - product.DiscountFromPrice;
+                                                var newValue = product.Price - (product.DiscountFromPrice + ((product.Price + product.DiscountFromPrice) * Math.Round((percentageToBeRemoved / 100m),2)));
                                                 <div class="row pl-3">
                                                     <h6>Initial Price: </h6>
                                                     <h6 class="pl-3" style="text-decoration:line-through; color:gray"> $@product.Price </h6>
                                                     <h6 class="pl-2 pr-2"> - </h6>
-                                                    <h6 class="discount-container" style="color:green"> $@product.DiscountFromPrice</h6>
+                                                    @{
+                                                        var discFromPrice = product.DiscountFromPrice + ((product.Price + product.DiscountFromPrice) * Math.Round((percentageToBeRemoved / 100m),2));
+                                                    }
+                                                    <h6 class="discount-container" style="color:green"> $@discFromPrice</h6>
                                                 </div>
                                                 <div class="row pl-3">
                                                     <h4>Discounted Price: </h4>
@@ -78,7 +87,7 @@
                                             }
 
                                             @{
-                                                string joinedSizes = string.Join(", ", product.ProductSizes.Select(x => x.ProductSize));
+                                                string joinedSizes = string.Join(", ", Model.FavoriteProducts.Where(x=>x.Product.Id==product.Id).Select(x => x.ProductSize));
                                             }
                                             <div class="row pl-3">
                                                 <h6>Sizes: </h6>
@@ -92,8 +101,6 @@
                                                     <a class="btn" style="background-color:@product.Colour"></a>
                                                 </h6>
                                             </div>
-
-
                                         </div>
                                     </div>
                                 </div>
@@ -126,11 +133,11 @@
     @{
         Cart cartContainer = (Cart)Model.Cart;
     }
-    @if (Model.FavoriteProducts != null)
+    @if (listOfProducts != null)
     {
-        if (Model.FavoriteProducts.Count() != 0)
+        if (listOfProducts.Count() != 0)
         {
-            @foreach (var product in Model.FavoriteProducts)
+            @foreach (var product in listOfProducts)
             {
                 @if (cartContainer != null)
                 {
@@ -140,9 +147,8 @@
                             <h2>Select Size:</h2>
                             <ul class="list-group" id="sizeSelectionPopup">
 
-                                @foreach (var size in product.ProductSizes)
+                                @foreach (var size in Model.FavoriteProducts)
                                 {
-
                                     @if (cartContainer.CartItems.Any(item => item.ProductId == product.Id && item.Size == size.ProductSize.ToString()))
                                     {
                                         <li class="list-group-item mb-3 border clickable-size checked-sizes">

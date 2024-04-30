@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Modum.DataAccess;
-using Modum.DataAccess.MainModel;
 using Modum.Models.BaseModels.Models.BaseStructure;
 using Modum.Models.BaseModels.Models.LTCs;
 using Modum.Models.BaseModels.Models.Payment;
+using Modum.Models.BaseModels.Models.PaymentStructure;
 using Modum.Models.BaseModels.Models.ProductStructure;
-using Modum.Models.Docs;
+using Modum.Models.MainModel;
 using Modum.Services.Interfaces;
 using Modum.Services.Services;
 using Modum.Services.Services.ControllerService.AdminController;
@@ -45,17 +45,8 @@ namespace Modum.Web.Extensions
             service.AddScoped<IBaseService<ShortUserModel>, BaseService<ShortUserModel>>();
             service.AddScoped<IBannedUsersService, BannedUsersService>();
 
-            service.AddScoped<IBaseService<OrderLog>, BaseService<OrderLog>>();
-            service.AddScoped<IOrderService, OrderService>();
-
             service.AddScoped<IBaseService<ProductSizesHelpingTable>, BaseService<ProductSizesHelpingTable>>();
             service.AddScoped<IProductSizesService, ProductSizesService>();
-
-            service.AddScoped<IBaseService<Brands>, BaseService<Brands>>();
-            service.AddScoped<IBrandService, BrandService>();
-
-            service.AddScoped<IBaseService<Doc>, BaseService<Doc>>();
-            service.AddScoped<IDocsService, DocsService>();
 
             service.AddScoped<IBaseService<LTC>, BaseService<LTC>>();
             service.AddScoped<ILTCService, LTCService>();
@@ -63,8 +54,10 @@ namespace Modum.Web.Extensions
             service.AddScoped<IBaseService<Worker>, BaseService<Worker>>();
             service.AddScoped<IWorkerService, WorkerService>();
 
-            service.AddScoped<IEmailSenderService, EmailSenderService>();
+            service.AddScoped<IBaseService<Order>, BaseService<Order>>();
+            service.AddScoped<IOrderService, OrderService>();
 
+            service.AddScoped<IEmailSenderService, EmailSenderService>();
 
             service.AddScoped<IHomeControllerHelper, HomeControllerHelper>();
             service.AddScoped<IAdminControllerHelper, AdminControllerHelper>();

@@ -1,16 +1,16 @@
 ﻿@using Microsoft.AspNetCore.Identity;
-@using Modum.DataAccess.MainModel;
+@using Modum.Models.MainModel;
 @using Modum.Web.Models.Models.Pagination;
 @inject UserManager<ApplicationUser> UserManager
 @model PaginatedList<ApplicationUser>
 
 @{
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
 }
 <div class="manage-users">
     <div id="userTableContainer" class="pt-3">
         <div class="d-flex justify-content-center">
-            <div class="h2">
+            <div class="display-4 py-3 text-center col">
                 Manage Users Menu
             </div>
         </div>

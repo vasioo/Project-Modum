@@ -19,20 +19,15 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             // Arrange
             var productToAdd = new Product
             {
-                Id = 11,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
@@ -42,7 +37,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             var addedId = await adsService.AddAsync(productToAdd);
 
             // Assert
-            Assert.NotEqual(0, addedId);
+            Assert.NotEqual(Guid.Empty, addedId);
             var retrievedProduct = await adsService.GetByIdAsync(addedId);
             Assert.NotNull(retrievedProduct);
         }
@@ -53,37 +48,27 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             // Arrange
             var productsToAdd = new List<Product>
         {
-            new Product {   Id = 14,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+            new Product {   Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons" },
-            new Product {   Id = 12,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+            new Product {   Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons" },
@@ -133,11 +118,12 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
         public async Task GetByIdAsync_ReturnsCorrectEntity()
         {
             // Act
-            var retrievedProduct = await adsService.GetByIdAsync(1);
+            var id = Guid.Empty;
+            var retrievedProduct = await adsService.GetByIdAsync(id);
 
             // Assert
             Assert.NotNull(retrievedProduct);
-            Assert.Equal(1, retrievedProduct.Id);
+            Assert.Equal(id, retrievedProduct.Id);
         }
 
         [Fact]
@@ -156,20 +142,15 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             // Arrange
             var productToAdd = new Product
             {
-                Id=11,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id= Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
@@ -182,7 +163,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             // Assert
             Assert.NotEqual(0, removedCount);
             var retrievedProduct = await adsService.GetByIdAsync(addedId);
-            Assert.Equal(0,retrievedProduct.Id);
+            Assert.Equal(Guid.Empty,retrievedProduct.Id);
         }
 
         [Fact]
@@ -191,40 +172,30 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             // Arrange
             var product1 = new Product
             {
-                Id = 16,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
             };
             var product2 = new Product
             {
-                Id = 17,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
@@ -266,40 +237,30 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
             // Arrange
             var product1 = new Product
             {
-                Id = 18,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"
             };
             var product2 = new Product
             {
-                Id = 19,
-                ProductSizes = new List<ProductSizesHelpingTable>
-                {
-                    new ProductSizesHelpingTable { ProductSize = "Size3", AvailableItems = 8, AllTimeAvailableItems = 80 },
-                    new ProductSizesHelpingTable { ProductSize = "Size4", AvailableItems = 12, AllTimeAvailableItems = 120 },
-                },
+                Id = Guid.NewGuid(),
                 Title = "Bluetooth Speaker",
                 Brand = "JBL",
                 Price = 69.99m,
                 UploadedBy = "User10",
                 Description = "Portable Bluetooth speaker with excellent sound quality.",
-                MainCategoryId = 5,
-                CategoryId = 5,
-                SubcategoryId = 5,
+                MainCategoryId = Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
+                SubcategoryId = Guid.NewGuid(),
                 Colour = "White",
                 ImageContainerId = "bluetoothspeaker_image",
                 Season = "All Seasons"

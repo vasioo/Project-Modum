@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 using Modum.Models.ViewModels;
 using Modum.Services.Services.ControllerService.AdminController;
 using Modum.Web.Controllers;

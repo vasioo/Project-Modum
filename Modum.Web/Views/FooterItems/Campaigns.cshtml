@@ -1,5 +1,5 @@
-﻿@using Modum.Models.BaseModels.Models.LTCs;
-@model IEnumerable<LTC>
+﻿@using Modum.Models.ViewModels;
+@model CampaignsPageViewModel
 
 <div class="campaigns-page">
     <div class="container mt-5 ">
@@ -7,9 +7,9 @@
             Our Current Campaigns
         </div>
         <div class="row">
-            @if (Model != null && Model.Any())
+            @if (Model != null && Model.LTCs.Any())
             {
-                @foreach (var item in Model.OrderByDescending(x=>x.EndDate))
+                @foreach (var item in Model.LTCs.OrderByDescending(x=>x.EndDate))
                 {
                     string srcLink = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-for-ltc-{item.Id}";
                     var modalId = $"ltcModal-{item.Id}";

@@ -1,0 +1,81 @@
+﻿@using Modum.Models.ViewModels;
+@model StatisticsViewModel
+@{
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
+<div class="application-statistics-page">
+    <div class="container pt-5">
+        <div class="display-4 py-3 text-center col">Financial Stats</div>
+        <div class="accordion" id="financialAccordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            User Statistics
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#financialAccordion">
+                    <div class="card-body">
+                        <ul>
+                            <li>Amount of Users: @Model.AmountOfUsers</li>
+                            <li>Amount of Workers: @Model.AmountOfWorkers</li>
+                            <li>Amount of Admins: @Model.AmountOfAdmins</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Financial Information
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#financialAccordion">
+                    <div class="card-body">
+                        <ul>
+                            <li>Total Income Before Tax: @Model.TotalIncomeBeforeTax</li>
+                            <li>Stripe Takeaway: @Model.StripeTakeaway</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Most Sold Categories
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#financialAccordion">
+                    <div class="card-body">
+                        <ul>
+                            <li>Most Sold Category: @Model.MostBoughtCategory</li>
+                            <li>Most Sold Subcategory: @Model.MostBoughtSubcategory</li>
+                            <li>Most Sold Maincategory: @Model.MostBoughtMaincategory</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            Amount of Blogs
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#financialAccordion">
+                    <div class="card-body">
+                        <ul>
+                            <li>Amount of Blogs in Application: @Model.AmountOfBlogsInApplication</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

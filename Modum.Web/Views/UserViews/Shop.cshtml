@@ -1,8 +1,8 @@
-﻿@using Modum.DataAccess.MainModel;
-@using Modum.Models.BaseModels.Models.BaseStructure;
+﻿@using Modum.Models.BaseModels.Models.BaseStructure;
 @using Modum.Models.BaseModels.Models.Payment;
 @using Modum.Models.BaseModels.Models.ProductStructure;
 @using Microsoft.AspNetCore.Identity;
+@using Modum.Models.MainModel;
 @using Modum.Models.ViewModels;
 @inject SignInManager<ApplicationUser> SignInManager
 @model ShopViewModel
@@ -14,11 +14,12 @@
 @{
     IEnumerable<Product> items = Model.TenFavItems;
     IEnumerable<Product> lastViewedProducts = Model.LastViewedProducts;
-    string link1 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-1-for-{Model.Product.ImageContainerId}.png";
-    string link2 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-2-for-{Model.Product.ImageContainerId}.png";
-    string link3 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-3-for-{Model.Product.ImageContainerId}.png";
-    string link4 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-4-for-{Model.Product.ImageContainerId}.png";
-    string link5 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-5-for-{Model.Product.ImageContainerId}.png";
+    var product = Model.Product.FirstOrDefault().Product;
+    string link1 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-1-for-{product.ImageContainerId}.png";
+    string link2 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-2-for-{product.ImageContainerId}.png";
+    string link3 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-3-for-{product.ImageContainerId}.png";
+    string link4 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-4-for-{product.ImageContainerId}.png";
+    string link5 = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-5-for-{product.ImageContainerId}.png";
 }
 
 
@@ -74,21 +75,31 @@
                     <div class="product-information">
                         <div class="container">
                             <div class="row p-3 justify-content-between title-row-container">
-                                <div class="p-0 col-6"><h1>@Model.Product.Title</h1></div>
-                                <div class="p-0 col-6 text-right"> <h1 class="text-right">@Model.Product.Brand</h1></div>
+                                <div class="p-0 col-6"><h1>@product.Title</h1></div>
+                                <div class="p-0 col-6 text-right"> <h1 class="text-right">@product.Brand</h1></div>
                             </div>
                             <br />
-                            @if (Model.Product.DiscountFromPrice > 0)
+                            @{
+                                decimal percentageToBeRemoved = 0;
+                                foreach (var ltc in product.LTCs)
+                                {
+                                    percentageToBeRemoved += ltc.PercentageOfDiscount;
+                                }
+                            }
+                            @if (product.DiscountFromPrice > 0 || percentageToBeRemoved > 0)
                             {
+                                var discFromPrice = product.DiscountFromPrice + ((product.Price + product.DiscountFromPrice) * (percentageToBeRemoved / 100m));
+                                var totaledPrice = product.Price - Math.Round(discFromPrice, 2);
+
                                 <h5 style="color: darkgrey;">Current Price:</h5>
                                 <h3 class="given-price" style="color: red;" id="given-price-with-discount">
-                                    @(Model.Product.Price - Model.Product.DiscountFromPrice) $
+                                    @totaledPrice $
                                 </h3>
-                                <h6 style="color: grey;">Normal Price: @Model.Product.Price $</h6>
+                                <h6 style="color: grey;">Normal Price: @product.Price $</h6>
                             }
                             else
                             {
-                                <h3 class="given-price">@Model.Product.Price $</h3>
+                                <h3 class="given-price">@product.Price $</h3>
                             }
                             <br>
                             <br>
@@ -107,7 +118,7 @@
                             else
                             {
                                 <div class="row justify-content-center">
-                                    <div class="col-9 btn btn-dark p-3 add-to-cart-shop" id=@Model.Product.Id>
+                                    <div class="col-9 btn btn-dark p-3 add-to-cart-shop" id=@product.Id>
                                         Add to cart <i class="fas fa-shopping-cart fa-lg"></i>
                                     </div>
                                     @{
@@ -115,22 +126,22 @@
                                     }
                                     @if (favourites != null)
                                     {
-                                        @if (favourites.Products.Contains(Model.Product))
+                                        @if (favourites.Products.Contains(product))
                                         {
-                                            <div class="col-3 btn btn-light p-3 add-to-favourites-shop" id=@Model.Product.Id>
+                                            <div class="col-3 btn btn-light p-3 add-to-favourites-shop" id=@product.Id>
                                                 <i class="fa-solid fa-heart fa-lg heart-icon"></i>
                                             </div>
                                         }
                                         else
                                         {
-                                            <div class="col-3 btn btn-light p-3 add-to-favourites-shop" id=@Model.Product.Id>
+                                            <div class="col-3 btn btn-light p-3 add-to-favourites-shop" id=@product.Id>
                                                 <i class="far fa-heart fa-lg heart-icon"></i>
                                             </div>
                                         }
                                     }
                                     else
                                     {
-                                        <div class="col-3 btn btn-light p-3 add-to-favourites-shop" id=@Model.Product.Id>
+                                        <div class="col-3 btn btn-light p-3 add-to-favourites-shop" id=@product.Id>
                                             <i class="far fa-heart fa-lg heart-icon"></i>
                                         </div>
                                     }
@@ -149,7 +160,7 @@
                                         </div>
                                         <div id="collapseOne" class="collapse" data-parent="#accordionExample">
                                             <div class="card-body">
-                                                @Model.Product.Description
+                                                @product.Description
                                             </div>
                                         </div>
                                     </div>
@@ -161,7 +172,7 @@
                                         </div>
                                         <div id="collapseTwo" class="collapse" data-parent="#accordionExample">
                                             <div class="card-body">
-                                                @Model.Product.ReturnPolicy
+                                                @product.ReturnPolicy
                                             </div>
                                         </div>
                                     </div>
@@ -170,7 +181,7 @@
                             @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Worker") || User.IsInRole("SuperAdmin"))
                             {
                                 <div class="row pt-4 justify-content-center">
-                                    <a class="btn btn-warning text-white col redirect-to-edit-page" id="@Model.Product.Id">Edit</a>
+                                    <a class="btn btn-warning text-white col redirect-to-edit-page" id="@product.Id">Edit</a>
                                 </div>
                                 <div class="row pt-2 justify-content-center">
                                     <a class="btn btn-danger text-white col delete">Delete</a>
@@ -205,11 +216,11 @@
                 <span class="close" id="closePopup">&times;</span>
                 <h2>Select Size:</h2>
                 <ul class="list-group pt-4" id="sizeSelectionPopupList">
-                    @foreach (var size in Model.Product.ProductSizes)
+                    @foreach (var size in Model.Product)
                     {
                         @if (cartContainer != null)
                         {
-                            @if (cartContainer.CartItems.Any(item => item.ProductId == Model.Product.Id && item.Size == size.ProductSize.ToString()))
+                            @if (cartContainer.CartItems.Any(item => item.ProductId == product.Id && item.Size == size.ProductSize.ToString()))
                             {
                                 <li class="list-group-item border mb-4 clickable-size checked-sizes">
                                     @if (size.AvailableItems > 0)
@@ -287,18 +298,15 @@
     </div>
 </div>
 
-
 <script>
 
     let slideIndex = 1;
     showSlides(slideIndex);
 
-    // Next/previous controls
     function plusSlides(n) {
         showSlides(slideIndex += n);
     }
 
-    // Thumbnail image controls
     function currentSlide(n) {
         showSlides(slideIndex = n);
     }

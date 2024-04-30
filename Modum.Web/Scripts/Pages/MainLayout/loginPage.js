@@ -8,7 +8,6 @@
             $(this).toggleClass('fa-eye fa-eye-slash');
         });
     }
-
     return {
         init
     };

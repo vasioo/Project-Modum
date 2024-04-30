@@ -1,6 +1,9 @@
 ﻿@using Modum.Models.ViewModels;
+@using System.Web;
 @model BlogPostViewModel
-
+@{
+    var contentOfItem = @Html.Raw(HttpUtility.HtmlDecode(Model.Post.Content));
+}
 <div class="loading-container-blogs">
     <div class="typewriter-text" id="typewriter">
     </div>
@@ -10,7 +13,7 @@
         <div class="col-lg-8 offset-lg-2 mt-4">
             <h1 class="text-center">@Model.Post.Title</h1>
             <div class="mt-4">
-                @Html.Raw(Model.Post.Content)
+                @contentOfItem
             </div>
         </div>
     </div>
@@ -37,12 +40,10 @@
                         typeWriter(i, txt, speed)
                     }, speed);
                 } else {
-                    // After typing, wait for 1 second, then fade out the loading screen
                     setTimeout(function () {
                         document.querySelector('.loading-container-blogs').style.animation = 'fadeOut 1s forwards';
                     }, 1000);
 
-                    // Reveal the content after the fading animation completes
                     setTimeout(function () {
                         document.querySelector('.loading-container-blogs').style.display = 'none';
                         document.querySelector('.custom-container-for-blogs').style.display = 'block';

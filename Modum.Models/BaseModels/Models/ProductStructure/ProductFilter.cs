@@ -2,8 +2,8 @@
 {
     public class ProductFilter
     {
-        public int MainCategoryId { get; set; } = 0;
-        public int CategoryId { get; set; } = 0;
+        public string MainCategoryName { get; set; } = "Women";
+        public Guid CategoryId { get; set; } 
         public string SelectedSubcategories { get; set; } = "";
         public string ProductColours { get; set; } = "";
         public decimal MinPrice { get; set; } = 0;

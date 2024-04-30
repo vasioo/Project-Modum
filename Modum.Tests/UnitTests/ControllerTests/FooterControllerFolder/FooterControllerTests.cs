@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Modum.Models.MainModel;
 using Modum.Models.BaseModels.Models.FooterItems;
 using Modum.Models.BaseModels.Models.LTCs;
 using Modum.Models.ViewModels;
@@ -8,6 +11,7 @@ using Modum.Web.Controllers;
 using Modum.Web.ControllerService.FooterController;
 using Moq;
 using System.Net;
+using System.Security.Claims;
 
 namespace Modum.Tests.UnitTests.ControllerTests.FooterControllerFolder
 {
@@ -17,23 +21,47 @@ namespace Modum.Tests.UnitTests.ControllerTests.FooterControllerFolder
         private readonly Mock<IFirebaseService> firebaseServiceMock;
         private readonly Mock<IConfiguration> configurationServiceMock;
         private readonly Mock<IEmailSenderService> emailServiceMock;
+        private Mock<UserManager<ApplicationUser>> userManagerMock;
         private readonly FooterController controller;
+        private DefaultHttpContext httpContext;
 
         public FooterControllerTests()
         {
+            userManagerMock = new Mock<UserManager<ApplicationUser>>(
+                new Mock<IUserStore<ApplicationUser>>().Object,
+                null!, null!, null!, null!, null!, null!, null!, null!);
             controllerHelperMock = new Mock<IFooterControllerHelper>();
             firebaseServiceMock = new Mock<IFirebaseService>();
             configurationServiceMock = new Mock<IConfiguration>();
             emailServiceMock = new Mock<IEmailSenderService>();
-
-            controller = new FooterController(controllerHelperMock.Object, emailServiceMock.Object, firebaseServiceMock.Object, configurationServiceMock.Object);
+            httpContext = new DefaultHttpContext();
+            controller = new FooterController(controllerHelperMock.Object, emailServiceMock.Object,
+                                            firebaseServiceMock.Object, configurationServiceMock.Object, userManagerMock.Object)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContext }
+            };
         }
+
+        private void SetupUser(string username)
+        {
+            var user = new ApplicationUser { UserName = username };
+
+            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, username) }));
+
+            userManagerMock.Setup(x => x.FindByNameAsync(username)).ReturnsAsync(user);
+        }
+
         #region Views
         [Fact]
         public async Task AboutUs_ReturnsViewResult()
         {
+            //Arrange
+            var username = "testuser";
+            SetupUser(username);
+            controllerHelperMock.Setup(x => x.GetAmountOfCartItemsForUser(null)).ReturnsAsync(0);
+
             // Act
-            var result = await controller.AboutUs();
+            var result = await controller.AboutUs() as ViewResult;
 
             // Assert
             Assert.IsType<ViewResult>(result);
@@ -43,6 +71,11 @@ namespace Modum.Tests.UnitTests.ControllerTests.FooterControllerFolder
         [Fact]
         public async Task Ads_ReturnsViewResult()
         {
+            //Arrange
+            var username = "testuser";
+            SetupUser(username);
+            controllerHelperMock.Setup(x => x.GetAmountOfCartItemsForUser(null)).ReturnsAsync(0);
+
             // Act
             var result = await controller.Ads();
 
@@ -55,6 +88,8 @@ namespace Modum.Tests.UnitTests.ControllerTests.FooterControllerFolder
         public async Task Campaigns_ReturnsViewResult()
         {
             // Arrange
+            var username = "testuser";
+            SetupUser(username);
             var viewModel = new List<LTC>();
             controllerHelperMock.Setup(x => x.GetCampaignInformationData()).ReturnsAsync(viewModel);
 
@@ -71,14 +106,16 @@ namespace Modum.Tests.UnitTests.ControllerTests.FooterControllerFolder
         #region Blogs
 
         [Fact]
-        public void Blog_ReturnsViewResult()
+        public async Task Blog_ReturnsViewResult()
         {
             // Arrange
+            var username = "testuser";
+            SetupUser(username);
             var blogPosts = new List<BlogPost> { /* create your test data */ };
             firebaseServiceMock.Setup(x => x.GetAllBlogPosts()).Returns(blogPosts.AsQueryable());
 
             // Act
-            var result = controller.Blog() as ViewResult;
+            var result = await controller.Blog() as ViewResult;
 
             // Assert
             Assert.NotNull(result);
@@ -90,8 +127,10 @@ namespace Modum.Tests.UnitTests.ControllerTests.FooterControllerFolder
         public async Task BlogPost_ValidPostId_ReturnsViewResult()
         {
             // Arrange
+            var username = "testuser";
+            SetupUser(username);
             var postId = Guid.NewGuid();
-            var blogPost = new BlogPost { /* create your test data */ };
+            var blogPost = new BlogPost { };
             firebaseServiceMock.Setup(x => x.GetBlogPostById(postId)).ReturnsAsync(blogPost);
 
             // Act
@@ -107,6 +146,8 @@ namespace Modum.Tests.UnitTests.ControllerTests.FooterControllerFolder
         public async Task BlogPost_InvalidPostId_ReturnsViewResult()
         {
             // Arrange
+            var username = "testuser";
+            SetupUser(username);
             var postId = Guid.NewGuid();
             firebaseServiceMock.Setup(x => x.GetBlogPostById(postId)).ReturnsAsync((BlogPost)null);
             firebaseServiceMock.Setup(x => x.GetAllBlogPosts()).Returns(new List<BlogPost>().AsQueryable());
@@ -122,6 +163,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.FooterControllerFolder
         #endregion
 
         #region Emails
+
         [Fact]
         public async Task UserSendEmail_Successful_ReturnsJsonResult()
         {
@@ -142,6 +184,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.FooterControllerFolder
             var jsonResult = Assert.IsType<JsonResult>(result);
             Assert.True((bool)jsonResult.Value!.GetType().GetProperty("status")?.GetValue(jsonResult.Value!)!);
         }
+
         [Fact]
         public async Task UserSendEmail_Error_ReturnsJsonResult()
         {
@@ -204,6 +247,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.FooterControllerFolder
             var jsonResult = Assert.IsType<JsonResult>(result);
             Assert.False((bool)jsonResult.Value!.GetType().GetProperty("status")?.GetValue(jsonResult.Value!)!);
         }
+
         #endregion
     }
 }

@@ -1,1 +1,215 @@
-var manageOrdersPage={init:function(n){n.on("click",".additional-btn",function(){var n="/Admin/AdditionalOrderInformation?orderId="+$(this).attr("id");window.location.href=n})}},manageUsersPage={init:function(n){var o=n.find(".ban-btn"),t=n.find(".make-admin-btn"),e=n.find(".remove-admin-btn"),i=n.find(".make-worker-btn"),n=n.find(".remove-worker-btn");o.click(function(){var n=$(this).closest("tr").find("td:eq(2)").text(),o=$(this).attr("id");Swal.fire({title:"WARNING?",text:"Are you sure you want to ban "+n+" ?",input:"text",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3085d6",inputPlaceholder:"What is the reason for the ban",cancelButtonColor:"#d33",confirmButtonText:"Yes, Ban!"}).then(n=>{n.isConfirmed&&n.value.trim()&&(commonFuncs.showLoader(),$.post("/Admin/BanUser",{userId:o,reasonOfBanning:n.value.trim()},function(n){}),commonFuncs.hideLoader(),location.reload())})}),t.click(function(){var n=$(this).closest("tr").find("td:eq(2)").text();Swal.fire({title:"WARNING?",text:"Are you sure you want to make "+n+" an admin?",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Yes!"}).then(n=>{n.isConfirmed&&Swal.fire({title:"Do you want to save the changes?",showDenyButton:!0,showCancelButton:!0,confirmButtonText:"Save",denyButtonText:"Don't save"}).then(n=>{n.isConfirmed?(commonFuncs.showLoader(),$.post("/Admin/MakeAdmin",{userId:$(this).attr("id")},function(n){commonFuncs.hideLoader(),location.reload()}).fail(function(n){commonFuncs.hideLoader(),alert("AJAX request failed: ",n)})):n.isDenied&&(commonFuncs.hideLoader(),Swal.fire("Changes are not saved","","info"))})})}),e.click(function(){var n=$(this).closest("tr").find("td:eq(2)").text();Swal.fire({title:"WARNING?",text:"Are you sure you want to remove "+n+"'s admin rights?",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Yes!"}).then(n=>{n.isConfirmed&&Swal.fire({title:"Do you want to save the changes?",showDenyButton:!0,showCancelButton:!0,confirmButtonText:"Save",denyButtonText:"Don't save"}).then(n=>{n.isConfirmed?(commonFuncs.showLoader(),$.post("/Admin/RemoveAdmin",{userId:$(this).attr("id")},function(n){commonFuncs.hideLoader(),location.reload()}).fail(function(n){commonFuncs.hideLoader(),alert("AJAX request failed: ",n)})):n.isDenied&&(commonFuncs.hideLoader(),Swal.fire("Changes are not saved","","info"))})})}),i.click(function(){var n=$(this).closest("tr").find("td:eq(2)").text();Swal.fire({title:"WARNING?",text:"Are you sure you want to make "+n+" a worker?",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Yes!"}).then(n=>{n.isConfirmed&&Swal.fire({title:"Enter the full name job title:",input:"text",inputPlaceholder:"Full Name",showCancelButton:!0,confirmButtonText:"Submit"}).then(n=>{n.isConfirmed&&n.value?(n=n.value.trim(),commonFuncs.showLoader(),$.post("/Admin/MakeWorker",{userId:$(this).attr("id"),position:n},function(n){commonFuncs.hideLoader(),location.reload()}).fail(function(n){commonFuncs.hideLoader(),alert("AJAX request failed: "+n.responseText)})):(commonFuncs.hideLoader(),Swal.fire("Operation canceled","","info"))})})}),n.click(function(){var n=$(this).closest("tr").find("td:eq(2)").text();Swal.fire({title:"WARNING?",text:"Are you sure you want to remove "+n+"'s worker position?",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Yes!"}).then(n=>{n.isConfirmed&&Swal.fire({title:"Do you want to save the changes?",showDenyButton:!0,showCancelButton:!0,confirmButtonText:"Save",denyButtonText:"Don't save"}).then(n=>{n.isConfirmed?(commonFuncs.showLoader(),$.post("/Admin/RemoveWorker",{userId:$(this).attr("id")},function(n){commonFuncs.hideLoader(),location.reload()}).fail(function(n){commonFuncs.hideLoader(),alert("AJAX request failed: ",n)})):n.isDenied&&(commonFuncs.hideLoader(),Swal.fire("Changes are not saved","","info"))})})})}},manageWorkersPage={init:function(n){}};
+var manageUsersPage = (function () {
+    function init($container) {
+        let $banBtn = $container.find('.ban-btn'),
+            $makeAdminBtn = $container.find('.make-admin-btn'),
+            $removeAdminBtn = $container.find('.remove-admin-btn'),
+            $makeWorkerBtn = $container.find('.make-worker-btn'),
+            $removeWorkerBtn = $container.find('.remove-worker-btn');
+
+        $banBtn.click(function () {
+            var userEmail = $(this).closest('tr').find('td:eq(2)').text();
+
+            var btnClickedUserId = $(this).attr('id');
+
+            Swal.fire({
+                title: 'WARNING?',
+                text: "Are you sure you want to ban "+ userEmail+" ?",
+                input: 'text',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                inputPlaceholder: "What is the reason for the ban",
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Ban!'
+            }).then((result) => {
+                if (result.isConfirmed && result.value.trim()) {
+                    commonFuncs.showLoader();
+                    $.post('/Admin/BanUser', { userId: btnClickedUserId, reasonOfBanning: result.value.trim() }, function (response) {
+                        
+                    });
+                    commonFuncs.hideLoader();
+                    location.reload();
+                }
+            })
+        });
+
+        $makeAdminBtn.click(function () {
+            var userEmail = $(this).closest('tr').find('td:eq(2)').text();
+
+            Swal.fire({
+                title: 'WARNING?',
+                text: "Are you sure you want to make " + userEmail + " an admin?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Do you want to save the changes?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Save',
+                        denyButtonText: `Don't save`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            commonFuncs.showLoader();
+                            $.post('/Admin/MakeAdmin', { userId: $(this).attr('id') }, function (response) {
+                                commonFuncs.hideLoader();
+                                location.reload();
+                            }).fail(function (error) {
+                                commonFuncs.hideLoader();
+                                alert('AJAX request failed: ', error);
+                            });
+                        } else if (result.isDenied) {
+                            commonFuncs.hideLoader();
+                            Swal.fire('Changes are not saved', '', 'info');
+                        }
+                    })
+
+                }
+            })
+        });
+
+        $removeAdminBtn.click(function () {
+            var userEmail = $(this).closest('tr').find('td:eq(2)').text();
+            Swal.fire({
+                title: 'WARNING?',
+                text: "Are you sure you want to remove "+userEmail+"'s admin rights?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Do you want to save the changes?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Save',
+                        denyButtonText: `Don't save`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            commonFuncs.showLoader();
+                            $.post('/Admin/RemoveAdmin', { userId: $(this).attr('id') }, function (response) {
+                                commonFuncs.hideLoader();
+                                location.reload();
+                            }).fail(function (error) {
+                                commonFuncs.hideLoader();
+                                alert('AJAX request failed: ', error);
+                            });
+                        } else if (result.isDenied) {
+                            commonFuncs.hideLoader();
+                            Swal.fire('Changes are not saved', '', 'info');
+                        }
+                    })
+
+                }
+            })
+        });
+
+        $makeWorkerBtn.click(function () {
+            var userEmail = $(this).closest('tr').find('td:eq(2)').text();
+
+            Swal.fire({
+                title: 'WARNING?',
+                text: "Are you sure you want to make " + userEmail + " a worker?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Enter the full name job title:',
+                        input: 'text',
+                        inputPlaceholder: 'Full Name',
+                        showCancelButton: true,
+                        confirmButtonText: 'Submit',
+                    }).then((inputResult) => {
+                        if (inputResult.isConfirmed && inputResult.value) {
+                            const fullName = inputResult.value.trim();
+                            commonFuncs.showLoader();
+                            $.post('/Admin/MakeWorker', { userId: $(this).attr('id'), position: fullName }, function (response) {
+                                commonFuncs.hideLoader();
+                                location.reload();
+                            }).fail(function (error) {
+                                commonFuncs.hideLoader();
+                                alert('AJAX request failed: ' + error.responseText);
+                            });
+                        } else {
+                            commonFuncs.hideLoader();
+                            Swal.fire('Operation canceled', '', 'info');
+                        }
+                    });
+                }
+            });
+        });
+
+
+
+        $removeWorkerBtn.click(function () {
+            var userEmail = $(this).closest('tr').find('td:eq(2)').text();
+            Swal.fire({
+                title: 'WARNING?',
+                text: "Are you sure you want to remove " + userEmail + "'s worker position?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Do you want to save the changes?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Save',
+                        denyButtonText: `Don't save`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            commonFuncs.showLoader();
+                            $.post('/Admin/RemoveWorker', { userId: $(this).attr('id') }, function (response) {
+                                commonFuncs.hideLoader();
+                                location.reload();
+                            }).fail(function (error) {
+                                commonFuncs.hideLoader();
+                                alert('AJAX request failed: ', error);
+                            });
+                        } else if (result.isDenied) {
+                            commonFuncs.hideLoader();
+                            Swal.fire('Changes are not saved', '', 'info');
+                        }
+                    })
+
+                }
+            })
+        });
+    }
+    return {
+        init
+    };
+})();
+var manageWorkersPage = (function () {
+    function init($container) {
+        
+    }
+    return {
+        init
+    };
+})();
+var stripePaymentOrdersPage = (function () {
+    function init($container) {
+        $container.on('click', '.additional-btn', function () {
+            const editPageUrl = '/Admin/AdditionalOrderInformation?orderId=' + $(this).attr('id');
+
+            window.location.href = editPageUrl;
+        });
+    }
+    return {
+        init
+    };
+})();

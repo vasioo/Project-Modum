@@ -12,7 +12,7 @@ namespace Modum.Models.BaseModels.Models.BaseStructure
 
 
         [Required]
-        public int Id { get; set; } = 0;
+        public Guid Id { get; set; }
 
         [Required]
         public string Name { get; set; } = "";
@@ -24,7 +24,7 @@ namespace Modum.Models.BaseModels.Models.BaseStructure
         public List<Subcategory> Subcategories { get; set; } = new List<Subcategory>();
 
         [Required]
-        public int MainCategoryId { get; set; } = 0;
+        public Guid MainCategoryId { get; set; }
 
         public bool IsSelectedForNav { get; set; } = false;
     }

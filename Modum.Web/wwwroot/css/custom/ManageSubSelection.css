@@ -10,3 +10,6 @@ th{
 tr, td, th {
     border: solid 1px black;
 }
+#mainCategoryTable{
+    border:1px solid black;
+}

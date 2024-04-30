@@ -19,7 +19,7 @@
         <div class="row" id="main-container">
             <div class="col-12 col-lg-3 ">
                 <div id="desktop-version-of-filters">
-                    <h1 class="d-flex align-items-center justify-content-center maincategory-id" id=@Model.MainCategoryId name="filter.MainCategoryId">Filter</h1>
+                    <h1 class="d-flex align-items-center justify-content-center maincategory-id" name="filter.MainCategoryId">Filter</h1>
                 </div>
                 <div id="filter-collapse-selector" class="d-lg-none row">
                     <a class="text-dark filter-collapse row pl-3" id="toggle-filter" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
@@ -31,6 +31,56 @@
                 </div>
                 <br>
                 <div id="collapseFilter" class="collapse d-lg-block">
+
+                    <div class="pb-2" id="filter-by-main-category">
+                        <div class="card">
+                            <a class="filter-by" data-toggle="collapse" data-target="#collapse-main" aria-expanded="true" aria-controls="collapse-main" style="cursor:pointer">
+                                <div class="heading-panel row" id="collapse-main-header">
+                                    <i class="fa-solid fa-chevron-down rotate mr-2 ml-4" id="collapse-main-icon"></i>
+                                    <div class="pl-0 collapse-menu-text h4 pt-2">Main Category</div>
+                                </div>
+                            </a>
+                            <div id="collapse-main" class="collapse show" aria-labelledby="collapse-main-header">
+                                <div class="card-body" style="font-size:1.2rem;">
+                                    @{
+                                        var womenChecked = Model.MainCategoryName == "Women" ? "checked" : "";
+                                        var menChecked = Model.MainCategoryName =="Men" ? "checked" : "";
+                                        var boysChecked = Model.MainCategoryName == "Boys" ? "checked" : "";
+                                        var girlsChecked = Model.MainCategoryName == "Girls" ? "checked" : "";
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="exampleRadios" id="women-r-b"  value="Women" @womenChecked>
+                                            <label class="form-check-label" for="women-r-b">
+                                                Women
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="exampleRadios" id="men-r-b" value="Men" @menChecked>
+                                            <label class="form-check-label" for="men-r-b">
+                                                Men
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="exampleRadios" id="girls-r-b" value="Girls" @girlsChecked>
+                                            <label class="form-check-label" for="girls-r-b">
+                                                Girls
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="exampleRadios" id="boys-r-b" value="Boys" @boysChecked>
+                                            <label class="form-check-label" for="boys-r-b">
+                                                Boys
+                                            </label>
+                                        </div>
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     @if (Model.Subcategories == null || Model.Categories == null)
                     {
@@ -52,11 +102,11 @@
                                         @{
                                             IEnumerable<Category> categories = (IEnumerable<Category>)Model.Categories;
                                             IEnumerable<Subcategory> subcategories = (IEnumerable<Subcategory>)Model.Subcategories;
-                                            IEnumerable<int> selectedSubcategories = (IEnumerable<int>)Model.SelectedSubcategoriesItems;
+                                            IEnumerable<Guid> selectedSubcategories = (IEnumerable<Guid>)Model.SelectedSubcategoriesItems;
                                             @foreach (var category in categories)
                                             {
                                                 <h5 style="font-weight:700" class="row h5 pt-2 pb-2 pl-3 ml-2">@category.Name</h5>
-                                                foreach (var subcategory in subcategories.Where(s => s.CategoryId == category.Id))
+                                                foreach (var subcategory in subcategories.Where(s => s.Category.Id == category.Id))
                                                 {
                                                     if (selectedSubcategories != null)
                                                     {
@@ -180,7 +230,7 @@
                                                 @{
                                                     var neededLTCInformation = Model.FilterLTCs ?? new string[0];
                                                     var filterLTCs = neededLTCInformation.ToList();
-                                                    var index = 0; 
+                                                    var index = 0;
 
                                                     foreach (var ltc in neededLTCInformation)
                                                     {
@@ -376,15 +426,52 @@
                         int counter = 0;
                     }
                     <button style="display:none" onclick="document.getElementById('helper-button-for-updating').click();" id="helper-button-for-updating" hidden>Trigger JavaScript Event</button>
-                    @if (Model.PaginatedProducts!=null)
+                    @if (Model.PaginatedProducts != null)
                     {
-                        @foreach (var product in Model.PaginatedProducts)
+                        @if (Model.SortBy == "Most Popular")
                         {
-                            <div class="col-md-4 col-6 pl-1 pr-1">
-                                @await Html.PartialAsync("~/Views/UserViews/_CardPartial.cshtml", product)
-                            </div>
-                            counter++;
+                            @foreach (var product in Model.PaginatedProducts.OrderByDescending(pr => pr.AmountOfTimesInFavourites))
+                            {
+                                <div class="col-md-4 col-6 pl-1 pr-1">
+                                    @await Html.PartialAsync("~/Views/UserViews/_CardPartial.cshtml", product)
+                                </div>
+                                counter++;
+                            }
                         }
+
+                        @if (Model.SortBy == "Lowest Price")
+                        {
+                            @foreach (var product in Model.PaginatedProducts.OrderBy(pr => pr.Price - pr.DiscountFromPrice))
+                            {
+                                <div class="col-md-4 col-6 pl-1 pr-1">
+                                    @await Html.PartialAsync("~/Views/UserViews/_CardPartial.cshtml", product)
+                                </div>
+                                counter++;
+                            }
+
+                        }
+                        @if (Model.SortBy == "Highest Price")
+                        {
+                            @foreach (var product in Model.PaginatedProducts.OrderByDescending(pr => pr.Price - pr.DiscountFromPrice))
+                            {
+                                <div class="col-md-4 col-6 pl-1 pr-1">
+                                    @await Html.PartialAsync("~/Views/UserViews/_CardPartial.cshtml", product)
+                                </div>
+                                counter++;
+                            }
+
+                        }
+                        @if (Model.SortBy == "Newest")
+                        {
+                            @foreach (var product in Model.PaginatedProducts.OrderByDescending(pr => pr.UploadedOrUpdatedOn))
+                            {
+                                <div class="col-md-4 col-6 pl-1 pr-1">
+                                    @await Html.PartialAsync("~/Views/UserViews/_CardPartial.cshtml", product)
+                                </div>
+                                counter++;
+                            }
+                        }
+
                         @if (Model.PaginatedProducts.Count() == 0)
                         {
                             <div class="pl-5 d-flex justify-content-center align-items-center h1">No products were found with these filters</div>
@@ -394,20 +481,20 @@
                     {
                         <div class="pl-5 d-flex justify-content-center align-items-center h1">No products were found with these filters</div>
                     }
-                   
+
                 </div>
             </div>
         </div>
         <br />
         <br />
-        @if (tenFavItems != null&&tenFavItems.Count()>0)
+        @if (tenFavItems != null && tenFavItems.Count() > 0)
         {
             <div id="most-added-to-favourites-section" class="container">
                 <h2 class="most-added-to-fav-text-container">Most added to favourites:</h2>
                 @await Html.PartialAsync("~/Views/UserViews/_CardScrollerPartial.cshtml",tenFavItems)
             </div>
         }
-        @if (lastViewedProducts != null &&lastViewedProducts.Count() > 0)
+        @if (lastViewedProducts != null && lastViewedProducts.Count() > 0)
         {
             <div id="last-viewed-section" class="container">
                 <h2 class="most-added-to-fav-text-container">Last viewed products:</h2>

@@ -18,7 +18,7 @@ namespace Modum.Services.Services
             var userCartItems = _dataContext.Cart.FirstOrDefault(item => item.UserId == userId);
             return Task.FromResult(userCartItems!);
         }
-        public Task<int> GetCartIdByUserId(string userId)
+        public Task<Guid> GetCartIdByUserId(string userId)
         {
             var cart = _dataContext.Cart.FirstOrDefault(item => item.UserId == userId);
 
@@ -27,7 +27,7 @@ namespace Modum.Services.Services
                 return Task.FromResult(cart.Id);
             }
 
-            return Task.FromResult(0);
+            return Task.FromResult(Guid.Empty);
         }
 
     }

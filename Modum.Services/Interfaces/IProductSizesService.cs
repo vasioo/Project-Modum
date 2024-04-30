@@ -4,6 +4,9 @@ namespace Modum.Services.Interfaces
 {
     public interface IProductSizesService : IBaseService<ProductSizesHelpingTable>
     {
-        Task<IEnumerable<ProductSizesHelpingTable>> GetSizesByProductId(int productId);
+        Task<List<ProductSizesHelpingTable>> GetSizesByProductId(Guid productId);
+        Task<Product> GetMostBoughtProducts();
+        Task<ProductSizesHelpingTable> GetSizeBasedOnItsName(Guid productId, string name);
+        Task<List<ProductSizesHelpingTable>> GetSizesOfProducts(List<Product> products);
     }
 }

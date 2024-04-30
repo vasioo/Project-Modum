@@ -21,7 +21,7 @@
 
     <section id="image-with-userprview">
         <div id="head-of-page" class="row justify-content-center align-items-center">
-            <div class=" text-center">
+            <div class="col text-center">
                 <img src="" alt="season-image" id="image-for-season" />
             </div>
             <div class="">
@@ -56,70 +56,73 @@
             <br />
         }
     </section>
-
-    <section id="section-with-LTC" class="py-5">
+    <section id="section-with-LTC">
         @if (Model.LimitedTimeCampaign != null)
         {
-            var link = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-for-ltc-{Model.LimitedTimeCampaign.Id}";
-            <div class="row justify-content-around align-items-center">
-                <div class="col-md-5 col-12 p-3 order-md-1 order-2">
-                    <div class=" col text-truncate">
-                        <div class="h1 row justify-content-lg-start justify-content-center">
-                            @Model.LimitedTimeCampaign.Title
-                        </div>
-                        <div class="h3 row justify-content-lg-start justify-content-center">
-                            @Model.LimitedTimeCampaign.Content
-                        </div>
-                    </div>
-                    @{
-                        var remainingData = Model.LimitedTimeCampaign.EndDate - DateTime.Now;
-                    }
-                    <div class="row pt-3 justify-content-lg-start justify-content-center">
-                        <div id="countdown-container" class="text-center col-xl-8 col-9 col-lg-10 col-md-12" data-enddate="@Model.LimitedTimeCampaign.EndDate">
-                            <div id="countdown" class="row text-white">
+            if (Model.LimitedTimeCampaign.Id != Guid.Empty)
+            {
 
-                                <div class="col pl-2 pr-2">
-                                    <div class="bg-dark pt-2 rounded-top data-shower">
-                                        @remainingData.Days
+                var link = $"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/image-for-ltc-{Model.LimitedTimeCampaign.Id}";
+                <div class="row justify-content-around align-items-center py-5">
+                    <div class="col-md-5 col-12 p-3 order-md-1 order-2">
+                        <div class=" col text-truncate">
+                            <div class="h1 row justify-content-lg-start justify-content-center">
+                                @Model.LimitedTimeCampaign.Title
+                            </div>
+                            <div class="h3 row justify-content-lg-start justify-content-center">
+                                @Model.LimitedTimeCampaign.Content
+                            </div>
+                        </div>
+                        @{
+                            var remainingData = Model.LimitedTimeCampaign.EndDate - DateTime.Now;
+                        }
+                        <div class="row pt-3 justify-content-lg-start justify-content-center">
+                            <div id="countdown-container" class="text-center col-xl-8 col-9 col-lg-10 col-md-12" data-enddate="@Model.LimitedTimeCampaign.EndDate">
+                                <div id="countdown" class="row text-white">
+
+                                    <div class="col pl-2 pr-2">
+                                        <div class="bg-dark pt-2 rounded-top data-shower">
+                                            @remainingData.Days
+                                        </div>
+                                        <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Days</div>
                                     </div>
-                                    <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Days</div>
-                                </div>
-                                <div class="col pl-2 pr-2">
-                                    <div class="bg-dark pt-2 rounded-top data-shower">
-                                        @remainingData.Hours
+                                    <div class="col pl-2 pr-2">
+                                        <div class="bg-dark pt-2 rounded-top data-shower">
+                                            @remainingData.Hours
+                                        </div>
+                                        <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Hours</div>
                                     </div>
-                                    <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Hours</div>
-                                </div>
-                                <div class="col pl-2 pr-2">
-                                    <div class="bg-dark pt-2 rounded-top data-shower">
-                                        @remainingData.Minutes
+                                    <div class="col pl-2 pr-2">
+                                        <div class="bg-dark pt-2 rounded-top data-shower">
+                                            @remainingData.Minutes
+                                        </div>
+                                        <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Minutes</div>
                                     </div>
-                                    <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Minutes</div>
-                                </div>
-                                <div class="col pl-2 pr-2">
-                                    <div class="bg-dark pt-2 rounded-top data-shower">
-                                        @remainingData.Seconds
+                                    <div class="col pl-2 pr-2">
+                                        <div class="bg-dark pt-2 rounded-top data-shower">
+                                            @remainingData.Seconds
+                                        </div>
+                                        <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Seconds</div>
                                     </div>
-                                    <div class="bg-dark pl-1 pr-1 pt-4 pb-2 rounded-bottom label-data-shower">Seconds</div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row pt-3 justify-content-lg-start justify-content-center">
-                        @{
-                            var hrefattr = $"/Home/_UserProductsPartial?mainCategoryId={category}&filter.LTCs={Model.LimitedTimeCampaign.Title}";
-                        }
-                        <div class="col-9 col-lg-10 col-xl-12 col-md-12 pr-2 pl-2">
-                            <a id="button-for-limited-time-campaign" class="btn btn-dark col-12 col-xl-8" href="@hrefattr">Buy NOW!</a>
+                        <div class="row pt-3 justify-content-lg-start justify-content-center">
+                            @{
+                                var hrefattr = $"/Home/_UserProductsPartial?mainCategoryId={category}&filter.LTCs={Model.LimitedTimeCampaign.Title}";
+                            }
+                            <div class="col-9 col-lg-10 col-xl-12 col-md-12 pr-2 pl-2">
+                                <a id="button-for-limited-time-campaign" class="btn btn-dark col-12 col-xl-8" href="@hrefattr">Buy NOW!</a>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-md-5 order-md-2 order-1">
+                        <img src="@link" style="width:100%;" class="p-3 img-fluid" />
+                    </div>
                 </div>
-                <div class="col-md-5 order-md-2 order-1">
-                    <img src="@link" style="width:100%;" class="p-3 img-fluid" />
-                </div>
-            </div>
-            <br />
-            <br />
+                <br />
+                <br />
+            }
         }
     </section>
 

@@ -23,7 +23,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
         public async Task GetProductsByMainCategoryAsync_ReturnsCorrectResult()
         {
             // Arrange
-            var mainCategoryId = 1;
+            var mainCategoryId = Guid.NewGuid();
 
             // Act
             var result = await productService.GetProductsByMainCategoryAsync(mainCategoryId);
@@ -49,7 +49,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
         public async Task GetProductsBySubcategoryAsync_ReturnsCorrectResult()
         {
             // Arrange
-            var subcategoryId = 1;
+            var subcategoryId = Guid.NewGuid();
 
             // Act
             var result = await productService.GetProductsBySubcategoryAsync(subcategoryId);

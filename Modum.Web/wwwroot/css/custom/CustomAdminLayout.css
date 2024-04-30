@@ -35,7 +35,7 @@
 }
 
 .nav-link-custom {
-    color: #F2F3F5;
+    color: #F2E5D5;
     font-size: 1.2em;
     font-family: Noto Sans,Helvetica,Arial,sans-serif;
     font-weight: bold;
@@ -102,4 +102,94 @@
 }
 .swal2-container{
     z-index:10000 !important;
+}
+
+.sticky-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    height: 100vh;
+    width: 250px; 
+    border-right: 1px solid #dee2e6;
+    background: rgb(50,39,110);
+    background: linear-gradient(131deg, rgba(50,39,110,1) 3%, rgba(51,62,204,1) 22%, rgba(50,39,110,1) 100%);
+    z-index: 1000; 
+}
+
+.nav-link{
+    border-bottom:1px solid black;
+}
+    .nav-link:hover {
+        border-bottom: 1px solid white;
+        color: white;
+        text-shadow: 0 0 5px #aa5dd0, 0 0 10px #aa5dd0, 0 0 15px #aa5dd0, 0 0 20px #aa5dd0;
+        animation: glow 1s infinite alternate;
+    }
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #aa5dd0, 0 0 10px #aa5dd0, 0 0 15px #aa5dd0, 0 0 20px #aa5dd0;
+    }
+
+    to {
+        text-shadow: 0 0 10px #aa5dd0, 0 0 15px #aa5dd0, 0 0 20px #aa5dd0, 0 0 25px #aa5dd0;
+    }
+}
+.overlay {
+    background: rgba(0,0,0,0.5);
+    z-index: 999; 
+    width: 100%;
+    height: 100%;
+    display: none;
+    position: fixed;
+}
+
+#hamburger-menu-custom {
+    position: fixed;
+    z-index: 1001;
+    color: purple;
+    top:15px;
+    left:5px;
+}
+    #hamburger-menu-custom .fa-bars{
+        display:block;
+    }
+    #hamburger-menu-custom .fa-times {
+        display:none;
+    }
+    #hamburger-menu-custom.active .fa-bars {
+        display: none;
+    }
+
+    #hamburger-menu-custom.active .fa-times {
+        display: block;
+        color: red;
+    }
+#sidebar-mobile {
+    position: fixed !important;
+    width: 60%;
+}
+@media (min-width: 992px) {
+    #sidebar-mobile {
+        display: none;
+    }
+
+    #sidebar-desktop {
+        display: block;
+    }
+}
+
+@media (max-width: 991px) {
+    #sidebar-mobile {
+        display: inline-block;
+    }
+
+    #sidebar-desktop {
+        display: none;
+    }
+}
+.display-4 {
+    border-bottom: 4px solid rgb(50,39,110,1);
+    text-shadow: 0 0 1px #aa5dd0, 0 0 1px #aa5dd0, 0 0 18px #aa5dd0, 0 0 1px #aa5dd0;
 }

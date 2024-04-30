@@ -1,6 +1,6 @@
 ﻿@using Modum.Models.BaseModels.Models.ProductStructure;
 @using Modum.Web.Models.Models.Pagination;
-@model PaginatedList<Product>
+@model PaginatedList<ProductSizesHelpingTable>
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
@@ -10,32 +10,32 @@
 <div class="manage-products">
     <div id="productTableContainer" class="pt-3">
         <div class="d-flex justify-content-center">
-            <div class="h2">
+            <div class="display-4 py-3 text-center col">
                 Products Manage Menu
             </div>
         </div>
-        <div class="d-flex pt-3">
-            <a class="col btn btn-success" asp-action="AddProduct" style="font-size:1.2em">Add a product</a>
+        <div class="d-flex pt-5">
+            <a class="col btn btn-purple text-white fs-5" id="hover-btn" asp-action="AddProduct">Add a product</a>
         </div>
         <div id="product-filtering" class="d-flex pt-4 pb-4 justify-content-center">
-            <div>
+            <div class="col-12 col-lg-6">
                 <form asp-action="ManageProducts" method="get">
-                    <div class="form-actions no-color row">
-                        <div class="h5 row p-0 m-0 pr-2 align-items-center" style="font-weight:400">
+                    <div class="form-actions no-color container">
+                        <div class="h3 d-flex py-3 align-items-center justify-content-center" style="font-weight:400">
                             Find by product name:
                         </div>
-                        <div class="">
+                        <div class="py-1">
                             <input type="text" name="SearchString" class="form-control" value="@ViewData["CurrentFilter"]" />
                         </div>
-                        <div class="pl-3">
-                            <input type="submit" value="Search" class="btn btn-dark" /> |
-                            <a class="btn btn-danger" asp-action="ManageProducts">Clear</a>
+                        <div class="py-3 row justify-content-around">
+                            <input type="submit" value="Search" class="btn btn-dark col-4 search-btn" style="font-size:1.4em;" />
+                            <a class="btn btn-danger col-4 clear-btn" asp-action="ManageProducts" style="font-size:1.4em;">Clear</a>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <table class="table table-striped" border="1">
+        <table class="table table-striped">
             <thead>
                 <tr class="header-row">
                     <th>Brand</th>
@@ -46,29 +46,23 @@
                 </tr>
             </thead>
             <tbody>
-
                 @foreach (var item in Model)
                 {
-                    @foreach (var size in item.ProductSizes)
-                    {
-                        <tr>
-                            <td>@item.Brand</td>
-                            <td>@item.Title</td>
-                            <td>@size.ProductSize</td>
-                            <td>@size.AvailableItems</td>
-                            <td>
-                                <button class="btn btn-warning redirect-to-edit-page" id="@item.Id">Edit</button>
-                                <button class="btn btn-danger delete" id="@item.Id">Delete</button>
-                            </td>
-                        </tr>
-                    }
+                    <tr>
+                        <td>@item.Product.Brand</td>
+                        <td>@item.Product.Title</td>
+                        <td>@item.ProductSize</td>
+                        <td>@item.AvailableItems</td>
+                        <td>
+                            <button class="btn btn-warning redirect-to-edit-page" id="@item.Product.Id">Edit</button>
+                            <button class="btn btn-danger delete" id="@item.Id">Delete</button>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
-
         <div id="add-a-product">
         </div>
     </div>
-
 </div>
 

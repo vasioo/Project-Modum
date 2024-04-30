@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Modum.Models.BaseModels.Models.FooterItems;
 using Modum.Models.Docs;
 using Modum.Services.Services.ControllerService.DocsController;
@@ -34,8 +33,7 @@ namespace Modum.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePost(Doc doc, IFormFile blogImage)
+        public async Task<JsonResult> CreatePost(Doc doc, string blogImage)
         {
             try
             {
@@ -44,26 +42,19 @@ namespace Modum.Web.Controllers
                 blog.DateOfCreation = DateTime.Now;
                 blog.Content = doc.Content;
 
-                using (var memoryStream = new MemoryStream())
-                {
-                    await blogImage.CopyToAsync(memoryStream);
-                    var base64String = Convert.ToBase64String(memoryStream.ToArray());
-
-                    // Create a data 
-                    var dataUrl = $"data:{blogImage.ContentType};base64,{base64String}";
-                    await _helper.SaveDocInformation(blog, dataUrl);
-                }
+                await _helper.SaveDocInformation(blog, blogImage);
             }
             catch (Exception ex)
             {
-                return View(DocsShower());
+                return Json(new { status = false, Message = "An error occured!" });
             }
-            return View("~/Views/Docs/CreateDocument.cshtml");
+            return Json(new { status = true, Message = "The entity was saved in the database!" });
         }
 
         #endregion
 
         #region EditDocument
+
         public async Task<IActionResult> EditDocument(Guid id)
         {
             var doc = await _helper.EditDocHelper(id);
@@ -76,32 +67,23 @@ namespace Modum.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditDocumentPost(Guid id, BlogPost doc, IFormFile blogImage)
+        public async Task<JsonResult> EditDocumentPost(BlogPost doc, string blogImage)
         {
             try
             {
-                if (id != doc.Id)
+                if (doc.Id == Guid.Empty)
                 {
                     return Json(new { status = false, Message = "There is not such entity in the database!" });
                 }
-                using (var memoryStream = new MemoryStream())
-                {
-                    await blogImage.CopyToAsync(memoryStream);
-                    var base64String = Convert.ToBase64String(memoryStream.ToArray());
-
-                    // Create a data 
-                    var dataUrl = $"data:{blogImage.ContentType};base64,{base64String}";
-                    await _helper.EditDocPostHelper(doc, dataUrl);
-                }
-
+                await _helper.EditDocPostHelper(doc, blogImage);
             }
             catch (Exception ex)
             {
-                return View(DocsShower());
+                return Json(new { status = false, Message = "An Error occured!" });
             }
-            return View(EditDocument(id));
+            return Json(new { status = true, Message = "The item was updated!" });
         }
+
         #endregion
 
         #region DeleteDocument

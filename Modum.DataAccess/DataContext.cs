@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Modum.DataAccess.MainModel;
 using Modum.Models.BaseModels.Models.BaseStructure;
 using Modum.Models.BaseModels.Models.LTCs;
 using Modum.Models.BaseModels.Models.Payment;
 using Modum.Models.BaseModels.Models.PaymentStructure;
 using Modum.Models.BaseModels.Models.ProductStructure;
-using Modum.Models.Docs;
+using Modum.Models.MainModel;
 
 namespace Modum.DataAccess
 {
@@ -33,15 +32,9 @@ namespace Modum.DataAccess
 
         public DbSet<Subcategory> Subcategory { get; set; }
 
-        public DbSet<Invoice> Invoice { get; set; }
-
         public DbSet<MainCategory> MainCategory { get; set; }
 
-        public DbSet<MostFollowedCategory> MostFollowedCategory { get; set; }
-
         public DbSet<Notifications> Notifications { get; set; }
-
-        public DbSet<OrderLog> OrderLog { get; set; }
 
         public DbSet<Product> Product { get; set; }
 
@@ -57,13 +50,11 @@ namespace Modum.DataAccess
 
         public DbSet<ProductSizesHelpingTable> ProductSizesHelpingTable { get; set; }
 
-        public DbSet<Brands> Brands { get; set; }
-
-        public DbSet<Doc> Docs { get; set; }
-
         public DbSet<LTC> LTCs { get; set; }
 
         public DbSet<Worker> Workers { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
 
         private MainCategory Men { get; set; } = new MainCategory();
         private MainCategory Women { get; set; } = new MainCategory();
@@ -82,10 +73,15 @@ namespace Modum.DataAccess
                     , this.Women
                     , this.Boys
                     , this.Girls);
-                modelBuilder.Entity<Product>().Navigation(e => e.ProductSizes).AutoInclude();
                 modelBuilder.Entity<Category>().Navigation(e => e.Subcategories).AutoInclude();
                 modelBuilder.Entity<Cart>().Navigation(e => e.CartItems).AutoInclude();
                 modelBuilder.Entity<Favourites>().Navigation(e => e.Products).AutoInclude();
+                modelBuilder.Entity<Product>().Navigation(e => e.LTCs).AutoInclude();
+                modelBuilder.Entity<Subcategory>().Navigation(e => e.Category).AutoInclude();
+                modelBuilder.Entity<Worker>().Navigation(e => e.AppUser).AutoInclude();
+                modelBuilder.Entity<Order>().Navigation(e => e.Products).AutoInclude();
+                modelBuilder.Entity<Order>().Navigation(e => e.ApplicationUser).AutoInclude();
+                modelBuilder.Entity<ProductSizesHelpingTable>().Navigation(e => e.Product).AutoInclude();
 
                 modelBuilder.Entity<ProductSizesHelpingTable>()
                     .HasIndex(ci => new { ci.ProductSize })
@@ -97,6 +93,7 @@ namespace Modum.DataAccess
                      new IdentityRole { Id = "3", Name = "Worker", NormalizedName = "WORKER" },
                      new IdentityRole { Id = "4", Name = "SuperAdmin", NormalizedName = "SUPERADMIN" }
                  );
+
             }
 
             base.OnModelCreating(modelBuilder);
@@ -105,22 +102,22 @@ namespace Modum.DataAccess
         {
             this.Men = new MainCategory()
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Men",
             };
             this.Women = new MainCategory()
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "Women",
             };
             this.Girls = new MainCategory()
             {
-                Id = 3,
+                Id = Guid.NewGuid(),
                 Name = "Girls",
             };
             this.Boys = new MainCategory()
             {
-                Id = 4,
+                Id = Guid.NewGuid(),
                 Name = "Boys",
             };
         }

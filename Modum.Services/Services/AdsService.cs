@@ -15,8 +15,9 @@ namespace Modum.Services.Services
         }
         public async Task<IEnumerable<Product>> GetProductsByTenMostBought()
         {
-            return await _dataContext.Product
-                .OrderByDescending(x => x.ProductSizes.Max(ps => ps.AllTimeAvailableItems - ps.AvailableItems))
+            return await _dataContext.ProductSizesHelpingTable
+                .OrderByDescending(ps => ps.AllTimeAvailableItems - ps.AvailableItems)
+                .Select(x=>x.Product)
                 .Take(10)
                 .ToListAsync();
         }

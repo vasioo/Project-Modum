@@ -6,7 +6,7 @@ namespace Modum.Models.BaseModels.Models.BaseStructure
     public class MainCategory : IEntity
     {
         [Required]
-        public int Id { get; set; } = 0;
+        public Guid Id { get; set; }
 
         [Required]
         public string Name { get; set; } = "";

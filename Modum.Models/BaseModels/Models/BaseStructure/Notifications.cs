@@ -7,7 +7,7 @@ namespace Modum.Models.BaseModels.Models.BaseStructure
     public class Notifications : IEntity
     {
         [Required]
-        public int Id { get; set; } = 0;
+        public Guid Id { get; set; } 
 
         [Required]
         public NotificationCause NotificationCause { get; set; } = NotificationCause.NotDefined;
@@ -26,8 +26,6 @@ namespace Modum.Models.BaseModels.Models.BaseStructure
 
         [Required]
         public string ShortDescription { get; set; } = "";
-
-        //if the user clicks on the notification it will redirect to a partial which will be filled with that information + more
 
     }
 }

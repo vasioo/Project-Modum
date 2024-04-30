@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Modum.DataAccess;
-using Modum.DataAccess.MainModel;
+using Modum.Models.MainModel;
 using Modum.Services.Interfaces;
 
 namespace Modum.Services.Services
@@ -16,12 +16,12 @@ namespace Modum.Services.Services
 
         public async Task<bool> DoesThisPersonAlreadyBelongToAPosition(ApplicationUser user)
         {
-            return _dataContext.Workers.Where(x=>x.User.Id==user.Id).Any();
+            return _dataContext.Workers.Where(x=>x.AppUser.Id==user.Id).Any();
         }
 
         public async Task<Worker> GetWorkerByUserIdAsync(string userId)
         {
-            return await _dataContext.Workers.Where(x => x.User.Id == userId).FirstOrDefaultAsync();
+            return await _dataContext.Workers.Where(x => x.AppUser.Id == userId).FirstOrDefaultAsync();
         }
     }
 }

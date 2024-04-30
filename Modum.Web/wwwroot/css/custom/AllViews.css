@@ -59,18 +59,6 @@ header{
     z-index:2;
     position:sticky;
 }
-/*body::-webkit-scrollbar {
-  width: 0.9rem;
-}
- 
-body::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
- 
-body::-webkit-scrollbar-thumb {
-  background-color: darkgrey;
-  outline: 1px solid slategrey;
-}*/
 body {
     scroll-behavior: smooth;
 }
@@ -123,7 +111,7 @@ body {
     width: 100%;
 }
 .header-row {
-    background-color: darkgrey;
+    background: linear-gradient(131deg, rgba(50,39,110,1) 3%, rgba(51,62,204,1) 22%, rgba(50,39,110,1) 100%);
     color: white;
 }
 
@@ -133,4 +121,30 @@ body {
 
 .table-striped tbody tr:nth-of-type(even) {
     background-color: lightgrey;
+}
+.btn-purple {
+    background: linear-gradient(131deg, rgba(50,39,110,1) 3%, rgba(51,62,204,1) 22%, rgba(50,39,110,1) 100%);
+    transition: background-color 0.3s ease;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1.5rem !important;
+    box-shadow: 0px 0px 12px 4px rgba(0, 0, 0, 0.7);
+}
+.search-btn, .clear-btn {
+    color: white;
+}
+
+    .search-btn:hover {
+        box-shadow: 0px 0px 12px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .clear-btn:hover {
+        box-shadow: 0px 0px 12px 4px rgba(255, 0, 0, 0.7);
+    }
+
+.sticky-sidebar {
+    position: sticky !important;
+    box-shadow: 6px -1px 20px 0px;
 }

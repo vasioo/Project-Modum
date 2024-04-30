@@ -6,13 +6,14 @@ namespace Modum.Models.ViewModels
 {
     public class ShopViewModel
     {
-        public Product Product { get; set; } = new Product();
+        public List<ProductSizesHelpingTable> Product { get; set; } = new List<ProductSizesHelpingTable>();
         public Cart Cart { get; set; }
         public Favourites Favourites { get; set; } = new Favourites();
         public IEnumerable<Product> TenFavItems { get; set; } = Enumerable.Empty<Product>();
         public IEnumerable<Category> UnderNavCategories { get; set; } = Enumerable.Empty<Category>();
-        public IEnumerable<Brands> BasicBrands { get; set; } = Enumerable.Empty<Brands>();
-        public IEnumerable<Brands> PremiumBrands { get; set; } = Enumerable.Empty<Brands>();
+        public List<string> BasicBrands { get; set; } = new List<string>();
+        public List<string> PremiumBrands { get; set; } = new List<string>();
         public IEnumerable<Product> LastViewedProducts { get; set; } = Enumerable.Empty<Product>();
+        public int CartItemsForUser { get; set; }
     }
 }

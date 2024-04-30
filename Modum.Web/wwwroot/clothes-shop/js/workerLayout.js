@@ -1,1 +1,1487 @@
-var addLtc={init:function(e){let t=e.find(".image-upload"),i=e.find("#title-input-field"),r=e.find("#description-input-field"),o=e.find("#content-input-field"),n=e.find("#startdate-input-field"),a=e.find(".btn-save"),s=e.find("#enddate-input-field");t.change(function(e){const t=$(this),i=t.parent().find(".uploaded-image"),a=e.target.files[0];commonFuncs.validateAndResizeImage(a,function(e,t){e?i.attr("src",t):Swal.fire({icon:"error",title:"Oops...",text:"Image validation failed:"+t})})}),a.click(function(){commonFuncs.showLoader();var e={Title:i.val(),Description:r.val(),Content:o.val(),StartDate:n.val(),EndDate:s.val()},t={Image:$(".uploaded-image:first").attr("src")},a=new d;if(a.validateLTCAndImages(e,t))$.post("/Worker/AddLTCPost",{ltcDTO:e,imageDTO:t},function(e){commonFuncs.hideLoader(),Swal.fire({icon:"info",title:"Server response",html:""+e.message,showClass:{popup:"animate__animated animate__fadeInDown"},hideClass:{popup:"animate__animated animate__fadeOutUp"}}),location.reload()}).fail(function(e){commonFuncs.hideLoader(),console.log("AJAX request failed:",e)});else{commonFuncs.hideLoader();let e=a.getErrors(),i=document.createElement("ul");e.forEach(e=>{var t=document.createElement("li");t.textContent=e,t.style.color="red",t.style.textAlign="left",i.appendChild(t)}),Swal.fire({icon:"error",title:"Oops...",html:""+i.innerHTML,showClass:{popup:"animate__animated animate__fadeInDown"},hideClass:{popup:"animate__animated animate__fadeOutUp"}})}});class d{constructor(){this.errors=[]}validateLTCAndImages(e,t){return this.errors=[],this.validateLTC(e),this.validateImage(t),0===this.errors.length}validateLTC(e){e.Title&&""!==e.Title.trim()||this.errors.push("Title field is required."),e.Content&&""!==e.Content.trim()||this.errors.push("Content field is required."),e.Description&&""!==e.Description.trim()||this.errors.push("Description field is required."),e.StartDate&&""!==e.StartDate.trim()||this.errors.push("Start Date field is required."),e.EndDate&&""!==e.EndDate.trim()||this.errors.push("End Date field is required.")}validateImage(e){e.Image&&""!=e.ImageName&&" "!=e.ImageName||this.errors.push("Image is required")}getErrors(){return this.errors}}}},addProductPage={init:function(o){let e=o.find(".image-upload"),t=o.find(".btn-save"),n=o.find(".main-category-input-fields"),s=o.find("#selectCategoryDropdownId"),d=o.find("#selectSubcategoryDropdownId"),i=o.find(".sizes-input-fields"),a=o.find("#available-items-container"),c=o.find("#title-input-field"),l=o.find("#brand-input-field"),u=o.find("#price-input-field"),m=o.find("#item-colour"),f=o.find("#discount-from-price-input-field"),p=o.find("#description-input-field"),h=o.find("#return-policy-input-field");e.change(function(e){const t=$(this),i=t.parent().find(".uploaded-image"),a=e.target.files[0];commonFuncs.validateAndResizeImage(a,function(e,t){e?i.attr("src",t):Swal.fire({icon:"error",title:"Oops...",text:"Image validation failed:"+t})})}),$(".choosing-season-button").click(function(){$(".choosing-season-button").removeClass("selected"),$(this).addClass("selected")}),t.click(function(){commonFuncs.showLoader();const t=[];var e=$(".choosing-season-button.selected").text();const i=[],a=($(".sizes-input-fields:checked").each(function(){var e=$(this).attr("id"),t=o.find("#size_"+e);i.push(e+"-"+t.val())}),[]);$(".ltc-input-box:checked").each(function(){var e=$(this).attr("id");a.push(e)});var e={Title:c.val(),Brand:l.val(),Sizes:i,Colour:m.val(),Price:u.val(),DiscountFromPrice:f.val(),Description:p.val(),ReturnPolicy:h.val(),MainCategoryId:n.val(),CategoryId:s.val(),SubcategoryId:d.val(),Season:e,LTCs:a},r=($(".uploaded-image").each(function(){var e={Image:$(this).attr("src")};t.push(e)}),new g);if(r.validateProductAndImages(e,t))$.post("/Worker/AddProduct",{productDTO:e,imagesDTO:t},function(e){commonFuncs.hideLoader(),Swal.fire({icon:"info",title:"Server response",html:""+e.message,showClass:{popup:"animate__animated animate__fadeInDown"},hideClass:{popup:"animate__animated animate__fadeOutUp"}}),location.reload()}).fail(function(e){console.log("AJAX request failed:",e),commonFuncs.hideLoader()});else{commonFuncs.hideLoader();let e=r.getErrors(),i=document.createElement("ul");e.forEach(e=>{var t=document.createElement("li");t.textContent=e,t.style.color="red",t.style.textAlign="left",i.appendChild(t)}),Swal.fire({icon:"error",title:"Oops...",html:""+i.innerHTML,showClass:{popup:"animate__animated animate__fadeInDown"},hideClass:{popup:"animate__animated animate__fadeOutUp"}})}});class g{constructor(){this.errors=[]}validateProductAndImages(e,t){return this.errors=[],this.validateProduct(e),this.validateImages(t),0===this.errors.length}validateProduct(e){e.Sizes.forEach(e=>{1<(e=e.split("-")).length?(e=parseInt(e[1]),parseInt(e)!=e&&this.errors.push("The field Available Items can contain only whole number values")):this.errors.push("Size field is required.")}),e.Title&&""!==e.Title.trim()||this.errors.push("Title field is required."),e.Brand&&""!==e.Brand.trim()||this.errors.push("Brand field is required."),isNaN(e.Price)&&this.errors.push("Price field cannot contain letters/symbols."),isNaN(e.DiscountFromPrice)&&this.errors.push("Discount from price field cannot contain letters/symbols."),e.Price&&""!==e.Price.trim()||this.errors.push("Price field is required."),e.DiscountFromPrice&&""!==e.DiscountFromPrice.trim()||this.errors.push("Discount From Price Field is required."),e.Description&&""!==e.Description.trim()||this.errors.push("Description field is required."),e.ReturnPolicy&&""!==e.ReturnPolicy.trim()||this.errors.push("Return Policy field is required."),e.MainCategoryId&&""!==e.MainCategoryId.trim()||this.errors.push("Main Category field is required."),e.CategoryId&&""!==e.CategoryId.trim()||this.errors.push("Category field is required."),e.SubcategoryId&&""!==e.SubcategoryId.trim()||this.errors.push("Subcategory field is required."),e.Season&&""!==e.Season.trim()||this.errors.push("Season selection is required.")}validateImages(e){e.forEach(e=>{e.Image&&""!=e.ImageName&&" "!=e.ImageName||this.errors.push("Image is required")})}getErrors(){return this.errors}}n.click(function(){$.post("/Worker/FilterMainCategoryData",{mainCategoryId:$(this).attr("id"),categoryId:s.val()},function(e){s.empty(),s.append('<option id="0">--Select existing category--</option>'),$.each(e.categories,function(e,t){s.append('<option value="'+t.id+'">'+t.name+"</option>")}),d.empty(),d.append('<option id="0">--Select existing subcategory--</option>'),$.each(e.subcategories,function(e,t){d.append('<option value="'+t.id+'">'+t.name+"</option>")})}).fail(function(e){console.log("AJAX request failed:",e)})}),s.change(function(){var e=$("input[name='mainCategory']:checked").val();$.post("/Worker/FilterMainCategoryData",{mainCategoryId:e,categoryId:$(this).val()},function(e){d.empty(),d.append('<option id="0">--Select existing subcategory--</option>'),$.each(e,function(e,t){d.append('<option value="'+t.id+'">'+t.name+"</option>")})}).fail(function(e){console.log("AJAX request failed:",e)})}),i.on("click",function(){var e,t=$(this).attr("id");$(this).is(":checked")?(e='<div id="div_'+t+'"><label>Number of available items for '+t+'<input type="number" id="size_'+t+'" placeholder="Available Items For '+t+'" class="form-control" /> </label><hr /></div>',a.append(e)):$("#div_"+t).remove()}),d.change(function(){var e=$(this).find("option:selected");$.post("/Worker/GetCategoryBySubcategory",{subcategoryId:e.val()},function(e){s.val(e)}).fail(function(e){console.log("AJAX request failed:",e)})})}},editLtc={init:function(e){let t=e.find(".image-upload"),i=e.find("#title-input-field"),r=e.find("#description-input-field"),o=e.find("#content-input-field"),n=e.find("#startdate-input-field"),a=e.find(".btn-save"),s=e.find("#enddate-input-field");t.change(function(e){const t=$(this),i=t.parent().find(".uploaded-image"),a=e.target.files[0];commonFuncs.validateAndResizeImage(a,function(e,t){e?i.attr("src",t):Swal.fire({icon:"error",title:"Oops...",text:"Image validation failed:"+t})})}),a.click(function(){commonFuncs.showLoader();var e={Title:i.val(),Description:r.val(),Content:o.val(),StartDate:n.val(),EndDate:s.val()},t={Image:$(".uploaded-image:first").attr("src")},a=new d;if(a.validateLTCAndImages(e,t))$.post("/Worker/EditLTCPost",{ltcDTO:e,imageDTO:t},function(e){commonFuncs.hideLoader(),Swal.fire({icon:"info",title:"Server response",html:""+e.message,showClass:{popup:"animate__animated animate__fadeInDown"},hideClass:{popup:"animate__animated animate__fadeOutUp"}}),location.reload()}).fail(function(e){commonFuncs.hideLoader(),console.log("AJAX request failed:",e)});else{commonFuncs.hideLoader();let e=a.getErrors(),i=document.createElement("ul");e.forEach(e=>{var t=document.createElement("li");t.textContent=e,t.style.color="red",t.style.textAlign="left",i.appendChild(t)}),Swal.fire({icon:"error",title:"Oops...",html:""+i.innerHTML,showClass:{popup:"animate__animated animate__fadeInDown"},hideClass:{popup:"animate__animated animate__fadeOutUp"}})}});class d{constructor(){this.errors=[]}validateLTCAndImages(e,t){return this.errors=[],this.validateLTC(e),this.validateImage(t),0===this.errors.length}validateLTC(e){e.Title&&""!==e.Title.trim()||this.errors.push("Title field is required."),e.Content&&""!==e.Content.trim()||this.errors.push("Content field is required."),e.Description&&""!==e.Description.trim()||this.errors.push("Description field is required."),e.StartDate&&""!==e.StartDate.trim()||this.errors.push("Start Date field is required."),e.EndDate&&""!==e.EndDate.trim()||this.errors.push("End Date field is required.")}validateImage(e){e.Image&&""!=e.ImageName&&" "!=e.ImageName||this.errors.push("Image is required")}getErrors(){return this.errors}}}},editProductPage={init:function(o){let e=o.find(".image-upload"),n=o.find(".edit-btn-save"),s=o.find(".main-category-input-fields-edit"),d=o.find("#selectCategoryDropdownId"),c=o.find("#selectSubcategoryDropdownId"),l=o.find("#title-input-field"),u=o.find("#brand-input-field"),m=o.find("#price-input-field"),f=o.find("#item-colour"),p=o.find("#discount-from-price-input-field"),h=o.find("#description-input-field"),g=o.find("#return-policy-input-field");n.click(function(){commonFuncs.showLoader();const t=[],a=[],i=($(".sizes-input-fields:checked").each(function(){var e=$(this).attr("id"),t=o.find("#size_"+e),i=t.closest("div").attr("id").split("-"),i=i[i.length-1];a.push(`${e}-${t.val()}-${t[0].classList[1]}-`+i)}),[]);$(".ltc-input-box:checked").each(function(){var e=$(this).attr("id");i.push(e)});var e={Id:n.attr("id"),Title:l.val(),Brand:u.val(),Sizes:a,Price:m.val(),DiscountFromPrice:p.val(),Description:h.val(),ReturnPolicy:g.val(),MainCategoryId:s.val(),CategoryId:d.val(),Colour:""+f.val(),SubcategoryId:c.val(),ImageContainerId:$(".image-container").attr("id"),LTCs:i},r=($(".uploaded-image").each(function(){var e={Image:$(this).attr("src")};t.push(e)}),new v);if(r.validateProductAndImages(e,t))$.post("/Admin/EditProduct",{productDTO:e,imagesDTO:t},function(e){commonFuncs.hideLoader(),Swal.fire({icon:"info",title:"Server response",html:""+e.message,showClass:{popup:"animate__animated animate__fadeInDown"},hideClass:{popup:"animate__animated animate__fadeOutUp"}}),location.reload()}).fail(function(e){console.log("AJAX request failed:",e),commonFuncs.hideLoader()});else{commonFuncs.hideLoader();let e=r.getErrors(),i=document.createElement("ul");e.forEach(e=>{var t=document.createElement("li");t.textContent=e,t.style.color="red",t.style.textAlign="left",i.appendChild(t)}),Swal.fire({icon:"error",title:"Oops...",html:""+i.innerHTML,showClass:{popup:"animate__animated animate__fadeInDown"},hideClass:{popup:"animate__animated animate__fadeOutUp"}})}});class v{constructor(){this.errors=[]}validateProductAndImages(e,t){return this.errors=[],this.validateProduct(e),this.validateImages(t),0===this.errors.length}validateProduct(e){e.Sizes.forEach(e=>{1<(e=e.split("-")).length?(e[0],e=parseInt(e[1]),parseInt(e)!=e&&this.errors.push("The field Available Items can contain only whole number values")):this.errors.push("Size field is required.")}),e.Title&&""!==e.Title.trim()||this.errors.push("Title field is required."),e.Brand&&""!==e.Brand.trim()||this.errors.push("Brand field is required."),isNaN(e.Price)&&this.errors.push("Price field cannot contain letters/symbols."),isNaN(e.DiscountFromPrice)&&this.errors.push("Discount from price field cannot contain letters/symbols."),e.Price&&""!==e.Price.trim()||this.errors.push("Price field is required."),e.DiscountFromPrice&&""!==e.DiscountFromPrice.trim()||this.errors.push("Discount From Price Field is required."),e.Description&&""!==e.Description.trim()||this.errors.push("Description field is required."),e.ReturnPolicy&&""!==e.ReturnPolicy.trim()||this.errors.push("Return Policy field is required."),e.MainCategoryId&&""!==e.MainCategoryId.trim()||this.errors.push("Main Category field is required."),e.CategoryId&&""!==e.CategoryId.trim()||this.errors.push("Category field is required."),e.SubcategoryId&&""!==e.SubcategoryId.trim()||this.errors.push("Subcategory field is required.")}validateImages(e){e.forEach(e=>{e.Image&&""!=e.ImageName&&" "!=e.ImageName||this.errors.push("Image is required")})}getErrors(){return this.errors}}e.change(function(e){const t=$(this),i=t.parent().find(".uploaded-image"),a=e.target.files[0];commonFuncs.validateAndResizeImage(a,function(e,t){e?i.attr("src",t):Swal.fire({icon:"error",title:"Oops...",text:"Image validation failed:"+t})})}),$(document).ready(function(){s.trigger("click"),d.trigger("change")}),s.click(function(){$.post("/Admin/FilterMainCategoryData",{mainCategoryId:$(this).attr("id"),categoryId:d.val()},function(e){d.empty(),d.append('<option id="0">--Select existing category--</option>'),$.each(e.categories,function(e,t){d.append('<option value="'+t.id+'">'+t.name+"</option>")}),c.empty(),c.append('<option id="0">--Select existing subcategory--</option>'),$.each(e.subcategories,function(e,t){c.append('<option value="'+t.id+'">'+t.name+"</option>")})}).fail(function(e){console.log("AJAX request failed:",e)})}),d.on("change",function(){var e=$("#mainCategoriesRadioBtns input[type='radio']:checked");$.post("/Admin/FilterMainCategoryData",{mainCategoryId:e,categoryId:$(this).val()}).fail(function(e){console.log("AJAX request failed:",e)})}),c.change(function(){var e=$(this).find("option:selected");d.val();$.post("/Admin/GetCategoryBySubcategory",{subcategoryId:e.val()},function(e){d.val(e)}).fail(function(e){console.log("AJAX request failed:",e)})})}},manageLtcs={init:function(e){e.find(""),e.on("click",".redirect-to-edit-page",function(){var e="/Worker/EditLTC?ltcId="+$(this).attr("id");window.location.href=e}),e.on("click",".delete",function(){Swal.fire({title:"Are you sure?",text:"You won't be able to revert this product!",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Yes, Delete!"}).then(e=>{e.isConfirmed&&(commonFuncs.showLoader(),$(this).closest("tr").remove(),$.post("/Worker/DeleteLTC",{ltcId:$(this).attr("id")},function(e){commonFuncs.hideLoader(),location.reload()}).fail(function(e){commonFuncs.hideLoader(),alert("AJAX request failed: ",e)}))})})}},manageProductsPage={init:function(e){e.find(""),e.on("click",".redirect-to-edit-page",function(){var e="/Worker/EditProduct?productId="+$(this).attr("id");window.location.href=e}),e.on("click",".delete",function(){Swal.fire({title:"Are you sure?",text:"You won't be able to revert this product!",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Yes, Delete!"}).then(e=>{e.isConfirmed&&(commonFuncs.showLoader(),$(this).closest("tr").remove(),$.post("/Worker/DeleteProduct",{productId:$(this).attr("id")},function(e){commonFuncs.hideLoader(),location.reload()}).fail(function(e){commonFuncs.hideLoader(),alert("AJAX request failed: ",e)}))})})}},manageSubSelectionsPage={init:function(e){let t=e.find("#save-btn"),i=e.find("#add-category-row-btn"),o=e.find("#selectMainCategoryDropdownId"),a=e.find("#save-btn-div-row"),n=e.find("#mainCategoryTable"),r=0,s='<tr class="cat-row">   <td><input type="text" class="form-control category-name" required></td>   <td id="for-subcategories">       <a class="btn btn-primary col" data-toggle="collapse" href="" role="button" aria-expanded="false" aria-controls="">           Subcategories       </a>        <div class="card subcategoryTable" id="">               <div class="card-header"></div>               <div class="card-body">                 <table>                     <thead>                         <tr>                             <th>Subcategory Name</th>                             <th></th>                         </tr>                     </thead>                     <tbody class="subcategory-tbody">                         \x3c!--Add options for change--\x3e                     </tbody>                 </table>                 <button type="button" class="btn btn-primary add-subcategory-row-btn" id=""><i class="fas fa-plus"></i> Add Subcategory</button>              </div>           </div>   </td>   <td>       <button type="button" class="btn btn-danger delete-row m-1"><i class="fa fa-trash"></i></button>   </td></tr>';t.click(function(){commonFuncs.showLoader();let e=o.val(),a=[],r=[];n.find(".category-table").find("tbody .cat-row").each(function(){const e=$(this),t=e.find(".category-name").val().trim();var i={CategoryName:t};e.find("tbody .sub-row").each(function(){var e={SubcategoryName:$(this).find(".subcategory-name").val().trim(),CategoryName:t};r.push(e)}),a.push(i)});var t=new d;if(t.validateMainCategory(e,a,r))$.post("/Worker/ManageSubSelection",{mainCategoryId:e,categoriesDTO:a,subcategoriesDTO:r},function(e){commonFuncs.hideLoader(),Swal.fire({icon:"info",title:"Server response",html:""+e.message,showClass:{popup:"animate__animated animate__fadeInDown"},hideClass:{popup:"animate__animated animate__fadeOutUp"}}),location.reload()}).fail(function(e){commonFuncs.hideLoader(),console.log("AJAX request failed:",e)});else{commonFuncs.hideLoader();let e=t.getErrors(),i=document.createElement("ul");e.forEach(e=>{var t=document.createElement("li");t.textContent=e,t.style.color="red",t.style.textAlign="left",i.appendChild(t)}),Swal.fire({icon:"error",title:"Oops...",html:""+i.innerHTML,showClass:{popup:"animate__animated animate__fadeInDown"},hideClass:{popup:"animate__animated animate__fadeOutUp"}})}});class d{constructor(){this.errors=[]}validateMainCategory(e,t,i){return this.errors=[],this.validateCategories(t),this.validateSubcategories(i),0===this.errors.length}validateCategories(e){e&&0!==e.length?e.forEach(e=>{e.CategoryName&&""!==e.CategoryName.trim()||this.errors.push("Category name is required.")}):this.errors.push("At least one category is required.")}validateSubcategories(e){e&&0!==e.length?e.forEach(e=>{e.SubcategoryName&&""!==e.SubcategoryName.trim()||this.errors.push("Subcategory name is required.")}):this.errors.push("At least one subcategory is required.")}getErrors(){return this.errors}}function c(e){e.find(".delete-row").click(function(){Swal.fire({title:"Are you sure?",text:"You won't be able to revert this row!",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Yes, Delete!"}).then(e=>{e.isConfirmed&&$(this).closest("tr").remove()})})}e.on("click",".add-subcategory-row-btn",function(){var e=$(this).closest(".subcategoryTable").find("tbody"),t=$('<tr class="sub-row">   <td><input type="text" class="form-control subcategory-name" required></td>   <td>       <button type="button" class="btn btn-danger delete-row m-1"><i class="fa fa-trash"></i></button>   </td></tr>');e.append(t),c(t)}),o.change(function(){var e=$(this).val();n.find("tbody").empty(),n.css("display",""!==o.val()?"block":"none"),a.css("display",""!==o.val()?"block":"none"),e&&(commonFuncs.showLoader(),$.post("/Worker/LoadMainCategoryData",{mainCategoryId:e},function(e){let t=e.categories,a=n.find("tbody");t.forEach(function(e){r++;let t=$(s);t.find(".category-name").val(e.name);var i=t.find("a");t.find(".subcategoryTable").attr("id","subcategoryTable-"+r),i.attr("aria-controls","subcategoryTable-"+r),i.attr("href","#subcategoryTable-"+r),e.subcategories.forEach(function(e){e='<tr class="sub-row">   <td><input type="text" class="form-control subcategory-name" required value="'+e.name+'"></td>   <td>       <button type="button" class="btn btn-danger delete-subcategory-row m-1"><i class="fa fa-trash"></i></button>   </td></tr>';t.find(".subcategory-tbody").append(e)}),a.append(t),commonFuncs.hideLoader()})}).fail(function(e){commonFuncs.hideLoader(),alert("AJAX request failed: ",e)}))}),i.click(function(){r++;var e=$(s),t=e.find("a");e.find(".subcategoryTable").attr("id","subcategoryTable-"+r),t.attr("aria-controls","subcategoryTable-"+r),t.attr("href","#subcategoryTable-"+r),n.find("#category-tbody").append(e),c(e)}),e.on("change",".category-name",function(){var e=n.closest("#subcategoryTable");e.attr("id","for-subcategories-"+$(this).val()),e.attr("href","#for-subcategories-"+$(this).val())})}};
+var addLtc = (function () {
+    function init($container) {
+        let $ltcImages = $container.find('.image-upload'),
+            $titleInputField = $container.find('#title-input-field'),
+            $descriptionInputField = $container.find('#description-input-field'),
+            $contentInputField = $container.find('#content-input-field'),
+            $startDateInputField = $container.find('#startdate-input-field'),
+            $saveProductsBtn = $container.find('.btn-save'),
+            $discountInputField = $container.find('#discount-input-field'),
+            $endDateInputField = $container.find('#enddate-input-field');
+
+        $ltcImages.change(function (event) {
+            const $self = $(this),
+                $uploadedImage = $self.parent().find('.uploaded-image'),
+                file = event.target.files[0];
+
+            commonFuncs.validateAndResizeImage(file, function (isValid, imageData) {
+                if (isValid) {
+
+                    $uploadedImage.attr('src', imageData);
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Image validation failed:' + imageData
+                    })
+                }
+            });
+        });
+
+
+        $saveProductsBtn.click(function () {
+            commonFuncs.showLoader();
+            const ltc = {
+                Title: $titleInputField.val(),
+                Description:$descriptionInputField.val(),
+                Content: $contentInputField.val(),
+                StartDate: $startDateInputField.val(),
+                EndDate: $endDateInputField.val(),
+                PercentageOfDiscount: $discountInputField.val()
+            };
+            const image = {
+                Image: $('.uploaded-image:first').attr('src'),
+            };
+
+            const validator = new FormValidator(),
+                isValid = validator.validateLTCAndImages(ltc, image);
+            if (isValid) {
+                $.post('/Worker/AddLTCPost', {
+                    ltcDTO: ltc,
+                    imageDTO: image
+                },
+                    function (response) {
+                        commonFuncs.hideLoader();
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Server response',
+                            html: `${response.message}`,
+                            showClass: {
+                                popup: 'animate__animated animate__fadeInDown'
+                            },
+                            hideClass: {
+                                popup: 'animate__animated animate__fadeOutUp'
+                            }
+                        });
+
+                        location.reload();
+
+                    }).fail(function (error) {
+                        commonFuncs.hideLoader();
+                        console.log('AJAX request failed:', error);
+                    });
+            }
+            else {
+                commonFuncs.hideLoader();
+                let errors = validator.getErrors(),
+                    errorList = document.createElement("ul");
+
+                errors.forEach((error) => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = error;
+                    listItem.style.color = "red";
+                    listItem.style.textAlign = "left";
+                    errorList.appendChild(listItem);
+                });
+
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: `${errorList.innerHTML}`,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                });
+            }
+        });
+
+        class FormValidator {
+            constructor() {
+                this.errors = [];
+            }
+
+
+            validateLTCAndImages(ltc, image) {
+                this.errors = [];
+
+                this.validateLTC(ltc);
+                this.validateImage(image);
+
+                return this.errors.length === 0;
+            }
+
+            validateLTC(ltc) {
+
+                if (!ltc.Title || ltc.Title.trim() === '') {
+                    this.errors.push('Title field is required.');
+                }
+                if (!ltc.Content || ltc.Content.trim() === '') {
+                    this.errors.push('Content field is required.');
+                }
+                if (!ltc.Description || ltc.Description.trim() === '') {
+                    this.errors.push('Description field is required.');
+                }
+                if (!ltc.StartDate || ltc.StartDate.trim() === '') {
+                    this.errors.push('Start Date field is required.');
+                }
+                if (!ltc.EndDate || ltc.EndDate.trim() === '') {
+                    this.errors.push('End Date field is required.');
+                }
+                if (!ltc.PercentageOfDiscount || ltc.PercentageOfDiscount.trim() === '') {
+                    this.errors.push('Discount field is required.');
+                }
+            }
+
+            validateImage(image) {
+                if (!image.Image || image.ImageName == "" || image.ImageName == " ") {
+                    this.errors.push('Image is required');
+                    return;
+                }
+            }
+
+            getErrors() {
+                return this.errors;
+            }
+        }
+    }
+    return {
+        init
+    };
+})();
+var addProductPage = (function () {
+    function init($container) {
+        let $productImages = $container.find('.image-upload'),
+            $saveProductsBtn = $container.find('.btn-save'),
+            $mainCategoriesRadioBtns = $container.find('.main-category-input-fields'),
+            $selectCategoryDropdown = $container.find('#selectCategoryDropdownId'),
+            $selectSubcategoryDropdown = $container.find('#selectSubcategoryDropdownId'),
+            $sizeInputChkBoxes = $container.find('.sizes-input-fields'),
+            $availableItemsContainer = $container.find('#available-items-container'),
+            $titleInputField = $container.find('#title-input-field'),
+            $brandInputField = $container.find('#brand-input-field'),
+            $priceInputField = $container.find('#price-input-field'),
+            $productColour = $container.find('#item-colour'),
+            $discountFromPriceInputField = $container.find('#discount-from-price-input-field'),
+            $descriptionInputField = $container.find('#description-input-field'),
+            $returnPolicyInputField = $container.find('#return-policy-input-field');
+
+
+        $productImages.change(function (event) {
+            const $self = $(this),
+                $uploadedImage = $self.parent().find('.uploaded-image'),
+                file = event.target.files[0];
+
+            commonFuncs.validateAndResizeImage(file, function (isValid, imageData) {
+                if (isValid) {
+
+                    $uploadedImage.attr('src', imageData);
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Image validation failed:' + imageData
+                    })
+                }
+            });
+        });
+
+        $('.choosing-season-button').click(function () {
+            $('.choosing-season-button').removeClass('selected');
+            $(this).addClass('selected');
+        });
+
+        $saveProductsBtn.click(function () {
+            commonFuncs.showLoader();
+            const images = [];
+
+            const selectedSeason = $('.choosing-season-button.selected').text();
+
+            const sizes = [];
+
+            $('.sizes-input-fields:checked').each(function () {
+                var checkedSizeId = $(this).attr('id');
+                var $availableItems = $container.find('#size_' + checkedSizeId);
+                sizes.push(`${checkedSizeId}-${$availableItems.val()}`);
+            });
+
+            const ltcs = [];
+            $('.ltc-input-box:checked').each(function () {
+                var ltcInput = $(this).attr('id');
+                ltcs.push(ltcInput);
+            });
+
+            const product = {
+                Title: $titleInputField.val(),
+                Brand: $brandInputField.val(),
+                Sizes: sizes,
+                Colour: $productColour.val(),
+                Price: $priceInputField.val(),
+                DiscountFromPrice: $discountFromPriceInputField.val(),
+                Description: $descriptionInputField.val(),
+                ReturnPolicy: $returnPolicyInputField.val(),
+                MainCategoryId: $mainCategoriesRadioBtns.val(),
+                CategoryId: $selectCategoryDropdown.val(),
+                SubcategoryId: $selectSubcategoryDropdown.val(),
+                Season: selectedSeason,
+                LTCs: ltcs
+            };
+
+            $('.uploaded-image').each(function () {
+                const image = {
+                    Image: $(this).attr('src'),
+                }
+                images.push(image);
+            });
+
+            const validator = new FormValidator(),
+                isValid = validator.validateProductAndImages(product, images);
+            if (isValid) {
+                $.post('/Worker/AddProduct', {
+                    productDTO: product,
+                    imagesDTO: images
+                },
+                    function (response) {
+                        commonFuncs.hideLoader();
+
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Server response',
+                            html: `${response.message}`,
+                            showClass: {
+                                popup: 'animate__animated animate__fadeInDown'
+                            },
+                            hideClass: {
+                                popup: 'animate__animated animate__fadeOutUp'
+                            }
+                        });
+
+                        location.reload();
+
+                    }).fail(function (error) {
+                        console.log('AJAX request failed:', error);
+                        commonFuncs.hideLoader();
+
+                    });
+            }
+            else {
+                commonFuncs.hideLoader();
+
+                let errors = validator.getErrors(),
+                    errorList = document.createElement("ul");
+
+                errors.forEach((error) => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = error;
+                    listItem.style.color = "red";
+                    listItem.style.textAlign = "left";
+                    errorList.appendChild(listItem);
+                });
+
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: `${errorList.innerHTML}`,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                });
+            }
+        });
+
+
+
+        class FormValidator {
+            constructor() {
+                this.errors = [];
+            }
+
+
+            validateProductAndImages(product, images) {
+                this.errors = [];
+
+                this.validateProduct(product);
+                this.validateImages(images);
+
+                return this.errors.length === 0;
+            }
+
+            validateProduct(product) {
+                var parts = product.Sizes;
+
+                parts.forEach((part) => {
+
+                    part = part.split('-');
+
+                    if (part.length > 1) {
+                        var AvailableItems = parseInt(part[1]);
+
+                        var parsedAvailableItems = parseInt(AvailableItems);
+
+
+                        if (parsedAvailableItems != AvailableItems) {
+                            this.errors.push('The field Available Items can contain only whole number values');
+                        }
+                    }
+                    else {
+                        this.errors.push('Size field is required.');
+                    }
+                });
+
+                if (!product.Title || product.Title.trim() === '') {
+                    this.errors.push('Title field is required.');
+                }
+                if (!product.Brand || product.Brand.trim() === '') {
+                    this.errors.push('Brand field is required.');
+                }
+                if (isNaN(product.Price)) {
+                    this.errors.push('Price field cannot contain letters/symbols.');
+                }
+                if (isNaN(product.DiscountFromPrice)) {
+                    this.errors.push('Discount from price field cannot contain letters/symbols.');
+                }
+                if (!product.Price || product.Price.trim() === '') {
+                    this.errors.push('Price field is required.');
+                }
+                if (!product.DiscountFromPrice || product.DiscountFromPrice.trim() === '') {
+                    this.errors.push('Discount From Price Field is required.');
+                }
+                if (!product.Description || product.Description.trim() === '') {
+                    this.errors.push('Description field is required.');
+                }
+                if (!product.ReturnPolicy || product.ReturnPolicy.trim() === '') {
+                    this.errors.push('Return Policy field is required.');
+                }
+
+                if (!product.MainCategoryId || product.MainCategoryId.trim() === '') {
+                    this.errors.push('Main Category field is required.');
+                }
+                if (!product.CategoryId || product.CategoryId.trim() === '') {
+                    this.errors.push('Category field is required.');
+                }
+                if (!product.SubcategoryId || product.SubcategoryId.trim() === '') {
+                    this.errors.push('Subcategory field is required.');
+                }
+                if (!product.Season || product.Season.trim() === '') {
+                    this.errors.push('Season selection is required.');
+                }
+
+            }
+
+            validateImages(images) {
+                images.forEach((image) => {
+                    if (!image.Image || image.ImageName == "" || image.ImageName == " ") {
+                        this.errors.push('Image is required');
+                        return;
+                    }
+                });
+            }
+
+            getErrors() {
+                return this.errors;
+            }
+        }
+
+        $mainCategoriesRadioBtns.click(function () {
+
+            $.post('/Worker/FilterMainCategoryData', {
+                mainCategoryId: $(this).attr('id'),
+                categoryId: $selectCategoryDropdown.val()
+            },
+                function (response) {
+                    $selectCategoryDropdown.empty();
+                    $selectCategoryDropdown.append('<option id="0">--Select existing category--</option>');
+                    $.each(response.categories, function (index, item) {
+                        $selectCategoryDropdown.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    });
+
+                    $selectSubcategoryDropdown.empty();
+                    $selectSubcategoryDropdown.append('<option id="0">--Select existing subcategory--</option>');
+                    $.each(response.subcategories, function (index, item) {
+                        $selectSubcategoryDropdown.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    });
+                }).fail(function (error) {
+                    console.log('AJAX request failed:', error);
+                });
+        });
+
+        $selectCategoryDropdown.change(function () {
+            var $checkedRadio = $("input[name='mainCategory']:checked").val();
+            $.post('/Worker/FilterMainCategoryData', {
+                mainCategoryId: $checkedRadio,
+                categoryId: $(this).val()
+            },
+                function (response) {
+                    $selectSubcategoryDropdown.empty();
+                    $selectSubcategoryDropdown.append('<option id="0">--Select existing subcategory--</option>');
+                    $.each(response, function (index, item) {
+                        $selectSubcategoryDropdown.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    });
+
+                }).fail(function (error) {
+                    console.log('AJAX request failed:', error);
+                });
+        });
+
+        $sizeInputChkBoxes.on('click', function () {
+            let $currentId = $(this).attr("id");
+            if ($(this).is(':checked')) {
+                let htmlAvailableItemsString =
+                    '<div id="div_' + $currentId + '">' +
+                    '<label>' +
+                    'Number of available items for ' + $currentId +
+                    '<input type="number" id="size_' + $currentId + '" placeholder="Available Items For ' + $currentId + '" class="form-control" /> ' +
+                    '</label>' +
+                    '<hr />' +
+                    '</div>';
+
+                $availableItemsContainer.append(htmlAvailableItemsString);
+            }
+            else {
+                $('#div_' + $currentId).remove();
+            }
+        });
+
+        $selectSubcategoryDropdown.change(function () {
+            var selectedSubcategoryId = $(this).find('option:selected');
+            $.post('/Worker/GetCategoryBySubcategory', {
+                subcategoryId: selectedSubcategoryId.val()
+            },
+                function (response) {
+                    $selectCategoryDropdown.val(response);
+                }).fail(function (error) {
+                    console.log('AJAX request failed:', error);
+                });
+        });
+    }
+    return {
+        init
+    };
+})();
+var createDocumentPage = (function () {
+    function init($container) {
+        $(document).ready(function () {
+            $('#submit-btn').click(function (event) {
+                var contentData = tinyMCE.activeEditor.getContent();
+                var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+
+                var formDataObject = {
+                    Title: $('#title').val(),
+                    Content: contentData,
+                    Id: $('#docId').val(),
+                    __RequestVerificationToken: antiForgeryToken
+                };
+                $.post('/Docs/CreatePost', {
+                    doc: formDataObject,
+                    blogImage: $('#sent-image').attr('src')
+                }, function (response) {
+                    if (response.status) {
+                        commonFuncs.hideLoader();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Успех',
+                            text: response.message,
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                            timerProgressBar: true,
+                            timer: 3000
+                        });
+                        location.reload();
+                    } else {
+                        commonFuncs.hideLoader();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Грешка',
+                            text: response.message,
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                            timerProgressBar: true,
+                            timer: 3000
+                        });
+                    }
+
+                    location.reload();
+                }).fail(function (error) {
+                    commonFuncs.hideLoader();
+                    console.log('AJAX request failed:', error);
+                });
+            });
+        });
+    }
+    return {
+        init
+    };
+})();
+var editDocumentPage = (function () {
+    function init($container) {
+        $(document).ready(function () {
+            $('#submit-btn').click(function (event) {
+                var contentData = tinyMCE.activeEditor.getContent();
+                var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+
+                var formDataObject = {
+                    Title: $('#title').val(),
+                    Content: contentData,
+                    DateOfCreation: $('#DateOfCreation').val(),
+                    Id: $('#docId').val(),
+                    __RequestVerificationToken:antiForgeryToken
+                };
+                $.post('/Docs/EditDocumentPost', {
+                    doc: formDataObject,
+                    blogImage: $('#sent-image').attr('src')
+                }, function (response) {
+                    if (response.status) {
+                        commonFuncs.hideLoader();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Успех',
+                            text: response.message,
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                            timerProgressBar: true,
+                            timer: 3000
+                        });
+                        location.reload();
+                    } else {
+                        commonFuncs.hideLoader();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Грешка',
+                            text: response.message,
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                            timerProgressBar: true,
+                            timer: 3000
+                        });
+                    }
+
+                    location.reload();
+                }).fail(function (error) {
+                    commonFuncs.hideLoader();
+                    console.log('AJAX request failed:', error);
+                });
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            var elements = document.getElementsByClassName('deleteBlogPostButton');
+
+            Array.from(elements).forEach(function (element) {
+                element.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this blog!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, Delete!'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            var id = element.getAttribute('id');
+
+                            var antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                            fetch('/Docs/DeleteDocumentPost', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                    'RequestVerificationToken': antiForgeryToken
+                                },
+                                body: 'id=' + id
+                            })
+                                .then(function (response) {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(function (data) {
+                                    var currentDomain = window.location.host
+                                    var updatedUrl = "https://" + currentDomain + "/Footer/Blog";
+
+                                    window.location.href = updatedUrl;
+
+                                })
+                                .catch(function (error) {
+                                    console.error('Fetch error:', error);
+                                });
+                        }
+                    });
+                });
+            });
+        });
+
+    }
+    return {
+        init
+    };
+})();
+var editLtc = (function () {
+    function init($container) {
+        let $ltcImages = $container.find('.image-upload'),
+            $titleInputField = $container.find('#title-input-field'),
+            $descriptionInputField = $container.find('#description-input-field'),
+            $contentInputField = $container.find('#content-input-field'),
+            $startDateInputField = $container.find('#startdate-input-field'),
+            $saveProductsBtn = $container.find('.btn-save'),
+            $discountInputField = $container.find('#discount-input-field'),
+            $endDateInputField = $container.find('#enddate-input-field');
+
+        $ltcImages.change(function (event) {
+            const $self = $(this),
+                $uploadedImage = $self.parent().find('.uploaded-image'),
+                file = event.target.files[0];
+
+            commonFuncs.validateAndResizeImage(file, function (isValid, imageData) {
+                if (isValid) {
+
+                    $uploadedImage.attr('src', imageData);
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Image validation failed:' + imageData
+                    })
+                }
+            });
+        });
+
+
+        $saveProductsBtn.click(function () {
+            commonFuncs.showLoader();
+            const ltc = {
+                Id: $('#model-id').data('model-id'),
+                Title: $titleInputField.val(),
+                Description: $descriptionInputField.val(),
+                Content: $contentInputField.val(),
+                StartDate: $startDateInputField.val(),
+                EndDate: $endDateInputField.val(),
+                PercentageOfDiscount:$discountInputField.val()
+            };
+            const image = {
+                Image: $('.uploaded-image:first').attr('src'),
+            };
+
+            const validator = new FormValidator(),
+                isValid = validator.validateLTCAndImages(ltc, image);
+            if (isValid) {
+                $.post('/Worker/EditLTCPost', {
+                    ltcDTO: ltc,
+                    imageDTO: image
+                },
+                    function (response) {
+                        commonFuncs.hideLoader();
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Server response',
+                            html: `${response.message}`,
+                            showClass: {
+                                popup: 'animate__animated animate__fadeInDown'
+                            },
+                            hideClass: {
+                                popup: 'animate__animated animate__fadeOutUp'
+                            }
+                        });
+
+                        location.reload();
+
+                    }).fail(function (error) {
+                        commonFuncs.hideLoader();
+                        console.log('AJAX request failed:', error);
+                    });
+            }
+            else {
+                commonFuncs.hideLoader();
+                let errors = validator.getErrors(),
+                    errorList = document.createElement("ul");
+
+                errors.forEach((error) => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = error;
+                    listItem.style.color = "red";
+                    listItem.style.textAlign = "left";
+                    errorList.appendChild(listItem);
+                });
+
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: `${errorList.innerHTML}`,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                });
+            }
+        });
+
+        class FormValidator {
+            constructor() {
+                this.errors = [];
+            }
+
+
+            validateLTCAndImages(ltc, image) {
+                this.errors = [];
+
+                this.validateLTC(ltc);
+                this.validateImage(image);
+
+                return this.errors.length === 0;
+            }
+
+            validateLTC(ltc) {
+
+                if (!ltc.Title || ltc.Title.trim() === '') {
+                    this.errors.push('Title field is required.');
+                }
+                if (!ltc.Content || ltc.Content.trim() === '') {
+                    this.errors.push('Content field is required.');
+                }
+                if (!ltc.Description || ltc.Description.trim() === '') {
+                    this.errors.push('Description field is required.');
+                }
+                if (!ltc.StartDate || ltc.StartDate.trim() === '') {
+                    this.errors.push('Start Date field is required.');
+                }
+                if (!ltc.EndDate || ltc.EndDate.trim() === '') {
+                    this.errors.push('End Date field is required.');
+                }
+                if (!ltc.PercentageOfDiscount || ltc.PercentageOfDiscount.trim() === '') {
+                    this.errors.push('Discount field is required.');
+                }
+            }
+
+            validateImage(image) {
+                if (!image.Image || image.ImageName == "" || image.ImageName == " ") {
+                    this.errors.push('Image is required');
+                    return;
+                }
+            }
+
+            getErrors() {
+                return this.errors;
+            }
+        }
+    }
+    return {
+        init
+    };
+})();
+    var editProductPage = (function () {
+    function init($container) {
+        let $productImages = $container.find('.image-upload'),
+            $saveEditProductsBtn = $container.find('.edit-btn-save'),
+            $mainCategoriesRadioBtnsEdit = $container.find('.main-category-input-fields-edit'),
+            $selectCategoryDropdown = $container.find('#selectCategoryDropdownId'),
+            $selectSubcategoryDropdown = $container.find('#selectSubcategoryDropdownId'),
+            $titleInputField = $container.find('#title-input-field'),
+            $brandInputField = $container.find('#brand-input-field'),
+            $priceInputField = $container.find('#price-input-field'),
+            $productColour = $container.find('#item-colour'),
+            $discountFromPriceInputField = $container.find('#discount-from-price-input-field'),
+            $descriptionInputField = $container.find('#description-input-field'),
+            $returnPolicyInputField = $container.find('#return-policy-input-field');
+
+
+        $saveEditProductsBtn.click(function () {
+            commonFuncs.showLoader();
+            const images = [];
+
+            const sizes = [];
+
+            $('.sizes-input-fields:checked').each(function () {
+                var checkedSizeId = $(this).attr('id');
+                var $availableItems = $container.find('#size_' + checkedSizeId);
+                var $parentContainerId = $availableItems.closest('div').attr('id');
+                var idParts = $parentContainerId.split('-');
+                var lastItem = idParts[idParts.length - 1]; 
+                sizes.push(`${checkedSizeId}-${$availableItems.val()}-${$availableItems[0].classList[1]}-${lastItem}`);
+            });
+
+            const ltcs = [];
+            $('.ltc-input-box:checked').each(function () {
+                var ltcInput = $(this).attr('id');
+                ltcs.push(ltcInput);
+            });
+
+            const product = {
+                Id: $saveEditProductsBtn.attr('id'),
+                Title: $titleInputField.val(),
+                Brand: $brandInputField.val(),
+                Sizes: sizes,
+                Price: $priceInputField.val(),
+                DiscountFromPrice: $discountFromPriceInputField.val(),
+                Description: $descriptionInputField.val(),
+                ReturnPolicy: $returnPolicyInputField.val(),
+                MainCategoryId: $mainCategoriesRadioBtnsEdit.val(),
+                CategoryId: $selectCategoryDropdown.val(),
+                Colour: `${$productColour.val()}`,
+                SubcategoryId: $selectSubcategoryDropdown.val(),
+                ImageContainerId: $('.image-container').attr('id'),
+                LTCs: ltcs
+            };
+
+            $('.uploaded-image').each(function () {
+
+                const image = {
+                    Image: $(this).attr('src'),
+                }
+                images.push(image);
+            });
+
+            const validator = new FormValidator(),
+                isValid = validator.validateProductAndImages(product, images);
+            if (isValid) {
+                $.post('/Worker/EditProduct', {
+                    productDTO: product,
+                    imagesDTO: images
+                },
+                    function (response) {
+                        commonFuncs.hideLoader();
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Server response',
+                            html: `${response.message}`,
+                            showClass: {
+                                popup: 'animate__animated animate__fadeInDown'
+                            },
+                            hideClass: {
+                                popup: 'animate__animated animate__fadeOutUp'
+                            }
+                        });
+
+                        location.reload();
+
+                    }).fail(function (error) {
+                        console.log('AJAX request failed:', error);
+                        commonFuncs.hideLoader();
+                    });
+            }
+            else {
+                commonFuncs.hideLoader();
+                let errors = validator.getErrors(),
+                    errorList = document.createElement("ul");
+
+                errors.forEach((error) => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = error;
+                    listItem.style.color = "red";
+                    listItem.style.textAlign = "left";
+                    errorList.appendChild(listItem);
+                });
+
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: `${errorList.innerHTML}`,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                });
+            }
+        });
+        
+        class FormValidator {
+            constructor() {
+                this.errors = [];
+            }
+
+
+            validateProductAndImages(product, images) {
+                this.errors = [];
+
+                this.validateProduct(product);
+                this.validateImages(images);
+
+                return this.errors.length === 0;
+            }
+
+            validateProduct(product) {
+                var parts = product.Sizes;
+
+                parts.forEach((part) => {
+
+                    part = part.split('-');
+
+                    if (part.length > 1) {
+                        var Size = part[0];
+                        var AvailableItems = parseInt(part[1]);
+
+                        var parsedAvailableItems = parseInt(AvailableItems);
+
+
+                        if (parsedAvailableItems != AvailableItems) {
+                            this.errors.push('The field Available Items can contain only whole number values');
+                        }
+                    }
+                    else {
+                        this.errors.push('Size field is required.');
+                    }
+                });
+
+                if (!product.Title || product.Title.trim() === '') {
+                    this.errors.push('Title field is required.');
+                }
+                if (!product.Brand || product.Brand.trim() === '') {
+                    this.errors.push('Brand field is required.');
+                }
+                if (isNaN(product.Price)) {
+                    this.errors.push('Price field cannot contain letters/symbols.');
+                }
+                if (isNaN(product.DiscountFromPrice)) {
+                    this.errors.push('Discount from price field cannot contain letters/symbols.');
+                }
+
+
+                if (!product.Price || product.Price.trim() === '') {
+                    this.errors.push('Price field is required.');
+                }
+                if (!product.DiscountFromPrice || product.DiscountFromPrice.trim() === '') {
+                    this.errors.push('Discount From Price Field is required.');
+                }
+                if (!product.Description || product.Description.trim() === '') {
+                    this.errors.push('Description field is required.');
+                }
+                if (!product.ReturnPolicy || product.ReturnPolicy.trim() === '') {
+                    this.errors.push('Return Policy field is required.');
+                }
+
+                if (!product.MainCategoryId || product.MainCategoryId.trim() === '') {
+                    this.errors.push('Main Category field is required.');
+                }
+                if (!product.CategoryId || product.CategoryId.trim() === '') {
+                    this.errors.push('Category field is required.');
+                }
+                if (!product.SubcategoryId || product.SubcategoryId.trim() === '') {
+                    this.errors.push('Subcategory field is required.');
+                }
+
+            }
+
+            validateImages(images) {
+                images.forEach((image) => {
+                    if (!image.Image || image.ImageName == "" || image.ImageName == " ") {
+                        this.errors.push('Image is required');
+                        return;
+                    }
+                });
+            }
+
+            getErrors() {
+                return this.errors;
+            }
+        }
+
+
+        $productImages.change(function (event) {
+            const $self = $(this),
+                $uploadedImage = $self.parent().find('.uploaded-image'),
+                file = event.target.files[0];
+
+            // Display only if it is an image file
+            commonFuncs.validateAndResizeImage(file, function (isValid, imageData) {
+                if (isValid) {
+
+                    $uploadedImage.attr('src', imageData);
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Image validation failed:' + imageData
+                    })
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $mainCategoriesRadioBtnsEdit.trigger('click');
+            $selectCategoryDropdown.trigger('change');
+        });
+
+
+        $mainCategoriesRadioBtnsEdit.click(function () {
+            $.post('/Worker/FilterMainCategoryData', {
+                mainCategoryId: $(this).attr('id'),
+                categoryId: $selectCategoryDropdown.val()
+            },
+                function (response) {
+                    $selectCategoryDropdown.empty();
+                    $selectCategoryDropdown.append('<option id="0">--Select existing category--</option>');
+                    $.each(response.categories, function (index, item) {
+                        $selectCategoryDropdown.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    });
+
+                    $selectSubcategoryDropdown.empty();
+                    $selectSubcategoryDropdown.append('<option id="0">--Select existing subcategory--</option>');
+                    $.each(response.subcategories, function (index, item) {
+                        $selectSubcategoryDropdown.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    });
+                }).fail(function (error) {
+                    console.log('AJAX request failed:', error);
+                });
+
+        });
+
+        $selectCategoryDropdown.on('change', function () {
+            var $checkedRadio = $("#mainCategoriesRadioBtns input[type='radio']:checked");
+            $.post('/Worker/FilterMainCategoryData', {
+                mainCategoryId: $checkedRadio,
+                categoryId: $(this).val()
+            }).fail(function (error) {
+                console.log('AJAX request failed:', error);
+            });
+
+        });
+
+        $selectSubcategoryDropdown.change(function () {
+            var selectedSubcategoryId = $(this).find('option:selected');
+            var selectedCategoryId = $selectCategoryDropdown.val();
+            $.post('/Worker/GetCategoryBySubcategory', {
+                subcategoryId: selectedSubcategoryId.val()
+            },
+                function (response) {
+                    $selectCategoryDropdown.val(response);
+                }).fail(function (error) {
+                    console.log('AJAX request failed:', error);
+                });
+        });
+    }
+    return {
+        init
+    };
+})();
+var manageLtcs = (function () {
+    function init($container) {
+
+        let $editButton = $container.find('');
+        $container.on('click', '.redirect-to-edit-page', function () {
+            const editPageUrl = '/Worker/EditLTC?ltcId=' + $(this).attr('id');
+
+            window.location.href = editPageUrl;
+        });
+
+        $container.on('click', '.delete', function () {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this product!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    commonFuncs.showLoader();
+                    $(this).closest('tr').remove();
+                    $.post('/Worker/DeleteLTC', { ltcId: $(this).attr('id') }, function (response) {
+                        commonFuncs.hideLoader();
+                        location.reload();
+                    }).fail(function (error) {
+                        commonFuncs.hideLoader();
+                        alert('AJAX request failed: ', error);
+                    });
+                }
+            })
+        });
+
+    }
+    return {
+        init
+    };
+})();
+var manageOrders = (function () {
+    function init($container) {
+        $('.view-details').click(function () {
+            var modalId = $(this).attr('data-target');
+            $(modalId).modal('show');
+        });
+        $(document).on('click', '.order-btn', function () {
+            var orderId = $(this).attr('data-orderId');
+            var newStatus = $(this).attr('data-orderStatus');
+
+            $.ajax({
+                url: '/Worker/ChangeDeliveryStatus',
+                method: 'POST',
+                data: { orderId: orderId, newStatus: newStatus },
+                success: function (response) {
+                    if (response.status) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.Message
+                        });
+                        location.reload();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred: ' + error
+                    });
+                }
+            });
+        });
+    }
+    return {
+        init
+    };
+})();
+var manageProductsPage = (function () {
+    function init($container) {
+
+        let $editButton = $container.find('');
+        $container.on('click', '.redirect-to-edit-page', function () {
+            const editPageUrl = '/Worker/EditProduct?productId=' + $(this).attr('id');
+
+            window.location.href = editPageUrl;
+        });
+
+        $container.on('click', '.delete', function () {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this product!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    commonFuncs.showLoader();
+                    $(this).closest('tr').remove();
+                    $.post('/Worker/DeleteProduct', { productId: $(this).attr('id') }, function (response) {
+                        commonFuncs.hideLoader();
+                        location.reload();
+                    }).fail(function (error) {
+                        commonFuncs.hideLoader();
+                        alert('AJAX request failed: ', error);
+                    });
+                }
+            })
+        });
+
+    }
+    return {
+        init
+    };
+})();
+var manageSubSelectionsPage = (function () {
+    function init($container) {
+        let $submitBtn = $container.find('#save-btn'),
+            $btnAddCategoryRow = $container.find('#add-category-row-btn'),
+            $selectMainCategoryDropdown = $container.find('#selectMainCategoryDropdownId'),
+            $mainCategoryTableDiv = $container.find('#mainCategoryTable'),
+            counter = 0,
+            newTemplateCategoryRow =
+                '<tr class="cat-row">' +
+                '   <td><input type="text" class="form-control category-name" required></td>' +
+                '   <td id="for-subcategories">' +
+                '       <a class="btn btn-primary col" data-toggle="collapse" href="" role="button" aria-expanded="true" aria-controls="">' +
+                '           Subcategories' +
+                '       </a> ' +
+                '       <div class="pt-3 subcategoryTable collapse show" id="">' +
+                '           <table class="col-12">' +
+                '              <thead>' +
+                '                  <tr>' +
+                '                      <th>Subcategory Name</th>' +
+                '                      <th></th>' +
+                '                  </tr>' +
+                '              </thead>' +
+                '              <tbody class="subcategory-tbody">' +
+                '              </tbody>' +
+                '          </table>' +
+                '          <div class="pt-2">'+
+                '               <button type="button" class="btn btn-primary add-subcategory-row-btn" id=""><i class="fas fa-plus"></i> Add Subcategory</button>' +
+                '          </div>' +
+                '       </div>' +
+                '   </td>' +
+                '   <td>' +
+                '       <button type="button" class="btn btn-danger delete-row m-1"><i class="fa fa-trash"></i></button>' +
+                '   </td>' +
+                '</tr>';
+
+        $submitBtn.click(function () {
+            commonFuncs.showLoader();
+            let selectedMainCategoryId = $selectMainCategoryDropdown.val(),
+                selectedCategoriesDTO = [],
+                selectedSubcategoriesDTO = [];
+
+            let $categoriesTable = $mainCategoryTableDiv.find('.category-table');
+
+            $categoriesTable.find('tbody .cat-row').each(function () {
+                const $row = $(this),
+                    categoryName = $row.find('.category-name').val().trim();
+                const category = {
+                    CategoryName: categoryName,
+                };
+
+                $row.find('tbody .sub-row').each(function () {
+                    const $subrow = $(this),
+                        subcategoryName = $subrow.find('.subcategory-name').val().trim();
+                    const subcategory = {
+                        SubcategoryName: subcategoryName,
+                        CategoryName: categoryName
+                    };
+
+                    selectedSubcategoriesDTO.push(subcategory);
+                });
+
+                selectedCategoriesDTO.push(category);
+            });
+
+            const validator = new FormValidator(),
+                isValid = validator.validateMainCategory(selectedMainCategoryId, selectedCategoriesDTO, selectedSubcategoriesDTO);
+            if (isValid) {
+
+                $.post('/Worker/ManageSubSelection', {
+                    mainCategoryId: selectedMainCategoryId,
+                    categoriesDTO: selectedCategoriesDTO,
+                    subcategoriesDTO: selectedSubcategoriesDTO
+                }, function (response) {
+                    commonFuncs.hideLoader();
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Server response',
+                        html: `${response.message}`,
+                        showClass: {
+                            popup: 'animate__animated animate__fadeInDown'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOutUp'
+                        }
+                    });
+
+                    location.reload();
+
+                }).fail(function (error) {
+                    commonFuncs.hideLoader();
+                    console.log('AJAX request failed:', error);
+                });
+
+            }
+            else {
+                commonFuncs.hideLoader();
+                let errors = validator.getErrors(),
+                    errorList = document.createElement("ul");
+
+                errors.forEach((error) => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = error;
+                    listItem.style.color = "red";
+                    listItem.style.textAlign = "left";
+                    errorList.appendChild(listItem);
+                });
+
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: `${errorList.innerHTML}`,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                });
+            }
+        });
+
+        class FormValidator {
+            constructor() {
+                this.errors = [];
+            }
+
+
+            validateMainCategory(mainCategory, categories, subcategories) {
+                this.errors = [];
+
+                this.validateCategories(categories);
+                this.validateSubcategories(subcategories);
+
+                return this.errors.length === 0;
+            }
+
+            validateCategories(categories) {
+
+                if (!categories || categories.length === 0) {
+                    this.errors.push('At least one category is required.');
+                } else {
+                    categories.forEach((category) => {
+
+                        if (!category.CategoryName || category.CategoryName.trim() === '') {
+                            this.errors.push('Category name is required.');
+                        }
+
+                    });
+                }
+            }
+
+            validateSubcategories(subcategories) {
+
+                if (!subcategories || subcategories.length === 0) {
+                    this.errors.push('At least one subcategory is required.');
+                } else {
+                    subcategories.forEach((subcategory) => {
+
+                        if (!subcategory.SubcategoryName || subcategory.SubcategoryName.trim() === '') {
+                            this.errors.push('Subcategory name is required.');
+                        }
+
+                    });
+                }
+            }
+
+            getErrors() {
+                return this.errors;
+            }
+        }
+
+        $container.on('click', '.add-subcategory-row-btn', function () {
+
+            var $button = $(this);
+            var $tempTableDiv = $button.closest('.subcategoryTable');
+            var $nearestTbody = $tempTableDiv.find('tbody');
+
+            let subcategoryRow = '<tr class="sub-row">' +
+                '   <td><input type="text" class="form-control subcategory-name" required></td>' +
+                '   <td>' +
+                '       <button type="button" class="btn btn-danger delete-row m-1"><i class="fa fa-trash"></i></button>' +
+                '   </td>' +
+                '</tr>';
+
+            let $newRow = $(subcategoryRow);
+
+            $nearestTbody.append($newRow);
+
+        });
+
+        $selectMainCategoryDropdown.change(function () {
+            var selectedMainCategoryId = $(this).val();
+            $mainCategoryTableDiv.find('tbody').empty();
+            $mainCategoryTableDiv.css("display", $selectMainCategoryDropdown.val() !== "" ? "block" : "none");
+            $submitBtn.css("display", $selectMainCategoryDropdown.val() !== "" ? "block" : "none");
+
+
+            if (selectedMainCategoryId) {
+                commonFuncs.showLoader();
+                $.post('/Worker/LoadMainCategoryData', { mainCategoryId: selectedMainCategoryId }, function (response) {
+
+                    let categories = (response.categories),
+                        $categoryBody = $mainCategoryTableDiv.find('tbody');
+
+                    categories.forEach(function (category) {
+                        counter++;
+                        let $newRow = $(newTemplateCategoryRow);
+                        $newRow.find('.category-name').val(category.name);
+
+                        let $aTag = $newRow.find('a');
+                        let $subcategoryDiv = $newRow.find('.subcategoryTable');
+
+                        $subcategoryDiv.attr('id', 'subcategoryTable-' + counter + '');
+
+                        $aTag.attr('aria-controls', 'subcategoryTable-' + counter + '');
+                        $aTag.attr('href', '#subcategoryTable-' + counter + '');
+
+                        category.subcategories.forEach(function (subcategory) {
+
+                            let subcategoryRow = '<tr class="sub-row">' +
+                                '   <td><input type="text" class="form-control subcategory-name" required value="' + subcategory.name + '"></td>' +
+                                '   <td>' +
+                                '       <button type="button" class="btn btn-danger delete-row m-1"><i class="fa fa-trash"></i></button>' +
+                                '   </td>' +
+                                '</tr>';
+
+                            $newRow.find('.subcategory-tbody').append(subcategoryRow);
+
+                        });
+                        $categoryBody.append($newRow);
+                        commonFuncs.hideLoader();
+                    });
+
+                }).fail(function (error) {
+                    commonFuncs.hideLoader();
+                    alert('AJAX request failed: ', error);
+                });
+            } commonFuncs.hideLoader();
+        });
+
+        $btnAddCategoryRow.click(function () {
+
+            counter++;
+
+            let $newRow = $(newTemplateCategoryRow);
+            let $aTag = $newRow.find('a');
+            let $subcategoryDiv = $newRow.find('.subcategoryTable');
+
+            $subcategoryDiv.attr('id', 'subcategoryTable-' + counter + '');
+
+            $aTag.attr('aria-controls', 'subcategoryTable-' + counter + '');
+            $aTag.attr('href', '#subcategoryTable-' + counter + '');
+
+
+            $mainCategoryTableDiv.find('#category-tbody').append($newRow);
+        });
+
+        $(document).on('click', '.delete-row', function () {
+            var clickedElement = this;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this row!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(clickedElement).closest('tr').remove();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: "The item was removed temporary until Save is clicked(for returning refresh page)",
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+
+        $container.on('change', '.category-name', function () {
+            let $subcategoryTable = $mainCategoryTableDiv.closest('#subcategoryTable')
+            $subcategoryTable.attr('id', 'for-subcategories-' + $(this).val() + '');
+            $subcategoryTable.attr('href', '#for-subcategories-' + $(this).val() + '');
+        });
+    }
+    return {
+        init
+    };
+})();

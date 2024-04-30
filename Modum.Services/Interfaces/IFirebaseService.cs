@@ -13,8 +13,9 @@ namespace Modum.Services.Interfaces
         Task<Guid> AddABlogPost(BlogPost post);
         IQueryable<BlogPost> GetAllBlogPosts();
         Task<BlogPost> GetBlogPostById(Guid postId);
-        Task<Guid> UpdateABlogPostAsync(Guid id,string filePath);
+        Task<Guid> UpdateABlogPostAsync(Guid id,BlogPost newItem,string filePath);
         Task RemoveABlogPostAsync(Guid id);
         Task<bool> DeleteImage(string link);
+        Task<int> GetAllBlogPostsCount();
     }
 }

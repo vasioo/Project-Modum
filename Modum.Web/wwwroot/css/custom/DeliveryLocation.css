@@ -1,0 +1,200 @@
+﻿#map {
+    height: 23rem;
+}
+
+@media (min-width: 768px) {
+    #map {
+    }
+}
+
+.selector-list-delivery {
+    text-align: center;
+    height: 3rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid rgba(0,0,0,.5);
+}
+
+    .selector-list-delivery:hover {
+        background: #F2E5D5;
+    }
+
+    .selector-list-delivery.active {
+        font-weight: bold;
+        background: #F2E5D5;
+    }
+
+#econt {
+}
+
+#custom {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+#speedy {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.form-input {
+    display: none;
+}
+
+.location-input-delivery-prices input, label {
+    font-size: 1.7rem;
+}
+
+.form-check-label {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.form-check-input {
+    margin-top: 0.8rem !important;
+    height: 1.3rem;
+    width: 1.3rem;
+}
+
+    .form-check-input:checked {
+        border-color: #28a745;
+    }
+
+.col-form-label, .col-form-input {
+    font-size: 1.2rem;
+}
+
+.label-additive-information {
+    color: black;
+    font-size: 15px;
+    display: block;
+    margin-left: 3.5em;
+}
+
+.form-check-input[type="radio"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 50%;
+    border: 2px solid #28a745;
+    outline: none;
+    cursor: pointer;
+}
+
+    .form-check-input[type="radio"]:checked::before {
+        content: '\2713';
+        color: white;
+        position: absolute;
+        top: 47%;
+        left: 50%;
+        font-size: 0.7em;
+        transform: translate(-50%, -50%);
+    }
+
+    .form-check-input[type="radio"]:checked {
+        background: #28a745;
+    }
+
+.active-delivery-option {
+    border: 4px solid green !important;
+    background: #c8f7c8;
+}
+
+.custom-input-field-main-section-div {
+    transition: background-color 0.2s ease-out;
+    border: 4px solid white;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+    .custom-input-field-main-section-div label, input {
+        cursor: pointer;
+    }
+
+.custom-container {
+    background: white;
+    border-radius: 3rem;
+    position: relative;
+    transform: translate(0%, 25%);
+}
+
+body {
+    background-image: url('/clothes-shop/images/others/sky-bg.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+footer {
+    background: white;
+}
+
+header {
+    display: none;
+}
+
+footer {
+    display: none;
+}
+
+#return-to-cart-btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    outline: none;
+    border: none;
+    padding: .375rem .75rem;
+    color:black;
+}
+
+    #return-to-cart-btn:hover .fa-circle-left::before {
+        box-shadow: 0px 0px 20px 4px;
+        color: black;
+    }
+
+.fa-circle-left::before {
+    border-radius: 50%;
+}
+#process-request-btn {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    border-color: green;
+    color: green;
+    transition: color 0.5s ease, border-color 0.5s ease;
+}
+
+.loading-animation {
+    display: none;
+}
+
+#process-request-btn:hover {
+    box-shadow: 2px 2px 2px 2px;
+    background-color: green; 
+    color:white;
+}
+
+    #process-request-btn:hover .loading-animation {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background-color: green;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
+        animation: loading 1s linear forwards;
+    }
+
+@keyframes loading {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+.delivery-location-page{
+    height:100vh;
+}

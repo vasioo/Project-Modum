@@ -3,7 +3,6 @@ using CloudinaryDotNet.Actions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Modum.DataAccess;
-using Modum.Models.BaseModels.Models.BaseStructure;
 using Modum.Models.BaseModels.Models.Images;
 using Modum.Models.BaseModels.Models.ProductStructure;
 using Modum.Services.Interfaces;
@@ -32,24 +31,23 @@ namespace Modum.Services.Services
             _cloudinary = new Cloudinary(account);
         }
 
-
         public Task<IEnumerable<Product>> GetProductsByAvailableSizesAsync(IEnumerable<string> availableSizes)
         {
-            var matchingProducts = _dataContext.Product
-                .Where(product => product.ProductSizes.Any(ps => availableSizes.Contains(ps.ProductSize.ToString())))
+            var matchingProducts = _dataContext.ProductSizesHelpingTable
+                .Where(ps => availableSizes.Contains(ps.ProductSize.ToString()))
+                .Select(x=>x.Product)
                 .ToList();
 
             return Task.FromResult(matchingProducts.AsEnumerable());
         }
 
-
-        public Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId)
+        public Task<IEnumerable<Product>> GetProductsByCategoryAsync(Guid categoryId)
         {
             var products = _dataContext.Product.Where(product => product.CategoryId == categoryId);
             return Task.FromResult(products.AsEnumerable());
         }
 
-        public Task<IEnumerable<Product>> GetProductsByMainCategoryAsync(int mainCategoryId)
+        public Task<IEnumerable<Product>> GetProductsByMainCategoryAsync(Guid mainCategoryId)
         {
             var products = _dataContext.Product.Where(product => product.MainCategoryId == mainCategoryId);
             return Task.FromResult(products.AsEnumerable());
@@ -61,7 +59,7 @@ namespace Modum.Services.Services
             return Task.FromResult(products.AsEnumerable());
         }
 
-        public Task<IEnumerable<Product>> GetProductsBySubcategoryAsync(int subcategoryId)
+        public Task<IEnumerable<Product>> GetProductsBySubcategoryAsync(Guid subcategoryId)
         {
             var products = _dataContext.Product.Where(product => product.SubcategoryId == subcategoryId);
             return Task.FromResult(products.AsEnumerable());
@@ -81,8 +79,9 @@ namespace Modum.Services.Services
 
         public async Task<IEnumerable<Product>> GetProductsByTenMostBought()
         {
-            return await _dataContext.Product
-                .OrderByDescending(x => x.ProductSizes.Max(ps => ps.AllTimeAvailableItems - ps.AvailableItems))
+            return await _dataContext.ProductSizesHelpingTable
+                .OrderByDescending(ps => ps.AllTimeAvailableItems - ps.AvailableItems)
+                .Select(x=>x.Product)
                 .Take(10)
                 .ToListAsync();
         }
@@ -120,14 +119,15 @@ namespace Modum.Services.Services
             {
                 sizes = filter.Sizes.Split('_').ToList();
             }
-            if (filter.MainCategoryId > 0)
+            if (filter.MainCategoryName != "")
             {
-                query = query.Where(product => product.MainCategoryId == filter.MainCategoryId);
+                var mcid = _dataContext.MainCategory.Where(x=>x.Name==filter.MainCategoryName).FirstOrDefault().Id;
+                query = query.Where(product => product.MainCategoryId == mcid);
             }
 
             if (filter.SelectedSubcategories != null && filter.SelectedSubcategories.Any())
             {
-                List<int> selectedSubs = filter.SelectedSubcategories.Split('_').Select(int.Parse).ToList();
+                List<Guid> selectedSubs = filter.SelectedSubcategories.Split('_').Select(Guid.Parse).ToList();
                 query = query.Where(product => selectedSubs.Contains(product.SubcategoryId));
             }
 
@@ -153,7 +153,7 @@ namespace Modum.Services.Services
 
             if (sizes != null && sizes.Any() && sizes[0] != "")
             {
-                var enumSizes = sizes.ToList(); // Assuming sizes is a collection of strings
+                var enumSizes = sizes.ToList();
 
                 var matchingProductIds = _dataContext.ProductSizesHelpingTable
                     .Where(size => enumSizes.Contains(size.ProductSize))
@@ -163,7 +163,7 @@ namespace Modum.Services.Services
 
                 query = query.Where(product => matchingProductIds.Contains(product.Id));
             }
-            if (filter.CategoryId > 0)
+            if (filter.CategoryId != Guid.Empty)
             {
                 query = query.Where(product => product.CategoryId == filter.CategoryId);
             }
@@ -194,6 +194,25 @@ namespace Modum.Services.Services
             }
         }
 
+        public async Task<bool> SaveImage(Photo image)
+        {
+            try
+            {
+                await _cloudinary.UploadAsync(new ImageUploadParams()
+                {
+                    File = new FileDescription(image.Image),
+                    DisplayName = image.ImageName,
+                    PublicId = image.PublicId,
+                    Overwrite = false,
+                });
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public async Task DailyCheckForLTC()
         {
             var currentDate = DateTime.Now;
@@ -206,6 +225,36 @@ namespace Modum.Services.Services
             }
 
             await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task<List<string>> GetMostFavouriteBrandsBySoldItemsBySection(string section)
+        {
+            if (section=="premium")
+            {
+                return _dataContext.Product
+                    .GroupBy(p => p.Brand) 
+                    .Select(g => new
+                    {
+                        Brand = g.Key,
+                        AveragePrice = g.Average(p => p.Price)
+                    })
+                    .Where(x => x.AveragePrice >= 500)
+                    .Select(x => x.Brand)
+                    .ToList();
+            }
+            else
+            {
+                return _dataContext.Product
+                    .GroupBy(p => p.Brand)
+                    .Select(g => new
+                    {
+                        Brand = g.Key,
+                        AveragePrice = g.Average(p => p.Price)
+                    })
+                    .Where(x => x.AveragePrice < 500)
+                    .Select(x => x.Brand)
+                    .ToList();
+            }
         }
     }
 }

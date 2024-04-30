@@ -63,7 +63,7 @@
             const validator = new FormValidator(),
                 isValid = validator.validateProductAndImages(product, images);
             if (isValid) {
-                $.post('/Admin/EditProduct', {
+                $.post('/Worker/EditProduct', {
                     productDTO: product,
                     imagesDTO: images
                 },
@@ -236,7 +236,7 @@
 
 
         $mainCategoriesRadioBtnsEdit.click(function () {
-            $.post('/Admin/FilterMainCategoryData', {
+            $.post('/Worker/FilterMainCategoryData', {
                 mainCategoryId: $(this).attr('id'),
                 categoryId: $selectCategoryDropdown.val()
             },
@@ -260,7 +260,7 @@
 
         $selectCategoryDropdown.on('change', function () {
             var $checkedRadio = $("#mainCategoriesRadioBtns input[type='radio']:checked");
-            $.post('/Admin/FilterMainCategoryData', {
+            $.post('/Worker/FilterMainCategoryData', {
                 mainCategoryId: $checkedRadio,
                 categoryId: $(this).val()
             }).fail(function (error) {
@@ -272,7 +272,7 @@
         $selectSubcategoryDropdown.change(function () {
             var selectedSubcategoryId = $(this).find('option:selected');
             var selectedCategoryId = $selectCategoryDropdown.val();
-            $.post('/Admin/GetCategoryBySubcategory', {
+            $.post('/Worker/GetCategoryBySubcategory', {
                 subcategoryId: selectedSubcategoryId.val()
             },
                 function (response) {

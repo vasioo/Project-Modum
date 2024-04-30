@@ -3,6 +3,7 @@ using Modum.Models.BaseModels.Enums;
 using Modum.Models.BaseModels.Models.BaseStructure;
 using Modum.Models.BaseModels.Models.FooterItems;
 using Modum.Models.BaseModels.Models.LTCs;
+using Modum.Models.BaseModels.Models.PaymentStructure;
 using Modum.Models.BaseModels.Models.ProductStructure;
 using Modum.Models.DTO;
 using Modum.Models.ViewModels;
@@ -22,12 +23,15 @@ namespace Modum.Services.Services.ControllerService.WorkerController
         private readonly ICategoryService _categoryService;
         private readonly IProductSizesService _productSizesService;
         private readonly IFirebaseService _firebaseService;
+        private readonly IOrderService _orderService;
         #endregion
 
         #region ConstructorHelper
         public WorkerControllerHelper(IMainCategoryService mainCategoryService,
-            ISubcategoryService subcategoryService, ICategoryService categoryService, IProductService productService,
-             IProductSizesService productSizesService, IFirebaseService firebaseService, ILTCService ltcService)
+            ISubcategoryService subcategoryService, ICategoryService categoryService,
+            IProductService productService, IProductSizesService productSizesService,
+            IFirebaseService firebaseService, ILTCService ltcService,
+            IOrderService orderService)
         {
             _mainCategoryService = mainCategoryService;
             _subcategoryService = subcategoryService;
@@ -36,6 +40,7 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             _productSizesService = productSizesService;
             _firebaseService = firebaseService;
             _ltcService = ltcService;
+            _orderService = orderService;
         }
         #endregion
 
@@ -95,9 +100,8 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             var categories = await _categoryService.GetAllAsync();
             var subcategories = await _subcategoryService.GetAllAsync();
             var sizes = Enum.GetValues(typeof(ClothesSizes));
-
-            SelectList categoryList = new SelectList(categories.Where(cat => cat.MainCategoryId == 1), "Id", "Name");
-            SelectList subcategoryList = new SelectList(subcategories.Where(sub => sub.MainCategoryId == 1), "Id", "Name");
+            SelectList categoryList = new SelectList(categories.Where(cat => cat.MainCategoryId == mainCategories.FirstOrDefault().Id), "Id", "Name");
+            SelectList subcategoryList = new SelectList(subcategories.Where(sub => sub.MainCategoryId == mainCategories.FirstOrDefault().Id), "Id", "Name");
 
             var addPrViewModel = new AddProductViewModel();
 
@@ -129,18 +133,19 @@ namespace Modum.Services.Services.ControllerService.WorkerController
                     productSizes.Add(item);
                 }
             }
+            await _productSizesService.AddRangeAsync(productSizes);
 
             var product = new Product();
 
             product.ImageContainerId = randomId;
             product.Title = productDTO.Title;
             product.Brand = productDTO.Brand;
-            product.ProductSizes = productSizes;
             product.Price = productDTO.Price;
             product.DiscountFromPrice = productDTO.DiscountFromPrice;
             product.Description = productDTO.Description;
             product.ReturnPolicy = productDTO.ReturnPolicy;
-            product.MainCategoryId = productDTO.MainCategoryId;
+            product.MainCategoryId = _categoryService.IQueryableGetAllAsync()
+                    .Where(x => x.Id == productDTO.CategoryId).Select(x => x.MainCategoryId).FirstOrDefault();
             product.CategoryId = productDTO.CategoryId;
             product.SubcategoryId = productDTO.SubcategoryId;
             product.UploadedBy = username;
@@ -149,17 +154,8 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             var ltcs = new List<LTC>();
             foreach (var item in productDTO.LTCs)
             {
-                var ltc = new LTC();
-
-                var neededItem =await _ltcService.GetByIdAsync(item);
-                if (neededItem!=null)
-                {
-                    ltc.Title = neededItem.Title;
-                    ltc.Content = neededItem.Content;
-                    ltc.Description = neededItem.Description;
-                    ltc.StartDate = neededItem.StartDate;
-                    ltc.EndDate = neededItem.EndDate;
-                }
+                var neededItem = await _ltcService.GetByIdAsync(item);
+                ltcs.Add(neededItem);
             }
             product.LTCs = ltcs;
 
@@ -185,15 +181,15 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             await _productService.SaveImages(images);
         }
 
-        public async Task<EditProductViewModel> EditProductHelper(int productId)
+        public async Task<EditProductViewModel> EditProductHelper(Guid productId)
         {
             var editPrVModel = new EditProductViewModel();
             var mainCategories = await _mainCategoryService.GetAllAsync();
             var subcategories = await _subcategoryService.GetAllAsync();
             var categories = await _categoryService.GetAllAsync();
 
-            var product = _productService.GetByIdAsync(productId).Result;
-
+            var productSizes =await _productSizesService.GetSizesByProductId(productId);
+            var product = productSizes.FirstOrDefault().Product;
 
             SelectList categoryList = new SelectList(categories.Where(cat => cat.MainCategoryId == product.MainCategoryId), "Id", "Name");
             SelectList subcategoryList = new SelectList(subcategories.Where(sub => sub.MainCategoryId == product.MainCategoryId), "Id", "Name");
@@ -204,7 +200,7 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             editPrVModel.LTCs = await _ltcService.GetAllAsync();
             editPrVModel.CategoryList = categoryList;
             editPrVModel.SubcategoryList = subcategoryList;
-            editPrVModel.Product = product;
+            editPrVModel.Product = productSizes;
             editPrVModel.CloudinaryImageContainerId = product.ImageContainerId;
             editPrVModel.Sizes = sizes;
             return editPrVModel;
@@ -218,7 +214,8 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             {
                 var item = new ProductSizesHelpingTable();
 
-                item.Id = int.Parse(size.Split('-')[2]);
+                //this would throw errors
+                item.Id = Guid.Parse(size.Split('-')[2]);
                 item.ProductSize = size.Split('-')[0];
                 item.AvailableItems = int.Parse(size.Split('-')[1]);
                 item.AllTimeAvailableItems = int.Parse(size.Split('-')[3]);
@@ -229,12 +226,11 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             product.Id = productDTO.Id;
             product.Title = productDTO.Title;
             product.Brand = productDTO.Brand;
-            product.ProductSizes = productSizes;
             product.Price = productDTO.Price;
             product.DiscountFromPrice = productDTO.DiscountFromPrice;
             product.Description = productDTO.Description;
             product.ReturnPolicy = productDTO.ReturnPolicy;
-            product.MainCategoryId = productDTO.MainCategoryId;
+            product.MainCategoryId = _categoryService.IQueryableGetAllAsync().Where(x => x.Id == productDTO.CategoryId).Select(x => x.MainCategoryId).FirstOrDefault();
             product.CategoryId = productDTO.CategoryId;
             product.SubcategoryId = productDTO.SubcategoryId;
             product.UploadedBy = username;
@@ -243,17 +239,8 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             var ltcs = new List<LTC>();
             foreach (var item in productDTO.LTCs)
             {
-                var ltc = new LTC();
-
                 var neededItem = await _ltcService.GetByIdAsync(item);
-                if (neededItem != null)
-                {
-                    ltc.Title = neededItem.Title;
-                    ltc.Content = neededItem.Content;
-                    ltc.Description = neededItem.Description;
-                    ltc.StartDate = neededItem.StartDate;
-                    ltc.EndDate = neededItem.EndDate;
-                }
+                ltcs.Add(neededItem);
             }
             product.LTCs = ltcs;
 
@@ -279,7 +266,7 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             await _productService.UpdateAsync(product);
         }
 
-        public async Task DeleteProductHelper(int productId)
+        public async Task DeleteProductHelper(Guid productId)
         {
             var product = await _productService.GetByIdAsync(productId);
 
@@ -293,15 +280,16 @@ namespace Modum.Services.Services.ControllerService.WorkerController
         {
             return await _mainCategoryService.GetAllAsync();
         }
+        public IQueryable<ProductSizesHelpingTable> ManageProductsJSON()
+        {
+            return _productSizesService.IQueryableGetAllAsync();
+        }
+
         #endregion
 
         #region ManageSubSelectionHelper
-        public IQueryable<Product> ManageProductsJSON()
-        {
-            return _productService.IQueryableGetAllAsync();
-        }
 
-        public async Task<bool> ManageSubSelectionHelper(int mainCategoryId, List<CategoryDTO> categoriesDTO, List<SubcategoryDTO> subcategoriesDTO, string username)
+        public async Task<bool> ManageSubSelectionHelper(Guid mainCategoryId, List<CategoryDTO> categoriesDTO, List<SubcategoryDTO> subcategoriesDTO, string username)
         {
             var categories = new List<Category>();
             foreach (var categoryDTO in categoriesDTO)
@@ -334,8 +322,28 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             return await _mainCategoryService.SaveCategoriesAndSubcategoriesAsync(categories);
         }
 
+        public async Task<bool> DeleteCategoryOrSubcategory(bool isCategory, Guid id)
+        {
+            try
+            {
+                if (isCategory)
+                {
+                    await _categoryService.RemoveAsync(id);
+                }
+                else
+                {
+                    await _subcategoryService.RemoveAsync(id);
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         #region HelperMethodsHelper
-        public async Task<MainCategory> LoadMainCategoryHelper(int mainCategoryId)
+        public async Task<MainCategory> LoadMainCategoryHelper(Guid mainCategoryId)
         {
             var mainCategoryAssociatedData = await _mainCategoryService.GetByIdAsync(mainCategoryId);
             var categoryAssociatedData = await _categoryService.GetCategoriesByMainCategoryAsync(mainCategoryId);
@@ -373,9 +381,9 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             return model;
         }
 
-        public async Task<object> FilterMainCategoryDataHelper(int mainCategoryId, int categoryId)
+        public async Task<object> FilterMainCategoryDataHelper(Guid mainCategoryId, Guid categoryId)
         {
-            if (mainCategoryId > 0)
+            if (mainCategoryId != Guid.Empty)
             {
                 var categories = await _categoryService.GetAllAsync();
                 categories = categories.Where(cat => cat.MainCategoryId == mainCategoryId);
@@ -383,13 +391,13 @@ namespace Modum.Services.Services.ControllerService.WorkerController
                 var subcategories = await _subcategoryService.GetAllAsync();
                 subcategories = subcategories.Where(sub => sub.MainCategoryId == mainCategoryId);
 
-                if (categoryId != 0)
+                if (categoryId != Guid.Empty)
                 {
                     var category = await _categoryService.GetByIdAsync(categoryId);
 
                     if (category != null)
                     {
-                        subcategories = subcategories.Where(sub => sub.MainCategoryId == mainCategoryId && sub.CategoryId == category.Id);
+                        subcategories = subcategories.Where(sub => sub.MainCategoryId == mainCategoryId && sub.Category.Id == category.Id);
 
                         var subcategoriesToReturn = subcategories.Select(sub => new
                         {
@@ -427,16 +435,17 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             return null;
         }
 
-        public async Task<int> GetCategoryBySubcategoryAsyncHelper(int subcategoryId)
+        public async Task<Guid> GetCategoryBySubcategoryAsyncHelper(Guid subcategoryId)
         {
             var subcategory = await _subcategoryService.GetByIdAsync(subcategoryId);
 
-            var category = await _categoryService.GetByIdAsync(subcategory.CategoryId);
+            var category = await _categoryService.GetByIdAsync(subcategory.Category.Id);
 
             return category.Id;
         }
 
         #endregion
+
         #endregion
 
         #region ManageLimitedTimeCampaignsHelper
@@ -454,6 +463,7 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             ltc.Content = ltcDTO.Content;
             ltc.Description = ltcDTO.Description;
             ltc.Title = ltcDTO.Title;
+            ltc.PercentageOfDiscount = ltcDTO.PercentageOfDiscount;
             var id = await _ltcService.AddAsync(ltc);
 
             var photo = new Photo();
@@ -467,7 +477,7 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             await _ltcService.SaveImage(photo);
         }
 
-        public async Task<LTC> EditLTCHelper(int ltcId)
+        public async Task<LTC> EditLTCHelper(Guid ltcId)
         {
             var ltc = await _ltcService.GetByIdAsync(ltcId);
             return ltc;
@@ -481,13 +491,13 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             ltc.EndDate = ltcDTO.EndDate;
             ltc.Content = ltcDTO.Content;
             ltc.Title = ltcDTO.Title;
-
+            ltc.PercentageOfDiscount = ltcDTO.PercentageOfDiscount;
             var photo = new Photo();
             if (imageDTO.Image != null && imageDTO.Image != "")
             {
                 photo.Image = imageDTO.Image;
                 photo.ImageName = $"image-for-ltc-{ltcDTO.Id}";
-                photo.PublicId = $"image-for-ltc{ltcDTO.Id}";
+                photo.PublicId = $"image-for-ltc-{ltcDTO.Id}";
             }
 
             await _ltcService.SaveImage(photo);
@@ -495,7 +505,7 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             await _ltcService.UpdateAsync(ltc);
         }
 
-        public async Task DeleteLTCHelper(int ltcId)
+        public async Task DeleteLTCHelper(Guid ltcId)
         {
             var ltc = await _ltcService.GetByIdAsync(ltcId);
 
@@ -505,6 +515,30 @@ namespace Modum.Services.Services.ControllerService.WorkerController
             }
         }
 
+        #endregion
+
+        #region ManageOrdersHelper
+        public IQueryable<Order> GetAllOrdersFromCategory(string category)
+        {
+            return _orderService.IQueryableGetAllAsync().Where(x=>x.OrderStatus==category);
+        }
+
+        public async Task<bool> ChangeDeliveryStatusHelper(Guid orderId, string newStatus)
+        {
+            try
+            {
+                var order = await _orderService.GetByIdAsync(orderId);
+                order.OrderStatus = newStatus;
+
+                await _orderService.UpdateAsync(order);
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }
+            return true;
+        }
         #endregion
 
         #region Helpers

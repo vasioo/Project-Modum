@@ -21,7 +21,6 @@
                 $uploadedImage = $self.parent().find('.uploaded-image'),
                 file = event.target.files[0];
 
-            // Display only if it is an image file
             commonFuncs.validateAndResizeImage(file, function (isValid, imageData) {
                 if (isValid) {
 
@@ -75,7 +74,7 @@
                 CategoryId: $selectCategoryDropdown.val(),
                 SubcategoryId: $selectSubcategoryDropdown.val(),
                 Season: selectedSeason,
-                LTCs:ltcs
+                LTCs: ltcs
             };
 
             $('.uploaded-image').each(function () {
@@ -143,7 +142,7 @@
                 });
             }
         });
-        
+
 
 
         class FormValidator {

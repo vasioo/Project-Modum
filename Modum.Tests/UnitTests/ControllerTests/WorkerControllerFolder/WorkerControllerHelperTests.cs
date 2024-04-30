@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Modum.Models.BaseModels.Enums;
+﻿using Modum.Models.BaseModels.Enums;
 using Modum.Models.BaseModels.Models.BaseStructure;
 using Modum.Models.BaseModels.Models.FooterItems;
 using Modum.Models.BaseModels.Models.LTCs;
@@ -20,6 +19,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
         private readonly Mock<ICategoryService> categoryServiceMock;
         private readonly Mock<IProductSizesService> productSizesServiceMock;
         private readonly Mock<IFirebaseService> firebaseServiceMock;
+        private readonly Mock<IOrderService> orderServiceMock;
         private readonly WorkerControllerHelper helper;
 
         public WorkerControllerHelperTests()
@@ -31,6 +31,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
             categoryServiceMock = new Mock<ICategoryService>();
             productSizesServiceMock = new Mock<IProductSizesService>();
             firebaseServiceMock = new Mock<IFirebaseService>();
+            orderServiceMock = new Mock<IOrderService>();
 
             helper = new WorkerControllerHelper(
                 mainCategoryServiceMock.Object,
@@ -39,7 +40,8 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
                 productServiceMock.Object,
                 productSizesServiceMock.Object,
                 firebaseServiceMock.Object,
-                ltcServiceMock.Object
+                ltcServiceMock.Object,
+                orderServiceMock.Object
             );
         }
 
@@ -141,7 +143,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
             var imagesDTO = new List<ImageDTO> { new ImageDTO { Image = "image1" } };
             var username = "testuser";
 
-            productServiceMock.Setup(x => x.AddAsync(It.IsAny<Product>())).ReturnsAsync(1);
+            productServiceMock.Setup(x => x.AddAsync(It.IsAny<Product>())).ReturnsAsync(Guid.NewGuid());
             productServiceMock.Setup(x => x.SaveImages(It.IsAny<List<Photo>>())).ReturnsAsync(true);
 
             // Act
@@ -156,7 +158,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
         public async Task EditProductHelper_ReturnsEditProductViewModel()
         {
             // Arrange
-            var productId = 1;
+            var productId = Guid.NewGuid();
             var mainCategories = new List<MainCategory>().AsQueryable();
             var categories = new List<Category>().AsQueryable();
             var subcategories = new List<Subcategory>().AsQueryable();
@@ -179,7 +181,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
             Assert.Equal(ltcList, result.LTCs);
             Assert.NotNull(result.CategoryList);
             Assert.NotNull(result.SubcategoryList);
-            Assert.Equal(product, result.Product);
+            Assert.Equal(product, result.Product.FirstOrDefault().Product);
             Assert.Equal(product.ImageContainerId, result.CloudinaryImageContainerId);
             Assert.Equal(sizes, result.Sizes);
         }
@@ -209,7 +211,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
         public async Task DeleteProductHelper_Success()
         {
             // Arrange
-            var productId = 1;
+            var productId = Guid.NewGuid();
             var product = new Product();
 
             productServiceMock.Setup(x => x.GetByIdAsync(productId)).ReturnsAsync(product);
@@ -218,7 +220,7 @@ namespace Modum.Tests.UnitTests.ControllerTests.WorkerControllerFolder
             await helper.DeleteProductHelper(productId);
 
             // Assert
-            productServiceMock.Verify(x => x.RemoveAsync(It.IsAny<int>()), Times.Once);
+            productServiceMock.Verify(x => x.RemoveAsync(It.IsAny<Guid>()), Times.Once);
         }
 
         [Fact]

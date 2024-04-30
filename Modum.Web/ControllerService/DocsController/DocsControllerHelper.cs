@@ -2,18 +2,19 @@
 using Modum.Models.BaseModels.Models.FooterItems;
 using Modum.Models.BaseModels.Models.ProductStructure;
 using Modum.Services.Interfaces;
+using System.Web;
 
 namespace Modum.Services.Services.ControllerService.DocsController
 {
     public class DocsControllerHelper : IDocsControllerHelper
     {
-        private readonly IDocsService _docsService;
         private readonly IFirebaseService _firebaseService;
+        private readonly IProductService _productService;
 
-        public DocsControllerHelper(IDocsService docsService, IFirebaseService firebaseService)
+        public DocsControllerHelper(IFirebaseService firebaseService, IProductService productService)
         {
-            _docsService = docsService;
             _firebaseService = firebaseService;
+            _productService = productService;
         }
 
                 
@@ -30,7 +31,7 @@ namespace Modum.Services.Services.ControllerService.DocsController
                     photo.PublicId = $"main-image-for-blog-{id}";
                 }
 
-                await _docsService.SaveImage(photo);
+                await _productService.SaveImage(photo);
                 return true;
             }
             catch (Exception)
@@ -53,7 +54,7 @@ namespace Modum.Services.Services.ControllerService.DocsController
         {
             try
             {
-                var id= await _firebaseService.UpdateABlogPostAsync(doc.Id,blogImage);
+                var id= await _firebaseService.UpdateABlogPostAsync(doc.Id,doc,blogImage);
                 await _firebaseService.DeleteImage(blogImage);
                 var photo = new Photo();
                 if (blogImage != null && blogImage != "")
@@ -62,7 +63,7 @@ namespace Modum.Services.Services.ControllerService.DocsController
                     photo.ImageName = $"main-image-for-blog-{id}";
                     photo.PublicId = $"main-image-for-blog-{id}";
                 }
-                await _docsService.SaveImage(photo);
+                await _productService.SaveImage(photo);
             }
             catch (DbUpdateConcurrencyException)
             {

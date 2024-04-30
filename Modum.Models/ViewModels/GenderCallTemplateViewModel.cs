@@ -11,9 +11,11 @@ namespace Modum.Models.ViewModels
         public IEnumerable<Product> MostBoughtItems { get; set; } = new List<Product>();
         public IEnumerable<Product> TenFavItems { get; set; } = new List<Product>();
         public IEnumerable<Category> UnderNavCategories { get; set; } = Enumerable.Empty<Category>();
-        public IEnumerable<Brands> BasicBrands { get; set; } = Enumerable.Empty<Brands>();
-        public IEnumerable<Brands> PremiumBrands { get; set; } = Enumerable.Empty<Brands>();
+        public List<string> BasicBrands { get; set; } = new List<string>();
+        public List<string> PremiumBrands { get; set; } = new List<string>();
         public LTC LimitedTimeCampaign { get; set; } = new LTC();
         public IEnumerable<BlogPost> BlogPostsForTemplate{ get; set; } = Enumerable.Empty<BlogPost>();
+        public int CartItemsForUser { get; set; }
+
     }
 }

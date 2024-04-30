@@ -1,0 +1,133 @@
+﻿@section Styles{
+    <link href="@Url.Content("~/css/custom/DeliveryLocation.css")" rel="stylesheet" type="text/css" />
+}
+<div class="delivery-location-page">
+    <div class="container custom-container p-5 my-5">
+        <div class="row pb-3 justify-content-center display-4 pt-4 pb-5" style="font-weight:600; color:rgb(105, 35, 145)">Delivery Location</div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-6">
+                <div id="map"></div>
+            </div>
+            <div class="col-12 col-xl-6 pt-5 pt-xl-0">
+                <div class="row justify-content-center">
+                    <a class="col-4 col-lg-3 selector-list-delivery active d-flex justify-content-center align-items-center h4" id="custom">Custom</a>
+                    <a class="col-4 col-lg-3 selector-list-delivery d-flex justify-content-center align-items-center h4" id="econt">Econt</a>
+                    <a class="col-4 col-lg-3 selector-list-delivery d-flex justify-content-center align-items-center h4" id="speedy">Speedy</a>
+                </div>
+
+                <div class="row justify-content-center pt-4 form-input" style="display:flex" id="custom-accordion">
+                    <div class="col-12 col-lg-9">
+                        <label for="custom-location-input" class=" h4 col-form-label ">Enter your pickup location:</label>
+                        <div class="">
+                            <input id="custom-location-input" type="text" placeholder="Type..." class="form-control col-form-input" style="cursor:inherit;" />
+                        </div>
+                        <div class="pt-4 location-input-delivery-prices">
+                            <div class="d-flex custom-input-field-main-section-div">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="custom-standart" name="delivery-option">
+                                        <label class="form-check-label  py-1 pl-2" name="flexRadioDefault" for="custom-standart" style="color:rgb(105, 35, 145)">
+                                            <i class="fa-solid fa-truck-moving"></i>&nbsp Standart - 2.99$
+                                            <span class="label-additive-information">(5-6 work days)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex custom-input-field-main-section-div">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="custom-express" name="delivery-option">
+                                        <label class="form-check-label py-1 pl-2" name="flexRadioDefault" for="custom-express" style="color:rgb(199, 135, 46)">
+                                            <i class="fa-solid fa-truck-fast"></i>&nbsp Express - 5.99$
+                                            <span class="label-additive-information">(2-3 work days)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center pt-4 form-input" id="econt-accordion">
+                    <div class="col-12 col-lg-9">
+                        <label for="econt-location-input" class="h4 col-form-label">Enter your closest Econt location:</label>
+                        <div class="">
+                            <input id="econt-location-input" type="text" placeholder="Type..." class="form-control col-form-input" style="cursor:inherit;" />
+                        </div>
+                        <div class="pt-4 location-input-delivery-prices">
+                            <div class="d-flex custom-input-field-main-section-div">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="econt-standart" name="delivery-option">
+                                        <label class="form-check-label  py-1 pl-2" name="flexRadioDefault" for="econt-standart" style="color:rgb(105, 35, 145)">
+                                            <i class="fa-solid fa-truck-moving"></i>&nbsp Standart - 2.54$
+                                            <span class="label-additive-information">(2-3 work days)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex custom-input-field-main-section-div">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="econt-express" name="delivery-option">
+                                        <label class="form-check-label py-1 pl-2" name="flexRadioDefault" for="econt-express" style="color:rgb(199, 135, 46)">
+                                            <i class="fa-solid fa-truck-fast"></i>&nbsp Express - 4.79$
+                                            <span class="label-additive-information">(12 work hours)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center pt-4 form-input" id="speedy-accordion">
+                    <div class="col-12 col-lg-9">
+                        <label for="speedy-location-input" class=" h4 col-form-label ">Enter your closest Speedy location:</label>
+                        <div class="">
+                            <input id="speedy-location-input" type="text" placeholder="Type..." class="form-control col-form-input" style="cursor:inherit;" />
+                        </div>
+                        <div class="pt-4 location-input-delivery-prices">
+                            <div class="d-flex custom-input-field-main-section-div">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="speedy-standart" name="delivery-option">
+                                        <label class="form-check-label py-1 pl-2" name="flexRadioDefault" for="speedy-standart" style="color:rgb(105, 35, 145)">
+                                            <i class="fa-solid fa-truck-moving"></i>&nbsp Standart - 2.77$
+                                            <span class="label-additive-information">(2-3 work days)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex custom-input-field-main-section-div">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="speedy-express" name="delivery-option">
+                                        <label class="form-check-label py-1 pl-2" name="flexRadioDefault" for="speedy-express" style="color:rgb(199, 135, 46)">
+                                            <i class="fa-solid fa-truck-fast"></i>&nbsp Express - 4.39$
+                                            <span class="label-additive-information">(1-2 work days)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-end">
+            <div class="col-6"></div>
+            <div class="col-6 px-0 text-center">
+                <div class="btn col-12 col-lg-9 fs-5" id="process-request-btn">
+                    <i class="fa-solid fa-truck"></i>
+                    <span id="proceed-text">Proceed</span>
+                    <span class="loading-animation"></span>
+                </div>
+            </div>
+        </div>
+        <a class="" id="return-to-cart-btn" asp-action="Cart" asp-controller="Home">
+            <i class="fa-regular fa-circle-left fa-2xl"></i>
+        </a>
+    </div>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwEmovX6yqUrnB1yyXOn2i_2HKLaw1aq4&libraries=places&language=bg"></script>

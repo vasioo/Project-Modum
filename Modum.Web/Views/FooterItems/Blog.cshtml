@@ -23,12 +23,12 @@
                 }
                 @foreach (var blog in Model.BlogPosts.OrderByDescending(x => x.DateOfCreation))
                 {
-                    @await Html.PartialAsync("~/Views/FooterItems/_BlogPartial.cshtml",blog)
+                    @await Html.PartialAsync("~/Views/FooterItems/_BlogPartial.cshtml",blog);
                 }
             </div>
         </div>
     </div>
-    
+
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -56,6 +56,6 @@
 
         setTimeout(function () {
             typeWriter(0, text, speed);
-        }, 500); 
+        }, 500);
     });
 </script>

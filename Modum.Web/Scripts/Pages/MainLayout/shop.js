@@ -26,8 +26,16 @@
                         },
                         hideClass: {
                             popup: 'animate__animated animate__fadeOutUp'
+                        },
+                        timer: 1500, 
+                        timerProgressBar: true, 
+                        didOpen: () => {
+                            Swal.showLoading(); 
+                        },
+                        willClose: () => {
+                            location.reload();
                         }
-                    })
+                    });
                 }).fail(function (error) {
                     Swal.fire({
                         icon: 'error',

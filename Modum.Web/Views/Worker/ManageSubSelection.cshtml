@@ -10,42 +10,43 @@
     <link href="@Url.Content("~/css/custom/ManageSubSelection.css")" rel="stylesheet" type="text/css" />
 }
 <div class="manage-sub-selections">
-    <div class="row justify-content-center h1 pt-3">
-        Manage Categories
+    <div class="justify-content-center d-flex">
+        <div class="display-4 py-3 text-center col">
+            Manage Categories
+        </div>
     </div>
     <br />
-    <div class="row justify-content-center align-items-center pb-3">
-        <label class="h5">Select an existing Main Category to edit</label>
+    <br />
+    <div class="row justify-content-center align-items-center pb-3 ">
+        <label class="h4">Select a Main Category to edit</label>
     </div>
 
     <div class="row mb-4 justify-content-center align-items-center">
         <div class="col-md-4">
             @Html.DropDownList("SelectedMainCategory", mainCategoryList, "-- Select existing main category --",
-            new { @class = "form-control", id = "selectMainCategoryDropdownId" })
+            new { @class = "form-control", id = "selectMainCategoryDropdownId", style="font-size:1.2em !important;" })
         </div>
     </div>
 
-    <div class="card" id="mainCategoryTable" style="display: none;">
-        <div class="card-header"></div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table category-table">
-                    <thead>
-                        <tr>
-                            <th>Category Name</th>
-                            <th>Subcategories</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="category-tbody">
-                    </tbody>
-                </table>
-            </div>
+    <div class="" id="mainCategoryTable" style="display: none;">
+        <div class="table-responsive">
+            <table class="table category-table">
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Subcategories</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="category-tbody">
+                </tbody>
+            </table>
+        </div>
+        <div class="pl-2 pb-2">
             <button type="button" class="btn btn-primary" id="add-category-row-btn"><i class="fas fa-plus"></i> Add Category</button>
         </div>
     </div>
-
-    <div class="d-flex mt-3 justify-content-center" style="display:none" id="save-btn-div-row">
-        <button id="save-btn" class="btn btn-primary col-10">Save all changes</button>
+    <div class="d-flex pt-5  justify-content-center" id="save-btn-div-row">
+        <button id="save-btn" style="display:none; font-size:1.5em !important" class="btn btn-success text-white col-10">Save all changes</button>
     </div>
 </div>

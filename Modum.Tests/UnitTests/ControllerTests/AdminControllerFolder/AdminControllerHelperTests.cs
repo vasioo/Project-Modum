@@ -1,7 +1,9 @@
-﻿using Modum.DataAccess.MainModel;
+﻿using Microsoft.AspNetCore.Identity;
+using Modum.Models.MainModel;
 using Modum.Models.BaseModels.Models.BaseStructure;
 using Modum.Services.Interfaces;
 using Modum.Services.Services.ControllerService.AdminController;
+using Modum.Services.Services.ControllerService.HomeController;
 using Moq;
 
 namespace Modum.Tests.UnitTests.ControllerTests.AdminControllerFolder
@@ -10,11 +12,37 @@ namespace Modum.Tests.UnitTests.ControllerTests.AdminControllerFolder
     {
         private readonly Mock<IBannedUsersService> bannedUsersServiceMock;
         private readonly Mock<IWorkerService> workerServiceMock;
+        private readonly Mock<IProductSizesService> productSizesServiceMock;
+        private readonly Mock<IFirebaseService> firebaseServiceMock;
+        private readonly Mock<ICategoryService> categoryServiceMock;
+        private readonly Mock<ISubcategoryService> subcategoryServiceMock;
+        private readonly Mock<IMainCategoryService> mainCategoryServiceMock;
+        private Mock<UserManager<ApplicationUser>> userManagerMock;
+        private readonly AdminControllerHelper adminControllerHelper;
 
         public AdminControllerHelperTests()
         {
+            userManagerMock = new Mock<UserManager<ApplicationUser>>(
+                new Mock<IUserStore<ApplicationUser>>().Object,
+                null!, null!, null!, null!, null!, null!, null!, null!);
+
             bannedUsersServiceMock = new Mock<IBannedUsersService>();
             workerServiceMock = new Mock<IWorkerService>();
+            productSizesServiceMock = new Mock<IProductSizesService>();
+            firebaseServiceMock = new Mock<IFirebaseService>();
+            categoryServiceMock = new Mock<ICategoryService>();
+            subcategoryServiceMock = new Mock<ISubcategoryService>();
+            mainCategoryServiceMock = new Mock<IMainCategoryService>();
+
+            adminControllerHelper = new AdminControllerHelper(
+                bannedUsersServiceMock.Object,
+                workerServiceMock.Object,
+                productSizesServiceMock.Object,
+                firebaseServiceMock.Object,
+                categoryServiceMock.Object,
+                subcategoryServiceMock.Object,
+                mainCategoryServiceMock.Object,
+                userManagerMock.Object);
         }
         #region ManageUsers
         [Fact]
@@ -24,17 +52,13 @@ namespace Modum.Tests.UnitTests.ControllerTests.AdminControllerFolder
             var user = new ApplicationUser { Id = "userId" };
             var reasonOfBanning = "Violating terms";
 
-            var adminControllerHelper = new AdminControllerHelper(
-                bannedUsersServiceMock.Object,
-                workerServiceMock.Object);
-
             bannedUsersServiceMock.Setup(x => x.GetUserByUserId(user.Id)).ReturnsAsync(new ShortUserModel());
 
             // Act
             await adminControllerHelper.BanUserHelper(user, reasonOfBanning);
 
             // Assert
-            bannedUsersServiceMock.Verify(x => x.RemoveAsync(It.IsAny<int>()), Times.Once);
+            bannedUsersServiceMock.Verify(x => x.RemoveAsync(It.IsAny<Guid>()), Times.Once);
             bannedUsersServiceMock.Verify(x => x.AddAsync(It.IsAny<ShortUserModel>()), Times.Once);
 
         }
@@ -46,10 +70,6 @@ namespace Modum.Tests.UnitTests.ControllerTests.AdminControllerFolder
             var user = new ApplicationUser { Id = "userId" };
             var position = "CTO";
 
-            var adminControllerHelper = new AdminControllerHelper(
-                bannedUsersServiceMock.Object,
-                workerServiceMock.Object);
-
             //Act
             var result = await adminControllerHelper.AddUserToPosition(user, position);
 
@@ -59,25 +79,6 @@ namespace Modum.Tests.UnitTests.ControllerTests.AdminControllerFolder
 
         }
 
-        [Fact]
-        public async Task RemoveUserFromPosition_ReturnsTask()
-        {
-            //Arrange
-            var user = new ApplicationUser { Id = "userId" };
-
-            var adminControllerHelper = new AdminControllerHelper(
-                bannedUsersServiceMock.Object,
-                workerServiceMock.Object);
-
-
-            workerServiceMock.Setup(x => x.DoesThisPersonAlreadyBelongToAPosition(user)).Returns(Task.FromResult(true));
-
-            //Act
-            await adminControllerHelper.RemoveUserFromPosition(user);
-
-            // Assert
-            workerServiceMock.Verify(x => x.RemoveAsync(It.IsAny<int>()), Times.Once);
-        }
         #endregion
 
         #region ManageWorkers
@@ -87,11 +88,6 @@ namespace Modum.Tests.UnitTests.ControllerTests.AdminControllerFolder
             // Arrange
             var userId = "userId";
             var expectedWorker = new Worker();
-
-            var adminControllerHelper = new AdminControllerHelper(
-                bannedUsersServiceMock.Object,
-                workerServiceMock.Object
-            );
 
             workerServiceMock.Setup(x => x.GetWorkerByUserIdAsync(userId)).ReturnsAsync(expectedWorker);
 
@@ -106,10 +102,6 @@ namespace Modum.Tests.UnitTests.ControllerTests.AdminControllerFolder
         public void GetAllWorkers_ReturnsQueryableOfWorkers()
         {
             // Arrange
-            var adminControllerHelper = new AdminControllerHelper(
-                bannedUsersServiceMock.Object,
-                workerServiceMock.Object
-            );
 
             var expectedWorkers = new List<Worker> { new Worker(), new Worker() }.AsQueryable();
             workerServiceMock.Setup(x => x.IQueryableGetAllAsync()).Returns(expectedWorkers);

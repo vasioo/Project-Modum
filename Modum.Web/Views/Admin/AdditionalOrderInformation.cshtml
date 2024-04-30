@@ -4,13 +4,13 @@
 @model OrderLogViewModel
 
 @{
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
 }
 
 <div class="container mt-4">
     <div class="row">
         <div class="col">
-            <h1 class="row justify-content-center">Order Information</h1>
+            <div class="display-4 py-3 text-center col">Order Information</div>
             <hr>
             <div class="row pt-2 border">
                 <div class="col-md-6">
@@ -31,7 +31,6 @@
                             <div class="col-md-6">
                                 <p><strong>Email:</strong> @Model.Charge.BillingDetails.Email</p>
                                 <p><strong>Name:</strong> @Model.Charge.BillingDetails.Name</p>
-                                <p><strong>Address:</strong> @Model.Charge.BillingDetails.Address.Line1</p>
                                 <p><strong>City:</strong> @Model.Charge.BillingDetails.Address.City</p>
                                 <p><strong>Country:</strong> @Model.Charge.BillingDetails.Address.Country</p>
                                 <p><strong>Postal Code:</strong> @Model.Charge.BillingDetails.Address.PostalCode</p>

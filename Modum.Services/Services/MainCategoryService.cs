@@ -1,4 +1,5 @@
-﻿using Modum.DataAccess;
+﻿using Microsoft.EntityFrameworkCore;
+using Modum.DataAccess;
 using Modum.Models.BaseModels.Models.BaseStructure;
 using Modum.Services.Interfaces;
 
@@ -14,10 +15,10 @@ namespace Modum.Services.Services
             _categoryService = categoryService;
         }
 
-        public Task<MainCategory> GetDefaultMainCategory()
+        public async Task<MainCategory> GetDefaultMainCategory()
         {
-            var mainCategory = _dataContext.Set<MainCategory>().OrderBy(x => x.Id).First();
-            return Task.FromResult(mainCategory);
+            var mainCategory =await _dataContext.Set<MainCategory>().FirstOrDefaultAsync(x=>x.Name=="Women");
+            return mainCategory;
         }
 
         public async Task<bool> SaveCategoriesAndSubcategoriesAsync(List<Category> categories)

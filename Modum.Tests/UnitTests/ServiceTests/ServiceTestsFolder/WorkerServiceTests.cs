@@ -1,4 +1,4 @@
-﻿using Modum.DataAccess.MainModel;
+﻿using Modum.Models.MainModel;
 using Modum.Services.Interfaces;
 using Modum.Services.Services;
 
@@ -30,7 +30,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
         {
             // Arrange
             var existingUser = new ApplicationUser { Id = "existingUserId" };
-            await context.Workers.AddAsync(new Worker { User = existingUser });
+            await context.Workers.AddAsync(new Worker { AppUser = existingUser });
             await context.SaveChangesAsync();
 
             // Act
@@ -58,7 +58,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
         {
             // Arrange
             var existingUser = new ApplicationUser { Id = "existingUserId" };
-            await context.Workers.AddAsync(new Worker { User = existingUser });
+            await context.Workers.AddAsync(new Worker { AppUser = existingUser });
             await context.SaveChangesAsync();
 
             // Act
@@ -66,7 +66,7 @@ namespace Modum.Tests.UnitTests.ServiceTests.ServiceTestsFolder
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(existingUser.Id, result.User.Id);
+            Assert.Equal(existingUser.Id, result.AppUser.Id);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Modum.Models.BaseModels.Models.Payment
     public class Cart : IEntity
     {
         [Key]
-        public int Id { get; set; } = 0;
+        public Guid Id { get; set; } 
 
         [ForeignKey("User")]
         public string UserId { get; set; } = "";

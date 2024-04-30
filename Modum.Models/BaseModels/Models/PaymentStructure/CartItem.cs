@@ -4,9 +4,9 @@ namespace Modum.Models.BaseModels.Models.PaymentStructure
 {
     public class CartItem : IEntity
     {
-        public int Id { get; set; } = 0;
-        public int CartId { get; set; } = 0;
-        public int ProductId { get; set; } = 0;
+        public Guid Id { get; set; } 
+        public Guid CartId { get; set; }
+        public Guid ProductId { get; set; }
         public string Size { get; set; } = "";
     }
 }

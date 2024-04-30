@@ -75,7 +75,7 @@ namespace Modum.Services.Services
         public async Task AddLastViewedProduct(string userId, string productId)
         {
             var existingProducts = await GetLastViewedProducts(userId);
-            var existingProduct = existingProducts.FirstOrDefault(p => p.Key == productId);
+            var existingProduct = existingProducts.FirstOrDefault(p => p.Key == $"{productId}");
 
             if (existingProduct.Value != null)
             {
@@ -111,6 +111,27 @@ namespace Modum.Services.Services
                 throw new Exception("The item couldn't be saved", ex);
             }
 
+        }
+
+        public async Task<int> GetAllBlogPostsCount()
+        {
+            var response = _client.Get("blogposts/");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                dynamic data = response.ResultAs<dynamic>();
+
+                int itemCount = 0;
+                if (data != null)
+                {
+                    foreach (var item in data)
+                    {
+                        itemCount++;
+                    }
+                    return itemCount;
+                }
+            }
+            return 0;
         }
 
         public IQueryable<BlogPost> GetAllBlogPosts()
@@ -152,15 +173,16 @@ namespace Modum.Services.Services
             }
         }
 
-        public async Task<Guid> UpdateABlogPostAsync(Guid id, string filePath)
+        public async Task<Guid> UpdateABlogPostAsync(Guid id,BlogPost newItem, string filePath)
         {
             var item = await GetBlogPostById(id);
             if (item!=null)
             {
                 await _client.DeleteAsync($"blogposts/{item.Id}");
             }
+            newItem.Id = id;
             await DeleteImage($"https://res.cloudinary.com/dzaicqbce/image/upload/v1695818842/main-image-for-blog-{id}.png");
-            return await AddABlogPost(item);
+            return await AddABlogPost(newItem);
         }
 
         public async Task RemoveABlogPostAsync(Guid id)

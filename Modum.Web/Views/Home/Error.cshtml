@@ -1,0 +1,75 @@
+﻿@using Modum.Models.BaseModels.Error;
+@model CustomErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+<style>
+    body {
+        background-image: url('/clothes-shop/images/others/background-error.svg');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    #header-bar {
+        display: none;
+    }
+
+    footer {
+        display: none;
+    }
+
+    #Botsonic-wrapper {
+        display:none;
+    }
+
+    .center-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    #back-to-home {
+        background: rgb(220, 55, 65);
+        font-size: 2em;
+        border: 1px solid red;
+        transition: background 0.3s, box-shadow 0.3s; 
+        border-radius:25px;
+    }
+
+        #back-to-home:hover {
+            background: #FF0B45;
+            box-shadow: 0px 0px 12px 5px;
+        }
+
+    @@media (min-width: 576px) {
+        #second-layer-container {
+            text-align: end;
+        }
+    }
+
+</style>
+<div class="container center-container">
+    <div class="row">
+        <div class="col-12 col-sm-6 px-0">
+            <img src="~/clothes-shop/images/others/error-custom.svg" class="img-fluid" style="height:33rem;" />
+        </div>
+        <div class="col-12 col-sm-6 px-0" id="second-layer-container" style="text-align:center">
+            <div class="d-flex flex-column justify-content-between h-100">
+                <div class="d-flex justify-content-center align-items-center flex-grow-1">
+                    <div class="col-12 p-0 m-0">
+                        <div class="h1 d-flex justify-content-center justify-content-sm-end">Error @Model.StatusCode</div>
+                        <div class="h2 d-flex justify-content-center justify-content-sm-end" style="color:red">@Model.CustomErrorMessage</div>
+                        <div class="h4 d-flex justify-content-center justify-content-sm-end">Oops!</div>
+                        <div class="h4 d-flex justify-content-center justify-content-sm-end">Looks like something is wrong.</div>
+                        <div class="h4 d-flex justify-content-center justify-content-sm-end">We are currently working on it.</div>
+                    </div>
+                </div>
+                <div class="mt-auto text-right mx-5 mx-sm-0 pt-2">
+                    <a class="btn col-12 col-sm-8 btn-warning" id="back-to-home" asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women"> Main Page</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

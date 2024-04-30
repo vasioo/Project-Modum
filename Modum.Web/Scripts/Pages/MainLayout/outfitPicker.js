@@ -59,7 +59,7 @@
                             var imagePath = actualResponse.response.ouput_path_img;
 
                             $('#additionalPicturePreview').attr('src', imagePath);
-                            $('#resultText').text(actualResponse.message);
+                            $('#resultText').text(actualResponse.message); 
 
                             $('#hiddenInput').css('display', 'block');
                             $('.retry-btn').css('display', 'block');
@@ -76,7 +76,7 @@
 
                     commonFuncs.hideLoader();
                 }
-
+    
                 else {
                     let errors = validator.getErrors(),
                         errorList = document.createElement("ul");

@@ -1,18 +1,22 @@
-﻿@using Modum.DataAccess.MainModel;
+﻿@using Modum.Models.MainModel;
 @model Worker
-
+@{
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
 <div class="edit-worker-information-page">
-    <div class="container">
+    <div class="container pt-5">
         @if (Model != null)
         {
-            <div class="row justify-content-center">
+            <div class="display-4 py-3 text-center col">
                 Edit Worker Information For
+            </div>
                 <br />
-                @Model.User.FirstName @Model.User.LastName
+            <div class="row h4 justify-content-center">
+                @Model.AppUser.FirstName @Model.AppUser.LastName
             </div>
             <hr />
 
-            <form method="post" asp-action="EditInformationForWorker" asp-controller="Admin">
+            <form method="post" asp-action="EditInformationForWorker" asp-controller="Admin">                                                                                                                                                                                                                 
                 <div class="form-group row">
                     <label for="Position" class="col-sm-2 col-form-label">Position:</label>
                     <div class="col-sm-10">
@@ -37,14 +41,14 @@
                 <div class="form-group row">
                     <label for="TimeSinceJoiningTheCompany" class="col-sm-2 col-form-label">Joining Date:</label>
                     <div class="col-sm-10">
-                        <input asp-for="TimeSinceJoiningTheCompany" class="form-control" type="date" value="@Model.TimeSinceJoiningTheCompany" required />
+                        <input asp-for="TimeSinceJoiningTheCompany" class="form-control" type="date" value="@Model.TimeSinceJoiningTheCompany.ToString("yyyy-MM-dd")" required />
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label for="TimeSinceChangingThePosition" class="col-sm-2 col-form-label">Change Position Date:</label>
                     <div class="col-sm-10">
-                        <input asp-for="TimeSinceChangingThePosition" class="form-control" type="date" value="@Model.TimeSinceChangingThePosition" required />
+                        <input asp-for="TimeSinceChangingThePosition" class="form-control" type="date" value="@Model.TimeSinceChangingThePosition.ToString("yyyy-MM-dd")" required />
                     </div>
                 </div>
 

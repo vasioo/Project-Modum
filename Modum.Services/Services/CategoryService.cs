@@ -12,7 +12,7 @@ namespace Modum.Services.Interfaces
             dataContext = context;
         }
 
-        public Task<IEnumerable<Category>> GetCategoriesByMainCategoryAsync(int mainCategoryId)
+        public Task<IEnumerable<Category>> GetCategoriesByMainCategoryAsync(Guid mainCategoryId)
         {
             var categories = dataContext.Set<Category>().Where(category => category.MainCategoryId == mainCategoryId);
             return Task.FromResult(categories.AsEnumerable());

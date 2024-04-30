@@ -35,54 +35,171 @@
     @RenderSection("Styles", false)
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" id="header-bar">
-            <div class="container-fluid">
-                <a class="navbar-brand " asp-area="" asp-controller="Home" asp-action="GenderCallTemplate" asp-route-category="Women">
-                    <img src="~/clothes-shop/images/logos/modum-transparent2-removebg-preview.png" />
-
-                </a>
-                <a class="btn d-lg-none" id="hamburger-menu">
-                    <span class="navbar-toggler-icon"></span>
-                </a>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav">
+    <div class="d-flex">
+        @{
+            var userRole = "";
+            if (User.IsInRole("Worker"))
+            {
+                userRole = "Worker";
+            }
+            if (User.IsInRole("Admin"))
+            {
+                userRole = "Admin";
+            }
+            if (User.IsInRole("SuperAdmin"))
+            {
+                userRole = "SuperAdmin";
+            }
+        }
+        <nav class="navbar-dark">
+            <a class="btn text-center align-self-center d-lg-none" id="hamburger-menu-custom">
+                <i class="fas fa-bars fa-xl"></i>
+                <i class="fas fa-times fa-xl"></i>
+            </a>
+            <div class="sticky-sidebar col pt-5 d-none d-lg-none" id="sidebar-mobile">
+                <ul class="nav flex-column">
+                    <li class="nav-item" style="font-size:1.1em; font-weight:700; color:white">
+                        Modum Admin
+                        <hr style="border-top: 1px solid white;" />
+                    </li>
+                    <li class="nav-item" style="font-size:1.2em;  font-weight:700; color:white">
+                        Your role: &nbsp; <span style="color:red;">@userRole</span>
+                        <hr style="border-top: 1px solid white;" />
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-item nav-link-custom px-0 mx-0" id="products-page" asp-area="" asp-controller="Worker" asp-action="ManageProducts">
+                            Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-item nav-link-custom px-0 mx-0" id="section-page" asp-area="" asp-controller="Worker" asp-action="ManageSubSelection">
+                            Sub-Selection
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-item nav-link-custom px-0 mx-0" id="ltc-page" asp-area="" asp-controller="Worker" asp-action="ManageLTCs">
+                            LTCs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-item nav-link-custom px-0 mx-0" id="posts-page" asp-area="" asp-controller="Docs" asp-action="DocsShower">
+                            Blogs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-item nav-link-custom px-0 mx-0" id="orders-page" asp-area="" asp-controller="Worker" asp-action="ManageOrders">
+                            Orders
+                        </a>
+                    </li>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                    {
                         <li class="nav-item">
-                            <a class="nav-link nav-item nav-link-custom" asp-area="" asp-controller="Worker" asp-action="ManageProducts">
-                                Products
+                            <a class="nav-link nav-link-custom px-0 mx-0" id="users-page" asp-area="" asp-controller="Admin" asp-action="ManageUsers">
+                                Users
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-item nav-link-custom" asp-area="" asp-controller="Worker" asp-action="ManageSubSelection">
-                                Sub-Selection
+                            <a class="nav-link nav-link-custom px-0 mx-0" id="stripe-page" asp-area="" asp-controller="Admin" asp-action="StripePaymentOrders">
+                                Stripe
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-item nav-link-custom" asp-area="" asp-controller="Worker" asp-action="ManageLTCs">
-                                LTCs
+                            <a class="nav-link nav-link-custom px-0 mx-0" id="workers-page" asp-area="" asp-controller="Admin" asp-action="ManageWorkers">
+                                Workers
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-item nav-link-custom" asp-area="" asp-controller="Docs" asp-action="DocsShower">
-                                Blog Posts
+                            <a class="nav-link nav-link-custom px-0 mx-0" id="statistics-page" asp-area="" asp-controller="Admin" asp-action="ApplicationStatistics">
+                                Statistics
                             </a>
                         </li>
-                    </ul>
-                </div>
+                    }
+                    <li class="nav-item" style="font-size:1.1em; font-weight:700; color:white">
+                        <a class="nav-link nav-link-custom px-0 mx-0" asp-controller="Home" asp-action="">
+                            <i class="fa-solid fa-house"></i>&nbsp;Home
+                        </a>
+                    </li>
+                </ul>
             </div>
+            <div class="sticky-sidebar col pt-5 d-none d-lg-block" id="sidebar-desktop">
+                <ul class="nav flex-column">
+                    <li class="nav-item" style="font-size:1.1em; font-weight:700; color:white">
+                        Modum Admin
+                        <hr style="border-top: 1px solid white;" />
+                    </li>
+                    <li class="nav-item" style="font-size:1.2em;  font-weight:700; color:white">
+                        Your role: &nbsp; <span style="color:red;">@userRole</span>
+                        <hr style="border-top: 1px solid white;" />
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-item nav-link-custom px-0 mx-0" id="products-page" asp-area="" asp-controller="Worker" asp-action="ManageProducts">
+                            Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-item nav-link-custom px-0 mx-0" id="section-page" asp-area="" asp-controller="Worker" asp-action="ManageSubSelection">
+                            Sub-Selection
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-item nav-link-custom px-0 mx-0" id="ltc-page" asp-area="" asp-controller="Worker" asp-action="ManageLTCs">
+                            LTCs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-item nav-link-custom px-0 mx-0" id="posts-page" asp-area="" asp-controller="Docs" asp-action="DocsShower">
+                            Blogs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-item nav-link-custom px-0 mx-0" id="orders-page" asp-area="" asp-controller="Worker" asp-action="ManageOrders">
+                            Orders
+                        </a>
+                    </li>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom px-0 mx-0" id="users-page" asp-area="" asp-controller="Admin" asp-action="ManageUsers">
+                                Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom px-0 mx-0" id="stripe-page" asp-area="" asp-controller="Admin" asp-action="StripePaymentOrders">
+                                Stripe
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom px-0 mx-0" id="workers-page" asp-area="" asp-controller="Admin" asp-action="ManageWorkers">
+                                Workers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom px-0 mx-0" id="statistics-page" asp-area="" asp-controller="Admin" asp-action="ApplicationStatistics">
+                                Statistics
+                            </a>
+                        </li>
+                    }
+                    <li class="nav-item" style="font-size:1.1em; font-weight:700; color:white">
+                        <a class="nav-link nav-link-custom px-0 mx-0" asp-controller="Home" asp-action="">
+                            <i class="fa-solid fa-house"></i>&nbsp;Home
+                        </a>
+                    </li>
+                </ul>
+            </div>  
         </nav>
-    </header>
-
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        <div class="overlay"></div>
+        <div class="main-content col-md-12 d-lg-flex justify-content-lg-center col-lg-11 pt-5 px-4">
+            <main role="main" class="col-md-12 px-0">
+                @RenderBody()
+            </main>
+        </div>
     </div>
     <script src="~/clothes-shop/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="~/clothes-shop/js/vendor/popper.min.js"></script>
     <script src="~/clothes-shop/js/vendor/bootstrap.min.js"></script>
     <script src="~/clothes-shop/js/vendor/slick.min.js"></script>
     <script src="~/clothes-shop/js/workerLayout.js"></script>
+    <script src="~/clothes-shop/js/adminLayout.js"></script>
 
     <!-- COMMON -->
     <script src="~/clothes-shop/js/common.js"></script>
@@ -100,6 +217,12 @@
             manageLtcs.init($('.manage-ltcs'));
             manageProductsPage.init($('.manage-products'));
             manageSubSelectionsPage.init($('.manage-sub-selections'));
+            createDocumentPage.init($('.create-document-page'));
+            editDocumentPage.init($('.edit-document-page'));
+            manageOrders.init($('.manage-orders'));
+            manageUsersPage.init($('.manage-users'));
+            manageWorkersPage.init($('.manage-workers'));
+            stripePaymentOrdersPage.init($('.stripe-payment-orders-page'));
         });
     </script>
     <!--ALERT-->

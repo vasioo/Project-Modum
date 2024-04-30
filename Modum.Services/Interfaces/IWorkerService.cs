@@ -1,4 +1,4 @@
-﻿using Modum.DataAccess.MainModel;
+﻿using Modum.Models.MainModel;
 
 namespace Modum.Services.Interfaces
 {

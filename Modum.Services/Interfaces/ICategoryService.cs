@@ -4,6 +4,6 @@ namespace Modum.Services.Interfaces
 {
     public interface ICategoryService : IBaseService<Category>
     {
-        Task<IEnumerable<Category>> GetCategoriesByMainCategoryAsync(int mainCategoryId);
+        Task<IEnumerable<Category>> GetCategoriesByMainCategoryAsync(Guid mainCategoryId);
     }
 }
