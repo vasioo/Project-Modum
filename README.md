@@ -6,9 +6,9 @@
 <br>
 <br>
 <p>Welcome to Modum - your premier destination for all things fashion!</br>
-Our application redefines the online shopping experience, providing users with a seamless journey from browsing to delivery. </br>
+My application redefines the online shopping experience, providing users with a seamless journey from browsing to delivery. </br>
 With Modum, customers can explore a curated selection of stylish clothing items while enjoying a user-friendly interface and efficient checkout process.</br>
-Our commitment to innovation and customer satisfaction drives us to continually enhance Modum's features and performance. </br>
+My commitment to innovation and customer satisfaction drives us to continually enhance Modum's features and performance. </br>
  </p>
 
 <h3>Some interesting services:</h3></br>
@@ -23,6 +23,7 @@ Our commitment to innovation and customer satisfaction drives us to continually 
 </ul>
 
 <h2><a href="https://modum.azurewebsites.net/" target="_blank">Visit the website!</a></h2>
+<p>*if the website shows rror 403 connect with me i will start the application</p>
 <br>
 <h3>Used Technologies</h3>
 <ul>
